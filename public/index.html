@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vehicle Expense Tracker / 车辆费用记录</title>
+<link rel="stylesheet" href="/style.css">
+</head>
+<body>
+
+<!-- ═══ LOGIN ═══ -->
+<div id="loginPage">
+  <div class="login-box">
+    <h1>Vehicle Expense Tracker</h1>
+    <h2>车辆费用记录系统</h2>
+    <input type="text" id="loginUser" placeholder="Username / 用户名" autocomplete="username">
+    <input type="password" id="loginPass" placeholder="Password / 密码" autocomplete="current-password">
+    <button class="btn btn-primary btn-block" onclick="doLogin()">Login / 登录</button>
+    <p id="loginError" class="error-msg"></p>
+  </div>
+</div>
+
+<!-- ═══ MAIN APP ═══ -->
+<div id="appPage" style="display:none">
+
+  <!-- Header -->
+  <header>
+    <h1>Vehicle Expense Tracker <span>车辆费用记录</span></h1>
+    <div class="header-right">
+      <button class="btn btn-sm btn-outline" onclick="switchLang()" id="btnLang">中文</button>
+      <span class="user-badge" id="userBadge"></span>
+      <button class="btn btn-sm btn-outline" onclick="doLogout()">Logout</button>
+    </div>
+  </header>
+
+  <!-- Summary Cards -->
+  <div class="summary-row">
+    <div class="card card-green">
+      <div class="card-label" data-en="Deposit" data-zh="预存款">Deposit</div>
+      <div class="card-value" id="sumDeposit">0</div>
+      <button class="btn btn-sm btn-outline" onclick="showDepositModal()" data-en="Manage" data-zh="管理">Manage</button>
+    </div>
+    <div class="card card-orange">
+      <div class="card-label" data-en="Expense" data-zh="支出">Expense</div>
+      <div class="card-value" id="sumExpense">0</div>
+    </div>
+    <div class="card card-blue">
+      <div class="card-label" data-en="Balance" data-zh="余额">Balance</div>
+      <div class="card-value" id="sumBalance">0</div>
+    </div>
+  </div>
+
+  <!-- Tabs -->
+  <div class="tabs">
+    <button class="tab active" data-tab="expenses" data-en="Expenses" data-zh="费用记录">Expenses</button>
+    <button class="tab" data-tab="payments" data-en="Payments" data-zh="付款记录">Payments</button>
+    <button class="tab" data-tab="reports" data-en="Reports" data-zh="统计报表">Reports</button>
+    <button class="tab" data-tab="users" data-en="Users" data-zh="用户管理" id="tabUsers" style="display:none">Users</button>
+  </div>
+
+  <!-- ═══ EXPENSES TAB ═══ -->
+  <div class="tab-content active" id="tabExpenses">
+    <div class="filter-bar">
+      <input type="date" id="fDate" oninput="renderRecords()" title="Date">
+      <input type="text" id="fDesc" placeholder="Description / 描述" oninput="renderRecords()">
+      <input type="text" id="fCarType" placeholder="Car Type / 车型" oninput="renderRecords()">
+      <input type="text" id="fPlate" placeholder="Plate No. / 车牌号" oninput="renderRecords()">
+      <input type="text" id="fGuy" placeholder="Used By / 使用人" oninput="renderRecords()">
+      <span style="flex:1"></span>
+      <button class="btn btn-success" onclick="showRecordModal()">+ <span data-en="New" data-zh="新增">New</span></button>
+      <button class="btn btn-outline" onclick="loadSampleData()" data-en="Load Sample" data-zh="加载示例">Load Sample</button>
+      <button class="btn btn-outline" onclick="exportCSV()">CSV</button>
+      <button class="btn btn-danger btn-sm" onclick="clearAll()" data-en="Clear All" data-zh="清空">Clear All</button>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th class="w-date" data-en="Date" data-zh="日期">Date</th>
+            <th class="w-desc" data-en="Description" data-zh="描述">Description</th>
+            <th class="w-qty">QTY</th>
+            <th class="w-type" data-en="Car Type" data-zh="车型">Car Type</th>
+            <th class="w-plate" data-en="Plate No." data-zh="车牌号">Plate No.</th>
+            <th class="w-amt" data-en="Amount" data-zh="金额">Amount</th>
+            <th class="w-guy" data-en="Used By" data-zh="使用人">Used By</th>
+            <th class="w-act" data-en="Action" data-zh="操作">Action</th>
+          </tr>
+        </thead>
+        <tbody id="recordsBody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ═══ PAYMENTS TAB ═══ -->
+  <div class="tab-content" id="tabPayments">
+    <div class="filter-bar">
+      <input type="text" id="fPPlate" placeholder="Plate No. / 车牌号" oninput="renderPayments()">
+      <select id="fPStatus" onchange="renderPayments()">
+        <option value="" data-en="All Status" data-zh="全部状态">All Status</option>
+        <option value="paid" data-en="Paid" data-zh="已付款">Paid</option>
+        <option value="unpaid" data-en="Unpaid" data-zh="未付款">Unpaid</option>
+      </select>
+      <span style="flex:1"></span>
+      <button class="btn btn-success" onclick="showPaymentModal()">+ <span data-en="New" data-zh="新增">New</span></button>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th class="w-plate" data-en="Plate No." data-zh="车牌号">Plate No.</th>
+            <th class="w-status" data-en="Status" data-zh="状态">Status</th>
+            <th class="w-date" data-en="Pay Date" data-zh="付款日期">Pay Date</th>
+            <th class="w-amt" data-en="Amount" data-zh="金额">Amount</th>
+            <th class="w-desc" data-en="Notes" data-zh="备注">Notes</th>
+            <th class="w-act" data-en="Action" data-zh="操作">Action</th>
+          </tr>
+        </thead>
+        <tbody id="paymentsBody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ═══ REPORTS TAB ═══ -->
+  <div class="tab-content" id="tabReports">
+    <div class="filter-bar">
+      <button class="btn btn-outline report-btn active" onclick="loadReport('daily', this)" data-en="Daily" data-zh="日报">Daily</button>
+      <button class="btn btn-outline report-btn" onclick="loadReport('weekly', this)" data-en="Weekly" data-zh="周报">Weekly</button>
+      <button class="btn btn-outline report-btn" onclick="loadReport('monthly', this)" data-en="Monthly" data-zh="月报">Monthly</button>
+      <button class="btn btn-outline report-btn" onclick="loadReport('yearly', this)" data-en="Yearly" data-zh="年报">Yearly</button>
+      <span style="flex:1"></span>
+      <span id="reportTotal" style="font-weight:700;font-size:15px"></span>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th data-en="Period" data-zh="周期">Period</th>
+            <th data-en="Records" data-zh="记录数">Records</th>
+            <th data-en="Total Amount" data-zh="合计金额">Total Amount</th>
+          </tr>
+        </thead>
+        <tbody id="reportsBody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ═══ USERS TAB (admin only) ═══ -->
+  <div class="tab-content" id="tabUsers">
+    <div class="filter-bar">
+      <button class="btn btn-success" onclick="showUserModal()">+ <span data-en="Add User" data-zh="添加用户">Add User</span></button>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th data-en="Username" data-zh="用户名">Username</th>
+            <th data-en="Role" data-zh="角色">Role</th>
+            <th data-en="Created" data-zh="创建时间">Created</th>
+          </tr>
+        </thead>
+        <tbody id="usersBody"></tbody>
+      </table>
+    </div>
+  </div>
+
+</div>
+
+<!-- ═══ RECORD MODAL ═══ -->
+<div class="modal-overlay" id="recordModal">
+  <div class="modal">
+    <h2 id="recordModalTitle">New Record</h2>
+    <div class="form-row"><label>Date</label><input type="date" id="mDate"></div>
+    <div class="form-row"><label>Description</label><input type="text" id="mDesc"></div>
+    <div class="form-row"><label>QTY</label><input type="text" id="mQty" class="short"></div>
+    <div class="form-row"><label>Car Type</label><input type="text" id="mCarType"></div>
+    <div class="form-row"><label>Plate No.</label><input type="text" id="mPlate"></div>
+    <div class="form-row"><label>Amount</label><input type="number" id="mAmount"></div>
+    <div class="form-row"><label>Used By</label><input type="text" id="mGuy"></div>
+    <div class="btn-row">
+      <button class="btn btn-outline" onclick="closeModal('recordModal')" data-en="Cancel" data-zh="取消">Cancel</button>
+      <button class="btn btn-primary" id="btnSaveRecord" onclick="saveRecord()" data-en="Save" data-zh="保存">Save</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ PAYMENT MODAL ═══ -->
+<div class="modal-overlay" id="paymentModal">
+  <div class="modal">
+    <h2 id="paymentModalTitle">New Payment</h2>
+    <div class="form-row"><label>Plate No.</label><input type="text" id="mPPlate"></div>
+    <div class="form-row">
+      <label>Status</label>
+      <select id="mPStatus"><option value="paid">Paid</option><option value="unpaid">Unpaid</option></select>
+    </div>
+    <div class="form-row"><label>Pay Date</label><input type="date" id="mPPayDate"></div>
+    <div class="form-row"><label>Amount</label><input type="number" id="mPAmount"></div>
+    <div class="form-row"><label>Notes</label><input type="text" id="mPNotes"></div>
+    <div class="btn-row">
+      <button class="btn btn-outline" onclick="closeModal('paymentModal')" data-en="Cancel" data-zh="取消">Cancel</button>
+      <button class="btn btn-primary" id="btnSavePayment" onclick="savePayment()" data-en="Save" data-zh="保存">Save</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ DEPOSIT MODAL ═══ -->
+<div class="modal-overlay" id="depositModal">
+  <div class="modal">
+    <h2 data-en="Manage Deposit" data-zh="管理预存款">Manage Deposit</h2>
+    <div class="form-row"><label data-en="Current" data-zh="当前">Current</label><input type="text" id="dCurrent" readonly class="readonly"></div>
+    <div class="form-row">
+      <label data-en="Action" data-zh="操作">Action</label>
+      <select id="dOp">
+        <option value="add" data-en="Add (+)" data-zh="追加 (+)">Add (+)</option>
+        <option value="sub" data-en="Subtract (-)" data-zh="减少 (-)">Subtract (-)</option>
+        <option value="set" data-en="Set Exact" data-zh="设置为">Set Exact</option>
+      </select>
+    </div>
+    <div class="form-row"><label>Amount</label><input type="number" id="dAmount"></div>
+    <div class="btn-row">
+      <button class="btn btn-outline" onclick="closeModal('depositModal')" data-en="Cancel" data-zh="取消">Cancel</button>
+      <button class="btn btn-primary" onclick="updateDeposit()" data-en="Confirm" data-zh="确认">Confirm</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ USER MODAL ═══ -->
+<div class="modal-overlay" id="userModal">
+  <div class="modal">
+    <h2 data-en="Add User" data-zh="添加用户">Add User</h2>
+    <div class="form-row"><label>Username</label><input type="text" id="mUUser"></div>
+    <div class="form-row"><label>Password</label><input type="password" id="mUPass"></div>
+    <div class="btn-row">
+      <button class="btn btn-outline" onclick="closeModal('userModal')" data-en="Cancel" data-zh="取消">Cancel</button>
+      <button class="btn btn-primary" onclick="addUser()" data-en="Save" data-zh="保存">Save</button>
+    </div>
+  </div>
+</div>
+
+<script src="/app.js"></script>
+</body>
+</html>
