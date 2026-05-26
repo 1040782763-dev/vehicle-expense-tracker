@@ -27,12 +27,3 @@ jobs:
           context: .
           push: true
           tags: ghcr.io/${{ github.repository }}:latest
-
-      - name: Make package public
-        run: |
-          gh api --method PATCH \
-            -H "Accept: application/vnd.github+json" \
-            /user/packages/container/$(echo ${{ github.repository }} | cut -d'/' -f2)/visibility \
-            -f visibility=public
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
