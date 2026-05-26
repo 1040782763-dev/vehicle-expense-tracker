@@ -3,12 +3,13 @@ const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const path = require('path');
 const { user, record, payment, deposit, report } = require('./database');
+const XLSX = require('xlsx');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 const JWT_SECRET = process.env.JWT_SECRET || 'vts-jwt-secret-change-in-production';
 
-app.use(express.json());
+app.use(express.json({ limit: '50mb' }));
 app.use(express.static(path.join(__dirname, 'public')));
 
 // ─── SSE Clients ─────────────────────────────────────────────
@@ -88,6 +89,81 @@ app.delete('/api/records/:id', authRequired, (req, res) => {
   record.delete(req.params.id);
   broadcastSSE('record_deleted', { id: Number(req.params.id) });
   res.json({ ok: true });
+});
+
+// ─── Import XLSX ──────────────────────────────────────────────
+app.post('/api/import', authRequired, (req, res) => {
+  try {
+    const { base64 } = req.body;
+    if (!base64) return res.status(400).json({ error: 'No file data' });
+
+    const buf = Buffer.from(base64, 'base64');
+    const wb = XLSX.read(buf, { type: 'buffer' });
+    const sheet = wb.Sheets[wb.SheetNames[0]];
+    const rows = XLSX.utils.sheet_to_json(sheet, { defval: '' });
+
+    if (!rows.length) return res.status(400).json({ error: 'Empty sheet' });
+
+    // Column name mapping (auto-detect)
+    const cols = Object.keys(rows[0]);
+    const findCol = (patterns) => {
+      for (const p of patterns) {
+        const found = cols.find(c => c.toLowerCase().includes(p.toLowerCase()));
+        if (found) return found;
+      }
+      return null;
+    };
+
+    const dateCol = findCol(['date', '日期', '时间']);
+    const descCol = findCol(['desc', '描述', '物料', '货品', 'item', 'name']);
+    const qtyCol = findCol(['qty', '数量', 'quantity']);
+    const carCol = findCol(['car', '车型', 'vehicle', 'type']);
+    const plateCol = findCol(['plate', '车牌', 'plate no', 'license']);
+    const amountCol = findCol(['amount', '金额', '费用', 'price', 'cost', 'total']);
+    const guyCol = findCol(['used', '使用人', '经手人', 'guy', 'by', 'user']);
+
+    let imported = 0;
+    for (const row of rows) {
+      const obj = {
+        date: dateCol ? String(row[dateCol] || '').trim() : '',
+        description: descCol ? String(row[descCol] || '').trim() : '',
+        qty: qtyCol ? String(row[qtyCol] || '').trim() : '',
+        car_type: carCol ? String(row[carCol] || '').trim() : '',
+        plate_number: plateCol ? String(row[plateCol] || '').trim() : '',
+        amount: amountCol ? parseInt(row[amountCol]) || 0 : 0,
+        used_by: guyCol ? String(row[guyCol] || '').trim() : '',
+        created_by: req.user.username
+      };
+
+      // Try to normalize date formats
+      if (obj.date && obj.date.match(/^\d{4,5}$/)) {
+        // Excel serial date number
+        const d = new Date((parseInt(obj.date) - 25569) * 86400 * 1000);
+        obj.date = d.toISOString().slice(0, 10);
+      } else if (obj.date && obj.date.match(/^\d{1,2}[\/\-\.]\d{1,2}[\/\-\.]\d{2,4}$/)) {
+        // DD/MM/YYYY or similar
+        const parts = obj.date.split(/[\/\-\.]/);
+        if (parts.length === 3) {
+          const day = parts[0].padStart(2, '0');
+          const month = parts[1].padStart(2, '0');
+          let year = parts[2];
+          if (year.length === 2) year = '20' + year;
+          obj.date = `${year}-${month}-${day}`;
+        }
+      }
+
+      if (obj.date) {
+        record.create(obj);
+        imported++;
+      }
+    }
+
+    // Broadcast to all clients
+    broadcastSSE('record_created', { imported });
+    res.json({ ok: true, imported, total: rows.length });
+  } catch (e) {
+    res.status(400).json({ error: 'Parse error: ' + e.message });
+  }
 });
 
 // ─── Payments CRUD ───────────────────────────────────────────

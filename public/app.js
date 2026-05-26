@@ -593,6 +593,38 @@ async function exportCSV() {
   } catch(e) { alert(e.message); }
 }
 
+// ─── XLSX Import ─────────────────────────────────────────────
+function importXLSX() {
+  document.getElementById('xlsxFileInput').click();
+}
+
+function handleXLSXFile(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+
+  if (!file.name.match(/\.xlsx?$/i)) {
+    alert(lang === 'en' ? 'Please select an .xlsx or .xls file' : '请选择 .xlsx 或 .xls 文件');
+    return;
+  }
+
+  const reader = new FileReader();
+  reader.onload = async function() {
+    const base64 = reader.result.split(',')[1];
+    try {
+      const result = await api('/api/import', {
+        method: 'POST',
+        body: JSON.stringify({ base64 })
+      });
+      alert((lang === 'en' ? 'Imported ' : '成功导入 ') + result.imported + ' / ' + result.total + (lang === 'en' ? ' records' : ' 条记录'));
+      loadRecords();
+    } catch (e) {
+      alert((lang === 'en' ? 'Import failed: ' : '导入失败: ') + e.message);
+    }
+  };
+  reader.readAsDataURL(file);
+  event.target.value = '';
+}
+
 // ─── Sample Data ──────────────────────────────────────────────
 async function loadSampleData() {
   // Load sample data via the server
