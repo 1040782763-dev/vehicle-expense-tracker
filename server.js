@@ -193,13 +193,36 @@ app.delete('/api/payments/:id', authRequired, (req, res) => {
 
 // ─── Deposit ─────────────────────────────────────────────────
 app.get('/api/deposit', authRequired, (req, res) => {
-  res.json({ amount: deposit.get() });
+  const date = req.query.date || new Date().toISOString().slice(0,10);
+  res.json({
+    date,
+    amount: deposit.getFor(date),
+    expense: deposit.expenseFor(date),
+    balance: deposit.balanceFor(date)
+  });
 });
 
 app.put('/api/deposit', authRequired, (req, res) => {
-  deposit.set(req.body.amount);
-  broadcastSSE('deposit_updated', { amount: req.body.amount });
-  res.json({ amount: req.body.amount });
+  const date = req.body.date || new Date().toISOString().slice(0,10);
+  deposit.setFor(date, req.body.amount);
+  broadcastSSE('deposit_updated', { amount: req.body.amount, date });
+  res.json({ amount: req.body.amount, date });
+});
+
+// Today's quick stats
+app.get('/api/today', authRequired, (req, res) => {
+  const d = new Date().toISOString().slice(0,10);
+  res.json({
+    date: d,
+    deposit: deposit.getFor(d),
+    expense: deposit.expenseFor(d),
+    balance: deposit.balanceFor(d)
+  });
+});
+
+// Daily summary (all dates with deposit/expense/balance)
+app.get('/api/daily-summary', authRequired, (req, res) => {
+  res.json(deposit.summary());
 });
 
 // ─── Reports ─────────────────────────────────────────────────

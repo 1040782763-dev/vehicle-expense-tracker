@@ -254,23 +254,16 @@ async function loadDeposit() {
   try {
     const data = await api('/api/deposit');
     document.getElementById('sumDeposit').textContent = formatNum(data.amount);
-    updateBalance(data.amount);
+    document.getElementById('sumExpense').textContent = formatNum(data.expense);
+    document.getElementById('sumBalance').textContent = formatNum(data.balance);
+    const balEl = document.getElementById('sumBalance');
+    balEl.style.color = data.balance >= 0 ? 'var(--blue)' : 'var(--danger)';
   } catch(e) { /* ignore */ }
-}
-
-let currentExpenseTotal = 0;
-
-function updateBalance(dep) {
-  document.getElementById('sumExpense').textContent = formatNum(currentExpenseTotal);
-  const bal = (dep || 0) - currentExpenseTotal;
-  document.getElementById('sumBalance').textContent = formatNum(bal);
-  const balEl = document.getElementById('sumBalance');
-  balEl.style.color = bal >= 0 ? 'var(--blue)' : 'var(--danger)';
 }
 
 function showDepositModal() {
   document.getElementById('dCurrent').value = formatNum(document.getElementById('sumDeposit').textContent.replace(/,/g,''));
-  document.getElementById('dOp').value = 'add';
+  document.getElementById('dOp').value = 'set';
   document.getElementById('dAmount').value = '';
   document.getElementById('depositModal').classList.add('active');
   applyLang();
@@ -284,8 +277,9 @@ async function updateDeposit() {
   else if (op === 'sub') current = Math.max(0, current - amt);
   else current = amt;
   try {
-    await api('/api/deposit', { method: 'PUT', body: JSON.stringify({ amount: current }) });
+    await api('/api/deposit', { method: 'PUT', body: JSON.stringify({ amount: current, date: new Date().toISOString().slice(0,10) }) });
     document.getElementById('depositModal').classList.remove('active');
+    loadDeposit();
   } catch(e) { alert(e.message); }
 }
 
@@ -305,10 +299,7 @@ async function loadRecords() {
     if (fGuy) params.set('used_by', fGuy);
 
     const data = await api('/api/records?' + params.toString());
-    currentExpenseTotal = data.reduce((s, r) => s + (r.amount || 0), 0);
     renderRecordsData(data);
-    const depText = document.getElementById('sumDeposit').textContent.replace(/,/g,'');
-    updateBalance(parseInt(depText) || 0);
   } catch(e) { /* ignore */ }
 }
 
@@ -508,6 +499,13 @@ async function loadReport(type, btn) {
     let totalAmount = 0;
     let label = '';
 
+    // Restore normal table headers
+    document.getElementById('reportHead').innerHTML = `<tr>
+      <th data-en="Period" data-zh="周期">Period</th>
+      <th data-en="Records" data-zh="记录数">Records</th>
+      <th data-en="Total Amount" data-zh="合计金额">Total Amount</th>
+    </tr>`;
+
     tbody.innerHTML = data.map(r => {
       totalAmount += r.total || 0;
       if (type === 'daily') label = formatDate(r.date);
@@ -522,6 +520,44 @@ async function loadReport(type, btn) {
     }).join('');
 
     totalEl.textContent = (lang === 'en' ? 'Total: ' : '合计: ') + formatNum(totalAmount);
+    applyLang();
+  } catch(e) { /* ignore */ }
+}
+
+async function loadDailySummary(btn) {
+  document.querySelectorAll('.report-btn').forEach(b => b.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+
+  try {
+    const data = await api('/api/daily-summary');
+    const tbody = document.getElementById('reportsBody');
+    const totalEl = document.getElementById('reportTotal');
+
+    // Wider headers for daily summary
+    document.getElementById('reportHead').innerHTML = `<tr>
+      <th data-en="Date" data-zh="日期">Date</th>
+      <th data-en="Opening Deposit" data-zh="期初预存">Opening Deposit</th>
+      <th data-en="Expense" data-zh="支出">Expense</th>
+      <th data-en="Balance" data-zh="余额">Balance</th>
+    </tr>`;
+
+    if (!data.length) {
+      tbody.innerHTML = '<tr><td colspan="4" class="no-data">No data</td></tr>';
+      totalEl.textContent = '';
+      return;
+    }
+
+    tbody.innerHTML = data.map(r => `
+      <tr>
+        <td>${formatDate(r.date)}</td>
+        <td class="w-amt text-right" style="color:var(--green)">${formatNum(r.deposit)}</td>
+        <td class="w-amt text-right" style="color:var(--orange)">${formatNum(r.expense)}</td>
+        <td class="w-amt text-right" style="color:${r.balance >= 0 ? 'var(--blue)' : 'var(--danger)'}">${formatNum(r.balance)}</td>
+      </tr>
+    `).join('');
+
+    totalEl.textContent = '';
+    applyLang();
   } catch(e) { /* ignore */ }
 }
 

@@ -8,7 +8,7 @@ const bcrypt = require('bcryptjs');
 const DB_PATH = path.join(__dirname, 'data.json');
 
 // In-memory data
-let data = { users: [], records: [], payments: [], deposit: 0, nextId: 1 };
+let data = { users: [], records: [], payments: [], deposit: 0, daily_deposits: {}, nextId: 1 };
 
 // ─── Load / Save ─────────────────────────────────────────────
 function load() {
@@ -152,9 +152,102 @@ const payment = {
 };
 
 // ─── Deposit ─────────────────────────────────────────────────
+function today() { return new Date().toISOString().slice(0,10); }
+
+function dayBefore(d) {
+  const dt = new Date(d + 'T00:00:00');
+  dt.setDate(dt.getDate() - 1);
+  return dt.toISOString().slice(0,10);
+}
+
+function dayExpense(d) {
+  return data.records
+    .filter(r => r.date === d)
+    .reduce((s, r) => s + (r.amount || 0), 0);
+}
+
+// sorted list of dates that have any data (records or deposits)
+function activeDates() {
+  const set = new Set();
+  for (const r of data.records) set.add(r.date);
+  for (const d of Object.keys(data.daily_deposits)) set.add(d);
+  return [...set].sort();
+}
+
 const deposit = {
-  get() { return data.deposit || 0; },
-  set(amount) { data.deposit = amount; save(); }
+  // Get today's opening deposit (auto-carry from yesterday)
+  get() {
+    return this.getFor(today());
+  },
+
+  // Get opening deposit for a specific date
+  getFor(date) {
+    // If explicitly set, use it
+    if (data.daily_deposits[date] !== undefined && data.daily_deposits[date] !== null) {
+      return data.daily_deposits[date];
+    }
+    // Auto-calculate: look for the most recent previous day that has data
+    const allDates = activeDates();
+    let lastBalance = 0;
+    for (const d of allDates) {
+      if (d >= date) break;
+      const dep = data.daily_deposits[d] !== undefined ? data.daily_deposits[d] : lastBalance;
+      const exp = dayExpense(d);
+      lastBalance = dep - exp;
+    }
+    return lastBalance;
+  },
+
+  // Set today's opening deposit
+  set(amount) {
+    this.setFor(today(), amount);
+  },
+
+  // Set opening deposit for a specific date
+  setFor(date, amount) {
+    data.daily_deposits[date] = amount;
+    data.deposit = amount;
+    save();
+  },
+
+  // Get expense for a specific date
+  expenseFor(date) {
+    return dayExpense(date);
+  },
+
+  // Get today's expense
+  getTodayExpense() {
+    return dayExpense(today());
+  },
+
+  // Get balance for a specific date
+  balanceFor(date) {
+    return this.getFor(date) - dayExpense(date);
+  },
+
+  // Get today's balance
+  getTodayBalance() {
+    return this.getFor(today()) - dayExpense(today());
+  },
+
+  // Full daily summary: every date with deposit/expense/balance
+  summary() {
+    const dates = activeDates();
+    if (!dates.length) return [];
+
+    let carriedDeposit = 0;
+    const result = [];
+    for (const d of dates) {
+      const opening = data.daily_deposits[d] !== undefined
+        ? data.daily_deposits[d]
+        : carriedDeposit;
+      const expense = dayExpense(d);
+      const balance = opening - expense;
+      result.push({ date: d, deposit: opening, expense, balance });
+      carriedDeposit = balance;
+    }
+    return result.reverse(); // newest first
+  }
 };
 
 // ─── Reports ─────────────────────────────────────────────────

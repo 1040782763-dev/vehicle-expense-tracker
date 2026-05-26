@@ -129,12 +129,13 @@
       <button class="btn btn-outline report-btn" onclick="loadReport('weekly', this)" data-en="Weekly" data-zh="周报">Weekly</button>
       <button class="btn btn-outline report-btn" onclick="loadReport('monthly', this)" data-en="Monthly" data-zh="月报">Monthly</button>
       <button class="btn btn-outline report-btn" onclick="loadReport('yearly', this)" data-en="Yearly" data-zh="年报">Yearly</button>
+      <button class="btn btn-outline report-btn" onclick="loadDailySummary(this)" data-en="Daily Summary" data-zh="每日结算">Daily Summary</button>
       <span style="flex:1"></span>
       <span id="reportTotal" style="font-weight:700;font-size:15px"></span>
     </div>
     <div class="table-wrap">
       <table>
-        <thead>
+        <thead id="reportHead">
           <tr>
             <th data-en="Period" data-zh="周期">Period</th>
             <th data-en="Records" data-zh="记录数">Records</th>
