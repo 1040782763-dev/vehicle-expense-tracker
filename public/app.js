@@ -325,6 +325,7 @@ async function loadRecords() {
     const fCarType = document.getElementById('fCarType').value;
     const fPlate = document.getElementById('fPlate').value;
     const fGuy = document.getElementById('fGuy').value;
+    const fCategory = document.getElementById('fCategory').value;
     const params = new URLSearchParams();
     if (fDateFrom) params.set('date_from', fDateFrom);
     if (fDateTo) params.set('date_to', fDateTo);
@@ -332,6 +333,7 @@ async function loadRecords() {
     if (fCarType) params.set('car_type', fCarType);
     if (fPlate) params.set('plate', fPlate);
     if (fGuy) params.set('used_by', fGuy);
+    if (fCategory) params.set('category', fCategory);
 
     const data = await api('/api/records?' + params.toString());
     renderRecordsData(data);
@@ -345,13 +347,20 @@ function renderRecordsData(data) {
   const tbody = document.getElementById('recordsBody');
   document.getElementById('recordCount').textContent = (lang === 'en' ? 'Records: ' : '记录数: ') + data.length;
   if (!data.length) {
-    tbody.innerHTML = '<tr><td colspan="9" class="no-data">' + t('noRecords') + '</td></tr>';
+    tbody.innerHTML = '<tr><td colspan="10" class="no-data">' + t('noRecords') + '</td></tr>';
     return;
   }
-  tbody.innerHTML = data.map(r => `
+  tbody.innerHTML = data.map(r => {
+    const cat = r.category || 'auto_parts';
+    const catLabel = cat === 'office_supplies'
+      ? (lang === 'en' ? 'Office' : '办公用品')
+      : (lang === 'en' ? 'Auto' : '汽车配件');
+    const catClass = cat === 'office_supplies' ? 'cat-badge-office' : 'cat-badge-auto';
+    return `
     <tr>
       <td class="w-seq text-center">${r.seq || ''}</td>
       <td class="w-date">${formatDate(r.date)}</td>
+      <td class="w-cat text-center"><span class="cat-badge ${catClass}">${catLabel}</span></td>
       <td class="w-desc">${esc(r.description)}</td>
       <td class="w-qty text-center">${esc(r.qty)}</td>
       <td class="w-type">${esc(r.car_type)}</td>
@@ -363,7 +372,19 @@ function renderRecordsData(data) {
         <button class="btn-xs btn-del" onclick="deleteRecord(${r.id})">${lang==='en'?'Del':'删除'}</button>
       </td>
     </tr>
-  `).join('');
+  `}).join('');
+}
+
+function onCategoryChange() {
+  const cat = document.getElementById('mCategory').value;
+  const autoFields = document.getElementById('autoFields');
+  if (cat === 'office_supplies') {
+    autoFields.style.display = 'none';
+    document.getElementById('mCarType').value = '';
+    document.getElementById('mPlate').value = '';
+  } else {
+    autoFields.style.display = '';
+  }
 }
 
 function showRecordModal() {
@@ -371,6 +392,8 @@ function showRecordModal() {
   document.getElementById('recordModalTitle').textContent = t('newRecord');
   document.getElementById('btnSaveRecord').textContent = t('save');
   document.getElementById('mDate').value = new Date().toISOString().slice(0,10);
+  document.getElementById('mCategory').value = 'auto_parts';
+  document.getElementById('autoFields').style.display = '';
   document.getElementById('mDesc').value = '';
   document.getElementById('mQty').value = '';
   document.getElementById('mCarType').value = '';
@@ -419,6 +442,8 @@ async function editRecord(id) {
     document.getElementById('recordModalTitle').textContent = t('editRecord');
     document.getElementById('btnSaveRecord').textContent = t('update');
     document.getElementById('mDate').value = r.date;
+    document.getElementById('mCategory').value = r.category || 'auto_parts';
+    onCategoryChange();
     document.getElementById('mDesc').value = r.description;
     document.getElementById('mQty').value = r.qty;
     document.getElementById('mCarType').value = r.car_type;
@@ -431,6 +456,7 @@ async function editRecord(id) {
 
 async function saveRecord() {
   const date = document.getElementById('mDate').value;
+  const category = document.getElementById('mCategory').value;
   const desc = document.getElementById('mDesc').value.trim();
   const qty = document.getElementById('mQty').value.trim();
   const carType = document.getElementById('mCarType').value.trim();
@@ -440,11 +466,25 @@ async function saveRecord() {
 
   if (!date) { alert(lang === 'en' ? 'Date is required' : '请选择日期'); return; }
   if (!desc) { alert(lang === 'en' ? 'Description is required' : '请填写描述'); return; }
-  if (!plate) { alert(lang === 'en' ? 'Plate No. is required' : '请填写车牌号'); return; }
+  if (category === 'auto_parts') {
+    if (!carType) { alert(lang === 'en' ? 'Car Type is required' : '请填写车型'); return; }
+    if (!plate) { alert(lang === 'en' ? 'Plate No. is required' : '请填写车牌号'); return; }
+  }
   if (!amount) { alert(lang === 'en' ? 'Amount is required' : '请填写金额'); return; }
   if (!guy) { alert(lang === 'en' ? 'Used By is required' : '请填写使用人'); return; }
 
-  const body = { date, description: desc, qty, car_type: carType, plate_number: plate, amount, used_by: guy };
+  // Description specificity check
+  const upperDesc = desc.toUpperCase();
+  const alternatives = findSpecificAlternatives(upperDesc);
+  if (alternatives.length > 0) {
+    const list = alternatives.slice(0, 8).map(a => a).join('\n');
+    const msg = (lang === 'en'
+      ? '⚠ "' + desc + '" is too generic.\n\nDid you mean one of these?\n\n' + list + '\n\n[OK] Save anyway   [Cancel] Go back to edit'
+      : '⚠ "' + desc + '" 太过泛指。\n\n您是否指以下具体零件？\n\n' + list + '\n\n[确定] 仍然保存   [取消] 返回修改');
+    if (!confirm(msg)) return;
+  }
+
+  const body = { date, category, description: desc, qty, car_type: carType, plate_number: plate, amount, used_by: guy };
 
   try {
     if (editingRecordId) {
@@ -455,6 +495,21 @@ async function saveRecord() {
     closeModal('recordModal');
     loadRecords();
   } catch(e) { alert(e.message); }
+}
+
+// Find specific alternatives from PARTS_MASTER for a generic term
+function findSpecificAlternatives(term) {
+  if (!term || term.length < 3) return [];
+  const results = [];
+  for (const key of Object.keys(PARTS_ZH)) {
+    if (key === term) continue; // skip exact match
+    if (key.includes(term) && key.length > term.length + 1) {
+      const t = PARTS_ZH[key];
+      const zh = typeof t === 'string' ? t : (t.zh || '');
+      results.push(zh ? key + ' | ' + zh : key);
+    }
+  }
+  return results.sort((a, b) => a.length - b.length);
 }
 
 async function deleteRecord(id) {

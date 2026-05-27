@@ -109,6 +109,7 @@ const record = {
     if (filters.car_type)  result = result.filter(r => (r.car_type || '').toLowerCase().includes(filters.car_type.toLowerCase()));
     if (filters.plate)     result = result.filter(r => (r.plate_number || '').toLowerCase().includes(filters.plate.toLowerCase()));
     if (filters.used_by)   result = result.filter(r => (r.used_by || '').toLowerCase().includes(filters.used_by.toLowerCase()));
+    if (filters.category)  result = result.filter(r => (r.category || 'auto_parts') === filters.category);
     if (filters.date_from) result = result.filter(r => r.date >= filters.date_from);
     if (filters.date_to)   result = result.filter(r => r.date <= filters.date_to);
     result.sort((a, b) => b.date.localeCompare(a.date) || b.id - a.id);
@@ -117,7 +118,8 @@ const record = {
 
   create(d) {
     const maxSeq = data.records.reduce((max, r) => Math.max(max, r.seq || 0), 0);
-    const r = { id: nextId(), seq: maxSeq + 1, date: d.date, description: d.description || '', qty: d.qty || '',
+    const r = { id: nextId(), seq: maxSeq + 1, date: d.date, category: d.category || 'auto_parts',
+                description: d.description || '', qty: d.qty || '',
                 car_type: d.car_type || '', plate_number: d.plate_number || '',
                 amount: Number(d.amount) || 0, used_by: d.used_by || '',
                 created_by: d.created_by || '',
@@ -130,7 +132,7 @@ const record = {
   update(id, d) {
     const r = data.records.find(x => x.id === Number(id));
     if (!r) return null;
-    const fields = ['date','description','qty','car_type','plate_number','amount','used_by'];
+    const fields = ['date','category','description','qty','car_type','plate_number','amount','used_by'];
     for (const f of fields) if (d[f] !== undefined) r[f] = d[f];
     r.updated_at = new Date().toISOString();
     save();
