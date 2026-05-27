@@ -884,8 +884,86 @@ function buildInvPrintView() {
 }
 
 function printInvoice() {
-  buildInvPrintView();
-  window.print();
+  const data = getInvFormData();
+  const items = data.items.length > 0 ? data.items : [];
+  const rows = Math.max(items.length, 5);
+
+  // Calculate total
+  let total = 0;
+  let rowsHtml = '';
+  for (let i = 0; i < rows; i++) {
+    const item = items[i] || {};
+    const c = item.cost ? Number(item.cost).toLocaleString('en-US') : '';
+    const l = item.labor ? Number(item.labor).toLocaleString('en-US') : '';
+    const amt = Number(item.amount) || Number(item.qty||0)*Number(item.cost||0)+Number(item.labor||0) || 0;
+    total += amt;
+    const a = amt > 0 ? amt.toLocaleString('en-US') : '';
+    rowsHtml += `<tr>
+      <td>${i+1}</td><td style="text-align:left">${esc(item.name||'')}</td><td>${esc(item.unit||'')}</td>
+      <td>${esc(item.qty||'')}</td><td style="text-align:right">${c}</td>
+      <td style="text-align:right">${l}</td><td style="text-align:right">${a}</td>
+      <td style="text-align:left">${esc(item.remark||'')}</td></tr>`;
+  }
+
+  const html = `<!DOCTYPE html><html lang="zh"><head><meta charset="utf-8"><title>PROFORMA INVOICE</title>
+  <style>
+    @page{size:A5;margin:5mm}
+    body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Microsoft YaHei",sans-serif;padding:0;margin:0;background:#fff}
+    .print-wrap{border:1.5px solid #000;padding:8px;max-width:100%}
+    .print-title{text-align:center;font-size:16pt;font-weight:700;padding:8px 0 4px 0;letter-spacing:1px}
+    .print-subtitle{text-align:center;font-size:10pt;padding-bottom:6px;border-bottom:1.5px solid #000}
+    .print-info{padding:4px 0;font-size:9pt}
+    .print-line{display:flex;margin-bottom:1px}
+    .print-label{width:105px;font-weight:600}
+    .print-val{flex:1;border-bottom:1px dotted #999}
+    table{width:100%;border-collapse:collapse;margin-top:6px}
+    th{border:.5px solid #000;padding:3px 2px;font-size:7pt;text-align:center;font-weight:600}
+    td{border:.5px solid #000;padding:3px 2px;font-size:8pt;text-align:center}
+    .print-footer{margin-top:8px;font-size:9pt}
+    .print-eng{padding:3px 0;font-size:8pt}
+    .print-total-line{display:flex;justify-content:flex-end;align-items:center;padding:4px 0;border-top:1px solid #000;border-bottom:1px solid #000;gap:10px}
+    .print-total-label{font-weight:600;font-size:9pt}
+    .print-total-value{font-weight:700;font-size:11pt}
+    .print-bank{font-size:7pt;padding:6px 0;line-height:1.5}
+    .print-stamp{text-align:right;padding-top:15px;font-size:9pt;font-weight:600}
+  </style></head><body>
+  <div class="print-wrap">
+    <div class="print-title">HOPE CAR SERVICE CO LIMITED</div>
+    <div class="print-subtitle">◆ PROFORMA INVOICE / 车辆维修单据 ◆</div>
+    <div class="print-info">
+      <div class="print-line"><span class="print-label">ORDER NO / 单号：</span><span class="print-val">${esc(data.orderNo||'')}</span></div>
+      <div class="print-line"><span class="print-label">CLIENT NAME / 客户：</span><span class="print-val">${esc(data.customer||'')}</span></div>
+      <div class="print-line"><span class="print-label">PLATE NUMBER / 车牌号：</span><span class="print-val">${esc(data.plate||'')}</span></div>
+      <div class="print-line"><span class="print-label">REMARK / 备注：</span><span class="print-val">${esc(data.remark||'')}</span></div>
+      <div class="print-line"><span class="print-label">DATE / 日期：</span><span class="print-val">${esc(data.date||'')}</span></div>
+    </div>
+    <table>
+      <thead>
+        <tr><th>S/N</th><th style="text-align:left">ITEAM</th><th>UNIT</th><th>QTY</th><th>COST (TZS)</th><th>LABOR (TZS)</th><th>AMOUNT (TZS)</th><th style="text-align:left">REMARK</th></tr>
+      </thead>
+      <tbody>${rowsHtml}</tbody>
+    </table>
+    <div class="print-footer">
+      <div class="print-eng">AMOUNT IN WORDS：<strong>${numToEnglish(total)}</strong></div>
+      <div class="print-total-line">
+        <span class="print-total-label">TOTAL AMOUNT (TZS) / 总金额（坦桑先令）：</span>
+        <span class="print-total-value">${total.toLocaleString('en-US')}</span>
+      </div>
+      <div class="print-bank">
+        TIN: 172-676-952<br>
+        ACCOUNT NAME: HOPE CAR SERVICE CO LIMITED<br>
+        ACCOUNT NO: 01500004GKA00<br>
+        CRDB PUGU BRANCH
+      </div>
+      <div class="print-stamp">STAMP / 盖章处</div>
+    </div>
+  </div>
+  <script>window.print();<\/script>
+  </body></html>`;
+
+  const w = window.open('', '_blank', 'width=850,height=700');
+  w.document.write(html);
+  w.document.close();
 }
 
 function exportInvoice() {
