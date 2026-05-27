@@ -220,8 +220,7 @@ const invoice = {
         unit: item.unit || '',
         qty: item.qty || '',
         cost: item.cost || '',
-        labor: item.labor || '',
-        amount: item.amount || (item.qty && item.cost ? (parseFloat(String(item.qty||'').replace(/,/g,'')) * parseFloat(String(item.cost||'').replace(/,/g,'')) + parseFloat(String(item.labor||'').replace(/,/g,''))).toString() : ''),
+        amount: item.amount || (item.qty && item.cost ? (parseFloat(String(item.qty||'').replace(/,/g,'')) * parseFloat(String(item.cost||'').replace(/,/g,''))).toString() : ''),
         remark: item.remark || ''
       })),
       created_by: d.created_by || '',
@@ -245,8 +244,7 @@ const invoice = {
         unit: item.unit || '',
         qty: item.qty || '',
         cost: item.cost || '',
-        labor: item.labor || '',
-        amount: item.amount || (item.qty && item.cost ? (parseFloat(String(item.qty||'').replace(/,/g,'')) * parseFloat(String(item.cost||'').replace(/,/g,'')) + parseFloat(String(item.labor||'').replace(/,/g,''))).toString() : ''),
+        amount: item.amount || (item.qty && item.cost ? (parseFloat(String(item.qty||'').replace(/,/g,'')) * parseFloat(String(item.cost||'').replace(/,/g,''))).toString() : ''),
         remark: item.remark || ''
       }));
     }

@@ -721,7 +721,6 @@ function buildInvTable() {
       <td><input class="inv-inp-unit" data-invrow="${i}" data-invfield="unit" placeholder=""></td>
       <td><input class="inv-inp-qty" data-invrow="${i}" data-invfield="qty" type="number" step="1" placeholder="1" oninput="calcInvRow(${i});calcInvTotals()"></td>
       <td><input class="inv-inp-cost" data-invrow="${i}" data-invfield="cost" type="number" step="0.01" placeholder="0" oninput="calcInvRow(${i});calcInvTotals()"></td>
-      <td><input class="inv-inp-labor" data-invrow="${i}" data-invfield="labor" type="number" step="0.01" placeholder="0" oninput="calcInvRow(${i});calcInvTotals()"></td>
       <td><input class="inv-inp-amount" data-invrow="${i}" data-invfield="amount" type="text" placeholder="0" readonly></td>
       <td><input class="inv-inp-remark" data-invrow="${i}" data-invfield="remark" placeholder=""></td>
     </tr>`;
@@ -757,14 +756,13 @@ function calcInvTotals() {
     if (name === 'VAT') { vatRow = i; break; }
   }
 
-  // Calculate non-VAT rows and update their AMOUNT: QTY × COST + LABOR
+  // Calculate non-VAT rows: AMOUNT = QTY × COST
   let nonVatTotal = 0;
   for (let i = 1; i <= INV_TOTAL_ROWS; i++) {
     if (i === vatRow) continue;
     const qty = parseNum(document.querySelector('[data-invrow="'+i+'"][data-invfield="qty"]').value);
     const cost = parseNum(document.querySelector('[data-invrow="'+i+'"][data-invfield="cost"]').value);
-    const labor = parseNum(document.querySelector('[data-invrow="'+i+'"][data-invfield="labor"]').value);
-    const amt = qty * cost + labor;
+    const amt = qty * cost;
     document.querySelector('[data-invrow="'+i+'"][data-invfield="amount"]').value = amt > 0 ? amt : '';
     nonVatTotal += amt;
   }
@@ -790,10 +788,9 @@ function getInvFormData() {
     const unit = document.querySelector('[data-invrow="'+i+'"][data-invfield="unit"]').value.trim();
     const qty = document.querySelector('[data-invrow="'+i+'"][data-invfield="qty"]').value.trim();
     const cost = document.querySelector('[data-invrow="'+i+'"][data-invfield="cost"]').value.trim();
-    const labor = document.querySelector('[data-invrow="'+i+'"][data-invfield="labor"]').value.trim();
     const amount = document.querySelector('[data-invrow="'+i+'"][data-invfield="amount"]').value.trim();
     const remark = document.querySelector('[data-invrow="'+i+'"][data-invfield="remark"]').value.trim();
-    if (name) items.push({ name, unit, qty, cost, labor, amount, remark });
+    if (name) items.push({ name, unit, qty, cost, amount, remark });
   }
   return {
     orderNo: document.getElementById('invOrderNo').value,
@@ -813,7 +810,7 @@ function setInvFormData(data) {
   document.getElementById('invRemark').value = data.remark || '';
   // Clear all rows
   for (let i = 1; i <= INV_TOTAL_ROWS; i++) {
-    ['name','unit','qty','cost','labor','amount','remark'].forEach(f => {
+    ['name','unit','qty','cost','amount','remark'].forEach(f => {
       document.querySelector('[data-invrow="'+i+'"][data-invfield="'+f+'"]').value = '';
     });
   }
@@ -826,7 +823,6 @@ function setInvFormData(data) {
         document.querySelector('[data-invrow="'+i+'"][data-invfield="unit"]').value = item.unit || '';
         document.querySelector('[data-invrow="'+i+'"][data-invfield="qty"]').value = item.qty || '';
         document.querySelector('[data-invrow="'+i+'"][data-invfield="cost"]').value = item.cost || '';
-        document.querySelector('[data-invrow="'+i+'"][data-invfield="labor"]').value = item.labor || '';
         document.querySelector('[data-invrow="'+i+'"][data-invfield="amount"]').value = item.amount || '';
         document.querySelector('[data-invrow="'+i+'"][data-invfield="remark"]').value = item.remark || '';
       }
@@ -841,7 +837,7 @@ async function autoFillInvoice() {
   // Clear items when plate is cleared
   if (!plate) {
     for (let i = 1; i <= INV_TOTAL_ROWS; i++) {
-      ['name','unit','qty','cost','labor','amount','remark'].forEach(f => {
+      ['name','unit','qty','cost','amount','remark'].forEach(f => {
         document.querySelector('[data-invrow="'+i+'"][data-invfield="'+f+'"]').value = '';
       });
     }
@@ -944,7 +940,7 @@ async function renderInvSavedList() {
     // Client-side search filter
     if (search) {
       data = data.filter(inv => {
-        const total = (inv.items || []).reduce((s, it) => s + (Number(it.amount) || Number(it.qty||0)*Number(it.cost||0)+Number(it.labor||0) || 0), 0);
+        const total = (inv.items || []).reduce((s, it) => s + (Number(it.amount) || (Number(it.qty)||0)*(Number(it.cost)||0) || 0), 0);
         return (inv.orderNo||'').toLowerCase().includes(search) ||
                (inv.plate||'').toLowerCase().includes(search) ||
                (inv.customer||'').toLowerCase().includes(search) ||
@@ -958,7 +954,7 @@ async function renderInvSavedList() {
       return;
     }
     container.innerHTML = recent.map(inv => {
-      const total = (inv.items || []).reduce((s, it) => s + (Number(it.amount) || Number(it.qty||0)*Number(it.cost||0)+Number(it.labor||0) || 0), 0);
+      const total = (inv.items || []).reduce((s, it) => s + (Number(it.amount) || (Number(it.qty)||0)*(Number(it.cost)||0) || 0), 0);
       return `<div class="inv-saved-item" onclick="loadInvoiceById(${inv.id})">
         <div class="inv-si-info">
           <div class="inv-si-plate">🚗 ${esc(inv.plate||'No Plate')} | ${esc(inv.orderNo||'')}</div>
@@ -977,7 +973,7 @@ function newInvoice() {
   invCurrentId = null;
   invInited = true; // keep table, just clear inputs
   for (let i = 1; i <= INV_TOTAL_ROWS; i++) {
-    ['name','unit','qty','cost','labor','amount','remark'].forEach(f => {
+    ['name','unit','qty','cost','amount','remark'].forEach(f => {
       document.querySelector('[data-invrow="'+i+'"][data-invfield="'+f+'"]').value = '';
     });
   }
@@ -1006,14 +1002,13 @@ function buildInvPrintView() {
   for (let i = 0; i < rows; i++) {
     const item = items[i] || {};
     const c = item.cost ? Number(item.cost).toLocaleString('en-US') : '';
-    const l = item.labor ? Number(item.labor).toLocaleString('en-US') : '';
-    const amt = parseNum(item.qty) * parseNum(item.cost) + parseNum(item.labor);
+    const amt = parseNum(item.qty) * parseNum(item.cost);
     total += amt;
     const a = amt > 0 ? amt.toLocaleString('en-US') : '';
     tbody.innerHTML += `<tr>
       <td>${i+1}</td><td style="text-align:left">${esc(item.name||'')}</td><td>${esc(item.unit||'')}</td>
       <td>${esc(item.qty||'')}</td><td style="text-align:right">${c}</td>
-      <td style="text-align:right">${l}</td><td style="text-align:right">${a}</td>
+      <td style="text-align:right">${a}</td>
       <td style="text-align:left">${esc(item.remark||'')}</td></tr>`;
   }
   document.getElementById('printTotal').textContent = total.toLocaleString('en-US');
@@ -1031,14 +1026,13 @@ function printInvoice() {
   for (let i = 0; i < rows; i++) {
     const item = items[i] || {};
     const c = item.cost ? Number(item.cost).toLocaleString('en-US') : '';
-    const l = item.labor ? Number(item.labor).toLocaleString('en-US') : '';
-    const amt = parseNum(item.qty) * parseNum(item.cost) + parseNum(item.labor);
+    const amt = parseNum(item.qty) * parseNum(item.cost);
     total += amt;
     const a = amt > 0 ? amt.toLocaleString('en-US') : '';
     rowsHtml += `<tr>
       <td>${i+1}</td><td style="text-align:left">${esc(item.name||'')}</td><td>${esc(item.unit||'')}</td>
       <td>${esc(item.qty||'')}</td><td style="text-align:right">${c}</td>
-      <td style="text-align:right">${l}</td><td style="text-align:right">${a}</td>
+      <td style="text-align:right">${a}</td>
       <td style="text-align:left">${esc(item.remark||'')}</td></tr>`;
   }
 
@@ -1076,7 +1070,7 @@ function printInvoice() {
     </div>
     <table>
       <thead>
-        <tr><th>S/N</th><th style="text-align:left">ITEAM</th><th>UNIT</th><th>QTY</th><th>COST (TZS)</th><th>LABOR (TZS)</th><th>AMOUNT (TZS)</th><th style="text-align:left">REMARK</th></tr>
+        <tr><th>S/N</th><th style="text-align:left">ITEAM</th><th>UNIT</th><th>QTY</th><th>COST (TZS)</th><th>AMOUNT (TZS)</th><th style="text-align:left">REMARK</th></tr>
       </thead>
       <tbody>${rowsHtml}</tbody>
     </table>
