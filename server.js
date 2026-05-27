@@ -110,6 +110,42 @@ app.get('/api/parts-master', (req, res) => {
   res.json(PARTS_MASTER);
 });
 
+// Translation fallback via MyMemory (free, no API key)
+function translateViaMyMemory(text, langPair) {
+  return new Promise((resolve) => {
+    const url = `https://api.mymemory.translated.net/get?q=${encodeURIComponent(text)}&langpair=${encodeURIComponent(langPair)}`;
+    const https = require('https');
+    https.get(url, (resp) => {
+      let data = '';
+      resp.on('data', chunk => data += chunk);
+      resp.on('end', () => {
+        try {
+          const json = JSON.parse(data);
+          resolve(json.responseData && json.responseData.translatedText || '');
+        } catch { resolve(''); }
+      });
+    }).on('error', () => resolve(''));
+  });
+}
+
+app.get('/api/translate', authRequired, async (req, res) => {
+  const term = (req.query.term || '').trim();
+  if (!term) return res.json({ translation: '' });
+
+  const upper = term.toUpperCase();
+
+  // 1. Local master dictionary
+  const entry = PARTS_MASTER[upper];
+  if (entry) {
+    const t = typeof entry === 'string' ? entry : (entry.zh || '');
+    return res.json({ translation: t });
+  }
+
+  // 2. MyMemory API fallback (EN → ZH)
+  const translated = await translateViaMyMemory(term, 'en|zh-CN');
+  res.json({ translation: translated || '' });
+});
+
 app.get('/api/users', authRequired, (req, res) => {
   if (req.user.role !== 'admin') return res.status(403).json({ error: 'Admin only' });
   res.json(user.list());

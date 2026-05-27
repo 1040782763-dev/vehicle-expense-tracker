@@ -627,29 +627,50 @@ async function loadPartsMaster() {
   }
 }
 
-// Get translation string from dict entry (supports both legacy string and new {zh,sw} format)
+// In-memory cache for API-translated terms (avoid re-fetching)
+const TRANSLATION_CACHE = {};
+
 function getZh(entry) {
   if (!entry) return '';
   if (typeof entry === 'string') return entry;
   return entry.zh || entry.sw || '';
 }
 
-function translatePart(name, lang) {
+async function translatePart(name, lang) {
   lang = lang || 'zh';
   const upper = (name || '').trim().toUpperCase();
+  if (!upper) return name;
+
+  // 1. Local dictionary — exact match
   const entry = PARTS_ZH[upper];
   if (entry) {
     const t = typeof entry === 'string' ? entry : (entry[lang] || entry.zh || '');
     return t ? name + ' | ' + t : name;
   }
-  // Try partial match
+
+  // 2. Local dictionary — partial match
   for (const [en, val] of Object.entries(PARTS_ZH)) {
     if (upper.includes(en)) {
       const t = typeof val === 'string' ? val : (val[lang] || val.zh || '');
       return t ? name + ' | ' + t : name;
     }
   }
-  return name;
+
+  // 3. In-memory cache (previous API lookups)
+  if (TRANSLATION_CACHE[upper] !== undefined) {
+    return TRANSLATION_CACHE[upper] ? name + ' | ' + TRANSLATION_CACHE[upper] : name;
+  }
+
+  // 4. Server-side API fallback (MyMemory)
+  try {
+    const resp = await api('/api/translate?term=' + encodeURIComponent(upper));
+    const t = (resp && resp.translation) || '';
+    TRANSLATION_CACHE[upper] = t;
+    return t ? name + ' | ' + t : name;
+  } catch (e) {
+    TRANSLATION_CACHE[upper] = '';
+    return name;
+  }
 }
 
 // ─── Invoice ───────────────────────────────────────────────────
@@ -926,15 +947,17 @@ async function autoFillInvoice() {
     });
 
     const parts = [...new Set(records.map(r => r.description).filter(Boolean))];
-    parts.slice(0, INV_TOTAL_ROWS).forEach((p, idx) => {
+    const topParts = parts.slice(0, INV_TOTAL_ROWS);
+    for (let idx = 0; idx < topParts.length; idx++) {
+      const p = topParts[idx];
       const i = idx + 1;
-      document.querySelector('[data-invrow="'+i+'"][data-invfield="name"]').value = translatePart(p);
+      document.querySelector('[data-invrow="'+i+'"][data-invfield="name"]').value = await translatePart(p);
       // Auto-fill cost_price from expense records
       const cp = costMap[p.toUpperCase().trim()];
       if (cp) {
         document.querySelector('[data-invrow="'+i+'"][data-invfield="cost_price"]').value = cp;
       }
-    });
+    }
     calcInvTotals();
   } catch(e) { /* ignore */ }
 }
