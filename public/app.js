@@ -252,8 +252,9 @@ function esc(v) { if (!v && v !== 0) return ''; return String(v).replace(/&/g,'&
 // ─── Deposit ──────────────────────────────────────────────────
 async function loadDeposit() {
   try {
-    const fDate = document.getElementById('fDate').value;
-    const date = fDate || new Date().toISOString().slice(0,10);
+    const fDateTo = document.getElementById('fDateTo').value;
+    const fDateFrom = document.getElementById('fDateFrom').value;
+    const date = fDateTo || fDateFrom || new Date().toISOString().slice(0,10);
     const data = await api('/api/deposit?date=' + date);
     document.getElementById('sumDeposit').textContent = formatNum(data.amount);
     document.getElementById('sumExpense').textContent = formatNum(data.expense);
@@ -267,8 +268,9 @@ function showDepositModal() {
   document.getElementById('dCurrent').value = formatNum(document.getElementById('sumDeposit').textContent.replace(/,/g,''));
   document.getElementById('dOp').value = 'set';
   document.getElementById('dAmount').value = '';
-  const fDate = document.getElementById('fDate').value;
-  document.getElementById('dDate').value = fDate || new Date().toISOString().slice(0,10);
+  const fDateTo = document.getElementById('fDateTo').value;
+  const fDateFrom = document.getElementById('fDateFrom').value;
+  document.getElementById('dDate').value = fDateTo || fDateFrom || new Date().toISOString().slice(0,10);
   document.getElementById('depositModal').classList.add('active');
   applyLang();
 }
@@ -291,13 +293,15 @@ async function updateDeposit() {
 // ─── Records ──────────────────────────────────────────────────
 async function loadRecords() {
   try {
-    const fDate = document.getElementById('fDate').value;
+    const fDateFrom = document.getElementById('fDateFrom').value;
+    const fDateTo = document.getElementById('fDateTo').value;
     const fDesc = document.getElementById('fDesc').value;
     const fCarType = document.getElementById('fCarType').value;
     const fPlate = document.getElementById('fPlate').value;
     const fGuy = document.getElementById('fGuy').value;
     const params = new URLSearchParams();
-    if (fDate) params.set('date', fDate);
+    if (fDateFrom) params.set('date_from', fDateFrom);
+    if (fDateTo) params.set('date_to', fDateTo);
     if (fDesc) params.set('desc', fDesc);
     if (fCarType) params.set('car_type', fCarType);
     if (fPlate) params.set('plate', fPlate);
@@ -643,7 +647,8 @@ async function exportCSV() {
       car_type: document.getElementById('fCarType').value,
       plate: document.getElementById('fPlate').value,
       used_by: document.getElementById('fGuy').value,
-      date: document.getElementById('fDate').value,
+      date_from: document.getElementById('fDateFrom').value,
+      date_to: document.getElementById('fDateTo').value,
     }).toString());
     const header = 'Date,Description,QTY,Car Type,Plate Number,Amount,Used By';
     const rows = data.map(r =>
