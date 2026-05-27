@@ -733,7 +733,7 @@ function onInvNameChange(row) {
   const nameEl = document.querySelector('[data-invrow="'+row+'"][data-invfield="name"]');
   const name = (nameEl.value || '').toUpperCase().trim();
   // VAT detection: auto-set QTY to 0.18
-  if (name === 'VAT' || name.includes('VAT')) {
+  if (name === 'VAT') {
     document.querySelector('[data-invrow="'+row+'"][data-invfield="qty"]').value = '0.18';
   }
   calcInvTotals();
@@ -743,7 +743,7 @@ function calcInvRow(row) {
   // Just updates this row's AMOUNT instantly; VAT handled in calcInvTotals
   const nameEl = document.querySelector('[data-invrow="'+row+'"][data-invfield="name"]');
   const name = (nameEl.value || '').toUpperCase().trim();
-  if (name === 'VAT' || name.includes('VAT')) {
+  if (name === 'VAT') {
     document.querySelector('[data-invrow="'+row+'"][data-invfield="qty"]').value = '0.18';
   }
   calcInvTotals(); // let calcInvTotals handle everything
@@ -754,7 +754,7 @@ function calcInvTotals() {
   let vatRow = -1;
   for (let i = 1; i <= INV_TOTAL_ROWS; i++) {
     const name = (document.querySelector('[data-invrow="'+i+'"][data-invfield="name"]').value || '').toUpperCase().trim();
-    if (name === 'VAT' || name.includes('VAT')) { vatRow = i; break; }
+    if (name === 'VAT') { vatRow = i; break; }
   }
 
   // Calculate non-VAT rows and update their AMOUNT: QTY × COST + LABOR
