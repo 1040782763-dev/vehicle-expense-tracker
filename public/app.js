@@ -522,7 +522,7 @@ async function syncPayments() {
   } catch(e) { alert(e.message); }
 }
 
-function showPaymentModal() {
+async function showPaymentModal() {
   editingPaymentId = null;
   document.getElementById('paymentModalTitle').textContent = t('newPayment');
   document.getElementById('btnSavePayment').textContent = t('save');
@@ -534,6 +534,18 @@ function showPaymentModal() {
   document.getElementById('mPAmount').value = '';
   document.getElementById('mPNotes').value = '';
   document.getElementById('paymentModal').classList.add('active');
+
+  // Auto-populate plate list from records and payments
+  try {
+    const [records, payments] = await Promise.all([
+      api('/api/records?limit=9999'),
+      api('/api/payments')
+    ]);
+    const plates = new Set();
+    (records || []).forEach(r => { if (r.plate_number) plates.add(r.plate_number.toUpperCase()); });
+    (payments || []).forEach(p => { if (p.plate_number) plates.add(p.plate_number.toUpperCase()); });
+    document.getElementById('dlPPlate').innerHTML = [...plates].sort().map(p => `<option value="${p}">`).join('');
+  } catch(e) { /* ignore */ }
 }
 
 async function editPayment(id) {
@@ -1242,33 +1254,41 @@ async function loadProfitReport(group, btn) {
     const data = await api('/api/reports/profit?group=' + group);
     document.getElementById('reportHead').innerHTML = `<tr>
       <th>${group === 'monthly' ? (lang === 'en' ? 'Month' : '月份') : (lang === 'en' ? 'Plate No.' : '车牌号')}</th>
-      <th style="text-align:right">${lang === 'en' ? 'Revenue (TZS)' : '收入（坦桑先令）'}</th>
-      <th style="text-align:right">${lang === 'en' ? 'Cost (TZS)' : '成本（坦桑先令）'}</th>
-      <th style="text-align:right">${lang === 'en' ? 'Profit (TZS)' : '毛利（坦桑先令）'}</th>
+      <th style="text-align:right">${lang === 'en' ? 'Gross Rev (TZS)' : '总收入'}</th>
+      <th style="text-align:right">${lang === 'en' ? 'VAT 18% (TZS)' : '增值税18%'}</th>
+      <th style="text-align:right">${lang === 'en' ? 'Net Rev (TZS)' : '净收入'}</th>
+      <th style="text-align:right">${lang === 'en' ? 'Cost (TZS)' : '成本'}</th>
+      <th style="text-align:right">${lang === 'en' ? 'Profit (TZS)' : '毛利'}</th>
       <th style="text-align:center">${lang === 'en' ? 'Margin %' : '毛利率'}</th>
     </tr>`;
 
-    let totalRevenue = 0, totalCost = 0, totalProfit = 0;
+    let totalGross = 0, totalVat = 0, totalNet = 0, totalCost = 0, totalProfit = 0;
     document.getElementById('reportsBody').innerHTML = data.map(r => {
-      totalRevenue += r.revenue;
+      totalGross += r.grossRevenue;
+      totalVat += r.vat;
+      totalNet += r.netRevenue;
       totalCost += r.cost;
       totalProfit += r.profit;
       const marginColor = r.margin >= 20 ? 'var(--green)' : r.margin >= 0 ? 'var(--orange)' : 'var(--danger)';
       return `<tr>
         <td>${esc(r.key)}</td>
-        <td class="w-amt text-right">${formatNum(r.revenue)}</td>
+        <td class="w-amt text-right">${formatNum(r.grossRevenue)}</td>
+        <td class="w-amt text-right" style="color:var(--orange)">${formatNum(r.vat)}</td>
+        <td class="w-amt text-right">${formatNum(r.netRevenue)}</td>
         <td class="w-amt text-right">${formatNum(r.cost)}</td>
         <td class="w-amt text-right" style="color:${r.profit >= 0 ? 'var(--green)' : 'var(--danger)'}">${formatNum(r.profit)}</td>
         <td class="text-center" style="font-weight:600;color:${marginColor}">${r.margin}%</td>
       </tr>`;
     }).join('');
 
-    const overallMargin = totalRevenue > 0 ? ((totalProfit / totalRevenue) * 100).toFixed(1) : '0.0';
+    const overallMargin = totalNet > 0 ? ((totalProfit / totalNet) * 100).toFixed(1) : '0.0';
     document.getElementById('reportTotal').innerHTML = `
-      <span>${lang === 'en' ? 'Revenue:' : '收入:'} ${formatNum(totalRevenue)}</span>
-      <span style="margin-left:12px">${lang === 'en' ? 'Cost:' : '成本:'} ${formatNum(totalCost)}</span>
-      <span style="margin-left:12px;color:var(--green)">${lang === 'en' ? 'Profit:' : '毛利:'} ${formatNum(totalProfit)}</span>
-      <span style="margin-left:12px;color:var(--blue)">${lang === 'en' ? 'Margin:' : '毛利率:'} ${overallMargin}%</span>
+      <span>${lang === 'en' ? 'Gross:' : '总收入:'} ${formatNum(totalGross)}</span>
+      <span style="margin-left:8px;color:var(--orange)">${lang === 'en' ? 'VAT:' : '增值税:'} ${formatNum(totalVat)}</span>
+      <span style="margin-left:8px">${lang === 'en' ? 'Net:' : '净收入:'} ${formatNum(totalNet)}</span>
+      <span style="margin-left:8px">${lang === 'en' ? 'Cost:' : '成本:'} ${formatNum(totalCost)}</span>
+      <span style="margin-left:8px;color:var(--green)">${lang === 'en' ? 'Profit:' : '毛利:'} ${formatNum(totalProfit)}</span>
+      <span style="margin-left:8px;color:var(--blue)">${lang === 'en' ? 'Margin:' : '毛利率:'} ${overallMargin}%</span>
     `;
     applyLang();
   } catch(e) { /* ignore */ }

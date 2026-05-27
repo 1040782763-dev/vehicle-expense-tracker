@@ -408,8 +408,9 @@ const report = {
   },
 
   // Profit margin analysis: revenue (paid payments) vs cost (expenses)
+  // VAT (18%) is included in payment revenue; net revenue = revenue / 1.18
   profit(groupBy = 'monthly') {
-    // Revenue from paid payments
+    // Revenue from paid payments (gross, includes 18% VAT)
     const revenueMap = {};
     for (const p of data.payments) {
       if (p.status !== 'paid' || !p.amount) continue;
@@ -430,14 +431,16 @@ const report = {
       costMap[key] = (costMap[key] || 0) + (r.amount || 0);
     }
 
-    // Merge and calculate profit
+    // Merge and calculate profit (with VAT deduction)
     const allKeys = [...new Set([...Object.keys(revenueMap), ...Object.keys(costMap)])].sort();
     const result = allKeys.map(key => {
-      const revenue = revenueMap[key] || 0;
+      const grossRevenue = revenueMap[key] || 0;
       const cost = costMap[key] || 0;
-      const profit = revenue - cost;
-      const margin = revenue > 0 ? ((profit / revenue) * 100).toFixed(1) : '0.0';
-      return { key, revenue, cost, profit, margin: Number(margin) };
+      const vat = Math.round(grossRevenue * 18 / 118); // 18% VAT included in gross
+      const netRevenue = grossRevenue - vat;
+      const profit = netRevenue - cost;
+      const margin = netRevenue > 0 ? ((profit / netRevenue) * 100).toFixed(1) : '0.0';
+      return { key, grossRevenue, vat, netRevenue, cost, profit, margin: Number(margin) };
     });
 
     if (groupBy === 'monthly') return result.reverse();
