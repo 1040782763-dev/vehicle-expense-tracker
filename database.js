@@ -8,7 +8,7 @@ const bcrypt = require('bcryptjs');
 const DB_PATH = path.join(__dirname, 'data.json');
 
 // In-memory data
-let data = { users: [], records: [], payments: [], deposit: 0, daily_deposits: {}, nextId: 1 };
+let data = { users: [], records: [], payments: [], invoices: [], deposit: 0, daily_deposits: {}, nextId: 1 };
 
 // ─── Load / Save ─────────────────────────────────────────────
 function load() {
@@ -18,6 +18,7 @@ function load() {
       data = JSON.parse(raw);
       if (!data.nextId) data.nextId = 1;
       if (!data.payments) data.payments = [];
+      if (!data.invoices) data.invoices = [];
       if (data.deposit === undefined) data.deposit = 0;
     }
   } catch (e) { /* keep defaults */ }
@@ -170,6 +171,101 @@ const payment = {
   }
 };
 
+// ─── Invoices ────────────────────────────────────────────────
+const invoice = {
+  list(filters = {}) {
+    let result = [...data.invoices];
+    if (filters.plate)  result = result.filter(p => (p.plate || '').toLowerCase().includes(filters.plate.toLowerCase()));
+    if (filters.search) {
+      const kw = filters.search.toLowerCase();
+      result = result.filter(p =>
+        (p.orderNo || '').toLowerCase().includes(kw) ||
+        (p.plate || '').toLowerCase().includes(kw) ||
+        (p.customer || '').toLowerCase().includes(kw) ||
+        (p.remark || '').toLowerCase().includes(kw)
+      );
+    }
+    if (filters.date_from) result = result.filter(p => p.date >= filters.date_from);
+    if (filters.date_to)   result = result.filter(p => p.date <= filters.date_to);
+    result.sort((a, b) => b.date.localeCompare(a.date) || b.id - a.id);
+    return result.slice(0, 200);
+  },
+
+  // Generate next order number: YYMMDDXX
+  nextOrderNo(date) {
+    const d = date || new Date().toISOString().slice(0, 10);
+    const prefix = d.slice(2, 4) + d.slice(5, 7) + d.slice(8, 10);
+    let maxSeq = 0;
+    for (const inv of data.invoices) {
+      if (inv.orderNo && inv.orderNo.startsWith(prefix)) {
+        const seq = parseInt(inv.orderNo.slice(6));
+        if (seq > maxSeq) maxSeq = seq;
+      }
+    }
+    return prefix + String(maxSeq + 1).padStart(2, '0');
+  },
+
+  create(d) {
+    const orderNo = d.orderNo || this.nextOrderNo(d.date);
+    const inv = {
+      id: nextId(),
+      orderNo,
+      plate: d.plate || '',
+      customer: d.customer || '',
+      date: d.date || '',
+      remark: d.remark || '',
+      items: (d.items || []).map((item, i) => ({
+        seq: i + 1,
+        name: item.name || '',
+        unit: item.unit || '',
+        qty: item.qty || '',
+        cost: item.cost || '',
+        labor: item.labor || '',
+        amount: item.amount || (Number(item.qty || 0) * Number(item.cost || 0) + Number(item.labor || 0)).toString(),
+        remark: item.remark || ''
+      })),
+      created_by: d.created_by || '',
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString()
+    };
+    data.invoices.push(inv);
+    save();
+    return inv;
+  },
+
+  update(id, d) {
+    const inv = data.invoices.find(x => x.id === Number(id));
+    if (!inv) return null;
+    const fields = ['plate', 'customer', 'date', 'remark'];
+    for (const f of fields) if (d[f] !== undefined) inv[f] = d[f];
+    if (d.items) {
+      inv.items = d.items.map((item, i) => ({
+        seq: i + 1,
+        name: item.name || '',
+        unit: item.unit || '',
+        qty: item.qty || '',
+        cost: item.cost || '',
+        labor: item.labor || '',
+        amount: item.amount || (Number(item.qty || 0) * Number(item.cost || 0) + Number(item.labor || 0)).toString(),
+        remark: item.remark || ''
+      }));
+    }
+    inv.updated_at = new Date().toISOString();
+    save();
+    return inv;
+  },
+
+  delete(id) {
+    const idx = data.invoices.findIndex(x => x.id === Number(id));
+    if (idx >= 0) { data.invoices.splice(idx, 1); save(); return true; }
+    return false;
+  },
+
+  getById(id) {
+    return data.invoices.find(x => x.id === Number(id)) || null;
+  }
+};
+
 // ─── Deposit ─────────────────────────────────────────────────
 function today() { return new Date().toISOString().slice(0,10); }
 
@@ -314,4 +410,4 @@ const report = {
   }
 };
 
-module.exports = { user, record, payment, deposit, report, reload: load };
+module.exports = { user, record, payment, invoice, deposit, report, reload: load };

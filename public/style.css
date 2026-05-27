@@ -91,15 +91,96 @@ td.w-amt{font-weight:600;font-variant-numeric:tabular-nums}
 .btn-row{display:flex;gap:8px;justify-content:flex-end;margin-top:18px}
 
 /* ─── Invoice ─── */
-.invoice-header{padding:16px 0}
-.inv-title{font-size:17px;font-weight:700;text-align:center;margin-bottom:12px}
-.inv-info{display:flex;gap:12px;flex-wrap:wrap;align-items:center}
-.form-row-inline{display:flex;align-items:center;gap:6px}
-.form-row-inline label{font-size:12px;color:#555;white-space:nowrap}
-.form-row-inline input{padding:7px 10px;border:1px solid #d9d9d9;border-radius:6px;font-size:13px;outline:none;width:130px}
-.form-row-inline input:focus{border-color:var(--primary)}
-.invoice-actions{display:flex;gap:10px;margin-top:12px;align-items:center;flex-wrap:wrap}
-.inv-total{font-size:13px;font-weight:600;padding:0 12px;white-space:nowrap}
+.inv-company-header{
+  background:linear-gradient(135deg,#1a237e,#283593);color:#fff;text-align:center;
+  padding:14px 12px;border-radius:12px;margin-bottom:12px;
+}
+.inv-company-name{font-size:19px;font-weight:700;letter-spacing:1px}
+.inv-company-sub{font-size:12px;opacity:.85;margin-top:3px}
+.inv-card{background:#fff;border-radius:10px;padding:14px;margin-bottom:10px;box-shadow:0 1px 4px rgba(0,0,0,.08)}
+.inv-card-title{font-size:15px;font-weight:600;color:#1a237e;margin-bottom:12px;padding-bottom:8px;border-bottom:2px solid #e8eaf6}
+.inv-form-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px}
+.inv-field{display:flex;flex-direction:column}
+.inv-field label{font-size:12px;font-weight:500;color:#666;margin-bottom:3px}
+.inv-field input,.inv-field textarea{width:100%;padding:10px 12px;border:1px solid #ddd;border-radius:8px;font-size:14px;background:#fafafa;transition:border .2s}
+.inv-field input:focus,.inv-field textarea:focus{outline:none;border-color:#1a237e;background:#fff;box-shadow:0 0 0 3px rgba(26,35,126,.08)}
+.inv-field input.auto-gen{background:#e8eaf6;font-weight:600;color:#1a237e}
+.inv-field-full{grid-column:1/-1}
+
+/* Invoice Table */
+.inv-table{min-width:750px}
+.inv-table th{background:#1a237e;color:#fff;font-size:11px;padding:7px 4px;text-align:center;font-weight:500;white-space:nowrap}
+.inv-table td{padding:3px;border-bottom:1px solid #eee;text-align:center}
+.inv-table td input{width:100%;border:1px solid transparent;padding:6px 4px;font-size:12px;text-align:center;border-radius:3px;background:transparent}
+.inv-table td input:focus{outline:none;border-color:#1a237e;background:#f5f5ff}
+.inv-table td input.inv-inp-name{text-align:left;min-width:120px}
+.inv-table td input.inv-inp-unit{min-width:50px}
+.inv-table td input.inv-inp-qty{min-width:55px}
+.inv-table td input.inv-inp-cost{text-align:right;min-width:75px}
+.inv-table td input.inv-inp-labor{text-align:right;min-width:75px}
+.inv-table td input.inv-inp-amount{text-align:right;min-width:85px;font-weight:600;background:#f5f5f5}
+.inv-table td input.inv-inp-remark{text-align:left;min-width:70px}
+.inv-table .inv-row-num{font-size:11px;color:#999;width:28px;text-align:center}
+.inv-table tr:nth-child(even) td{background:#fafafa}
+.inv-col-sn{width:30px}.inv-col-item{min-width:130px}.inv-col-unit{width:55px}
+.inv-col-qty{width:60px}.inv-col-cost{width:85px}.inv-col-labor{width:85px}
+.inv-col-amount{width:95px}.inv-col-remark{width:80px}
+
+/* Invoice Totals */
+.inv-totals{margin-top:10px}
+.inv-total-row{display:flex;justify-content:flex-end;align-items:center;padding:10px 0;gap:10px;border-top:2px solid #1a237e}
+.inv-total-label{font-size:14px;font-weight:600;color:#1a237e}
+.inv-total-value{font-size:22px;font-weight:700;color:#c62828}
+.inv-words-row{display:flex;align-items:center;gap:8px;padding:8px 0;font-size:12px;color:#555;flex-wrap:wrap}
+.inv-words-val{font-weight:600;color:#1a237e;font-size:13px}
+
+/* Invoice Buttons */
+.inv-btn-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
+.inv-btn{padding:14px;border:none;border-radius:10px;font-size:15px;font-weight:600;cursor:pointer;transition:all .2s;text-align:center}
+.inv-btn:active{transform:scale(.96)}
+.inv-btn-save{background:#fff;color:#1a237e;border:2px solid #1a237e}
+.inv-btn-print{background:#1a237e;color:#fff}
+.inv-btn-export{background:#4caf50;color:#fff}
+.inv-btn-new{background:#ff9800;color:#fff;grid-column:1/-1}
+
+/* Saved List */
+.inv-saved-item{display:flex;justify-content:space-between;align-items:center;padding:12px;border-bottom:1px solid #eee;cursor:pointer}
+.inv-saved-item:active{background:#f0f0f0}
+.inv-saved-item .inv-si-info{flex:1}
+.inv-saved-item .inv-si-plate{font-weight:600;font-size:15px}
+.inv-saved-item .inv-si-meta{font-size:12px;color:#888}
+.inv-saved-item .inv-si-del{background:#ff5252;color:#fff;border:none;padding:8px 12px;border-radius:6px;font-size:12px;cursor:pointer}
+
+/* Print Area */
+.inv-print-area{display:none}
+@media print{
+  @page{size:A5;margin:5mm}
+  body{background:#fff;padding:0;margin:0}
+  header,.tabs,.tab-content,.btn,.tab,.filter-bar,.summary-row,.modal-overlay,
+  .inv-card-title,.inv-btn-row,.inv-company-header,#invSavedSection,#loginPage{display:none!important}
+  #tabInvoice{display:block!important;padding:0}
+  .inv-card{box-shadow:none;border:none;padding:0;margin:0;border-radius:0}
+  .inv-print-area{display:block!important}
+  .inv-print-title{text-align:center;font-size:16pt;font-weight:700;padding:8px 0 4px 0;letter-spacing:1px}
+  .inv-print-subtitle{text-align:center;font-size:10pt;padding-bottom:6px;border-bottom:1.5px solid #000}
+  .inv-print-info{padding:4px 0;font-size:9pt}
+  .inv-print-line{display:flex;margin-bottom:1px}
+  .inv-print-label{width:105px;font-weight:600}
+  .inv-print-val{flex:1;border-bottom:1px dotted #999}
+  .inv-print-table{width:100%;border-collapse:collapse;margin-top:6px}
+  .inv-print-table th{border:.5px solid #000;padding:3px 2px;font-size:7pt;text-align:center;font-weight:600}
+  .inv-print-table td{border:.5px solid #000;padding:3px 2px;font-size:8pt;text-align:center}
+  .inv-pcol-sn{width:22px}.inv-pcol-item{text-align:left;min-width:85px}.inv-pcol-unit{width:30px}
+  .inv-pcol-qty{width:30px}.inv-pcol-cost{width:52px;text-align:right}.inv-pcol-labor{width:52px;text-align:right}
+  .inv-pcol-amount{width:58px;text-align:right}.inv-pcol-remark{width:45px;text-align:left}
+  .inv-print-footer{margin-top:8px;font-size:9pt}
+  .inv-print-eng{padding:3px 0;font-size:8pt}
+  .inv-print-total-line{display:flex;justify-content:flex-end;align-items:center;padding:4px 0;border-top:1px solid #000;border-bottom:1px solid #000;gap:10px}
+  .inv-print-total-label{font-weight:600;font-size:9pt}
+  .inv-print-total-value{font-weight:700;font-size:11pt}
+  .inv-print-bank{font-size:7pt;padding:6px 0;line-height:1.5}
+  .inv-print-stamp{text-align:right;padding-top:15px;font-size:9pt;font-weight:600}
+}
 
 /* ─── Reports ─── */
 .report-btn.active{background:var(--primary);color:#fff;border-color:var(--primary)}

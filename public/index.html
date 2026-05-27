@@ -133,40 +133,122 @@
 
   <!-- ═══ INVOICE TAB ═══ -->
   <div class="tab-content" id="tabInvoice">
-    <div class="invoice-header">
-      <div class="inv-title" data-en="HOPE PURCHASE FROM FOR SPARE PARTS" data-zh="维修车辆采购单据">HOPE PURCHASE FROM FOR SPARE PARTS</div>
-      <div class="inv-info">
-        <div class="form-row-inline"><label>Date</label><input type="date" id="invDate"></div>
-        <div class="form-row-inline"><label>Plate No.</label><input type="text" id="invPlate" list="dlInvPlate" autocomplete="off" onchange="autoFillInvoice()"></div>
-        <datalist id="dlInvPlate"></datalist>
-        <div class="form-row-inline"><label>Car Type</label><input type="text" id="invCarType"></div>
-        <div class="form-row-inline"><label>Fundi</label><input type="text" id="invFundi" list="dlInvFundi" autocomplete="off"></div>
-        <datalist id="dlInvFundi"></datalist>
+    <!-- Company Header -->
+    <div class="inv-company-header">
+      <div class="inv-company-name">HOPE CAR SERVICE CO LIMITED</div>
+      <div class="inv-company-sub" data-en="Vehicle Repair Document" data-zh="车辆维修单据">Vehicle Repair Document</div>
+    </div>
+
+    <!-- Invoice Info -->
+    <div class="inv-card">
+      <div class="inv-card-title" data-en="Invoice Info" data-zh="单据信息">Invoice Info</div>
+      <div class="inv-form-grid">
+        <div class="inv-field">
+          <label data-en="Order No (Auto)" data-zh="单号（自动生成）">Order No (Auto)</label>
+          <input type="text" id="invOrderNo" class="auto-gen" readonly>
+        </div>
+        <div class="inv-field">
+          <label data-en="Plate Number" data-zh="车牌号">Plate Number</label>
+          <input type="text" id="invPlate" placeholder="T 788 DUT" list="dlInvPlate" autocomplete="off" onchange="autoFillInvoice()">
+          <datalist id="dlInvPlate"></datalist>
+        </div>
+        <div class="inv-field">
+          <label data-en="Client Name" data-zh="客户名称">Client Name</label>
+          <input type="text" id="invCustomer" placeholder="">
+        </div>
+        <div class="inv-field">
+          <label data-en="Date" data-zh="日期">Date</label>
+          <input type="date" id="invDate" onchange="onInvDateChange()">
+        </div>
+        <div class="inv-field inv-field-full">
+          <label data-en="Remark (Car Type, Engine No.)" data-zh="备注（车型、发动机号等）">Remark (Car Type, Engine No.)</label>
+          <input type="text" id="invRemark" placeholder="">
+        </div>
       </div>
     </div>
-    <div class="table-wrap" style="max-height:45vh">
-      <table>
-        <thead>
-          <tr>
-            <th class="w-seq">#</th>
-            <th data-en="Spare Parts" data-zh="需要更换的配件">Spare Parts</th>
-            <th data-en="Godown Price" data-zh="仓库价格">Godown Price</th>
-            <th data-en="Outside Price" data-zh="外面价格">Outside Price</th>
-            <th data-en="Who Paid" data-zh="谁付款">Who Paid</th>
-            <th class="w-act"></th>
-          </tr>
-        </thead>
-        <tbody id="invoiceBody"></tbody>
-      </table>
+
+    <!-- Repair Items -->
+    <div class="inv-card">
+      <div class="inv-card-title">🔧 <span data-en="Repair Items (TZS)" data-zh="维修项目（坦桑先令）">Repair Items (TZS)</span></div>
+      <div class="table-wrap" style="max-height:55vh">
+        <table class="inv-table">
+          <thead>
+            <tr>
+              <th class="inv-col-sn" data-en="S/N" data-zh="序号">S/N</th>
+              <th class="inv-col-item" data-en="ITEAM" data-zh="项目">ITEAM</th>
+              <th class="inv-col-unit" data-en="UNIT" data-zh="单位">UNIT</th>
+              <th class="inv-col-qty" data-en="QTY" data-zh="数量">QTY</th>
+              <th class="inv-col-cost" data-en="COST (TZS)" data-zh="单价">COST (TZS)</th>
+              <th class="inv-col-labor" data-en="LABOR (TZS)" data-zh="人工费">LABOR (TZS)</th>
+              <th class="inv-col-amount" data-en="AMOUNT (TZS)" data-zh="金额">AMOUNT (TZS)</th>
+              <th class="inv-col-remark" data-en="REMARK" data-zh="备注">REMARK</th>
+            </tr>
+          </thead>
+          <tbody id="invPartsTable"></tbody>
+        </table>
+      </div>
+      <datalist id="dlInvPart"></datalist>
+
+      <!-- Totals -->
+      <div class="inv-totals">
+        <div class="inv-total-row">
+          <span class="inv-total-label" data-en="TOTAL (TZS) / Total Amount：" data-zh="TOTAL (TZS) / 总金额（坦桑先令）：">TOTAL (TZS) / Total Amount：</span>
+          <span class="inv-total-value" id="invTotalAll">0</span>
+        </div>
+        <div class="inv-words-row">
+          <span data-en="AMOUNT IN WORDS:" data-zh="英文大写金额：">AMOUNT IN WORDS:</span>
+          <span class="inv-words-val" id="invEngAmount"></span>
+        </div>
+      </div>
     </div>
-    <datalist id="dlInvPart"></datalist>
-    <div class="invoice-actions">
-      <button class="btn btn-outline" onclick="addInvoiceRow()">+ <span data-en="Add Row" data-zh="添加行">Add Row</span></button>
-      <span style="flex:1"></span>
-      <span class="inv-total" id="invTotalGodown"></span>
-      <span class="inv-total" id="invTotalOutside"></span>
-      <span class="inv-total" style="font-size:15px;font-weight:700" id="invGrandTotal"></span>
-      <button class="btn btn-primary" onclick="printInvoice()">Print</button>
+
+    <!-- Action Buttons -->
+    <div class="inv-btn-row">
+      <button class="inv-btn inv-btn-save" onclick="saveInvoice()">💾 <span data-en="SAVE" data-zh="保存">SAVE</span></button>
+      <button class="inv-btn inv-btn-print" onclick="printInvoice()">🖨️ <span data-en="PRINT" data-zh="打印">PRINT</span></button>
+      <button class="inv-btn inv-btn-export" onclick="exportInvoice()">📤 <span data-en="EXPORT" data-zh="导出">EXPORT</span></button>
+      <button class="inv-btn inv-btn-new" onclick="newInvoice()">🆕 <span data-en="NEW" data-zh="新单">NEW</span></button>
+    </div>
+
+    <!-- Recent Saved List -->
+    <div class="inv-card" id="invSavedSection">
+      <div class="inv-card-title">📂 <span data-en="Recent Saved" data-zh="最近保存">Recent Saved</span></div>
+      <div id="invSavedList"></div>
+    </div>
+
+    <!-- Hidden Print Area -->
+    <div class="inv-print-area" id="invPrintArea">
+      <div style="border:1.5px solid #000; padding:8px;">
+        <div class="inv-print-title">HOPE CAR SERVICE CO LIMITED</div>
+        <div class="inv-print-subtitle">◆ PROFORMA INVOICE / 车辆维修单据 ◆</div>
+        <div class="inv-print-info">
+          <div class="inv-print-line"><span class="inv-print-label">ORDER NO / 单号：</span><span class="inv-print-val" id="printOrderNo">&nbsp;</span></div>
+          <div class="inv-print-line"><span class="inv-print-label">CLIENT NAME / 客户：</span><span class="inv-print-val" id="printCustomer">&nbsp;</span></div>
+          <div class="inv-print-line"><span class="inv-print-label">PLATE NUMBER / 车牌号：</span><span class="inv-print-val" id="printPlate">&nbsp;</span></div>
+          <div class="inv-print-line"><span class="inv-print-label">REMARK / 备注：</span><span class="inv-print-val" id="printRemark">&nbsp;</span></div>
+          <div class="inv-print-line"><span class="inv-print-label">DATE / 日期：</span><span class="inv-print-val" id="printDate">&nbsp;</span></div>
+        </div>
+        <table class="inv-print-table">
+          <thead>
+            <tr><th class="inv-pcol-sn">S/N</th><th class="inv-pcol-item">ITEAM</th><th class="inv-pcol-unit">UNIT</th><th class="inv-pcol-qty">QTY</th><th class="inv-pcol-cost">COST (TZS)</th><th class="inv-pcol-labor">LABOR (TZS)</th><th class="inv-pcol-amount">AMOUNT (TZS)</th><th class="inv-pcol-remark">REMARK</th></tr>
+          </thead>
+          <tbody id="invPrintTableBody"></tbody>
+        </table>
+        <div class="inv-print-footer">
+          <div class="inv-print-eng">AMOUNT IN WORDS：<strong id="printEngAmount"></strong></div>
+          <div class="inv-print-total-line">
+            <span class="inv-print-total-label">TOTAL AMOUNT (TZS) / 总金额（坦桑先令）：</span>
+            <span class="inv-print-total-value" id="printTotal"></span>
+          </div>
+          <div class="inv-print-bank">
+            TIN: 172-676-952<br>
+            ACCOUNT NAME: HOPE CAR SERVICE CO LIMITED<br>
+            ACCOUNT NO: 01500004GKA00<br>
+            CRDB PUGU BRANCH
+          </div>
+          <div class="inv-print-stamp">STAMP / 盖章处</div>
+        </div>
+      </div>
     </div>
   </div>
 

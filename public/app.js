@@ -146,7 +146,12 @@ async function doLogin() {
     document.getElementById('loginPage').style.display = 'none';
     document.getElementById('appPage').style.display = 'block';
     document.getElementById('userBadge').textContent = data.username + (data.role === 'admin' ? ' (admin)' : '');
-    if (data.role === 'admin') document.getElementById('tabUsers').style.display = '';
+    if (data.role === 'admin') {
+      document.getElementById('tabUsers').style.display = '';
+    } else {
+      ['tabInvoice','tabReports','tabUsers'].forEach(id => { const el = document.getElementById(id); if (el) el.style.display = 'none'; });
+      ['invoice','reports','users'].forEach(t => { const el = document.querySelector('.tab[data-tab="'+t+'"]'); if (el) el.style.display = 'none'; });
+    }
     initApp();
   } catch (e) {
     errEl.textContent = t('loginFailed') + ': ' + e.message;
@@ -185,7 +190,13 @@ document.addEventListener('DOMContentLoaded', () => {
       document.getElementById('loginPage').style.display = 'none';
       document.getElementById('appPage').style.display = 'block';
       document.getElementById('userBadge').textContent = payload.username + (payload.role === 'admin' ? ' (admin)' : '');
-      if (payload.role === 'admin') document.getElementById('tabUsers').style.display = '';
+      if (payload.role === 'admin') {
+        document.getElementById('tabUsers').style.display = '';
+      } else {
+        // Non-admin: hide Invoice, Reports, Users tabs
+        ['tabInvoice','tabReports','tabUsers'].forEach(id => { const el = document.getElementById(id); if (el) el.style.display = 'none'; });
+        ['invoice','reports','users'].forEach(t => { const el = document.querySelector('.tab[data-tab="'+t+'"]'); if (el) el.style.display = 'none'; });
+      }
       initApp();
     }).catch(() => { doLogout(); });
   }
@@ -194,16 +205,8 @@ document.addEventListener('DOMContentLoaded', () => {
   // Tab clicks
   document.querySelectorAll('.tab').forEach(tab => {
     tab.addEventListener('click', () => {
-      document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-      document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-      tab.classList.add('active');
       const id = tab.getAttribute('data-tab');
-      if (id === 'expenses') { document.getElementById('tabExpenses').classList.add('active'); renderRecords(); }
-      else if (id === 'payments') { document.getElementById('tabPayments').classList.add('active'); renderPayments(); }
-      else if (id === 'invoice') { document.getElementById('tabInvoice').classList.add('active'); initInvoice(); }
-      else if (id === 'reports') { document.getElementById('tabReports').classList.add('active'); loadReport('daily'); }
-      else if (id === 'users') { document.getElementById('tabUsers').classList.add('active'); loadUsers(); }
-      applyLang();
+      switchTab(id);
     });
   });
 
@@ -213,6 +216,19 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 });
 
+function switchTab(id) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+  const tabBtn = document.querySelector('.tab[data-tab="' + id + '"]');
+  if (tabBtn) tabBtn.classList.add('active');
+  if (id === 'expenses') { document.getElementById('tabExpenses').classList.add('active'); renderRecords(); }
+  else if (id === 'payments') { document.getElementById('tabPayments').classList.add('active'); renderPayments(); }
+  else if (id === 'invoice') { document.getElementById('tabInvoice').classList.add('active'); initInvoice(); }
+  else if (id === 'reports') { document.getElementById('tabReports').classList.add('active'); loadReport('daily'); }
+  else if (id === 'users') { document.getElementById('tabUsers').classList.add('active'); loadUsers(); }
+  applyLang();
+}
+
 // ─── SSE ──────────────────────────────────────────────────────
 function connectSSE() {
   const es = new EventSource('/api/events?token=' + encodeURIComponent(token));
@@ -221,6 +237,7 @@ function connectSSE() {
   es.addEventListener('record_deleted', () => { loadRecords(); loadDeposit(); });
   es.addEventListener('payment_updated', () => renderPayments());
   es.addEventListener('deposit_updated', () => loadDeposit());
+  es.addEventListener('invoice_updated', () => { if (document.getElementById('tabInvoice').classList.contains('active')) renderInvSavedList(); });
   es.addEventListener('connected', () => {});
   es.onerror = () => { es.close(); setTimeout(connectSSE, 5000); };
 }
@@ -554,19 +571,73 @@ async function deletePayment(id) {
 }
 
 // ─── Invoice ───────────────────────────────────────────────────
-let invoiceRows = [];
+const INV_TOTAL_ROWS = 14;
+let invCurrentId = null;
+let invInited = false;
 
-function initInvoice() {
-  document.getElementById('invDate').value = new Date().toISOString().slice(0, 10);
-  loadInvoiceAutocomplete();
-  if (!invoiceRows.length) {
-    invoiceRows = [{ desc: '', godown: '', outside: '', paid: '' }];
+// Number to English words
+const ONES = ['','ONE','TWO','THREE','FOUR','FIVE','SIX','SEVEN','EIGHT','NINE','TEN','ELEVEN','TWELVE','THIRTEEN','FOURTEEN','FIFTEEN','SIXTEEN','SEVENTEEN','EIGHTEEN','NINETEEN'];
+const TENS = ['','','TWENTY','THIRTY','FORTY','FIFTY','SIXTY','SEVENTY','EIGHTY','NINETY'];
+const THOUSANDS = ['','THOUSAND','MILLION','BILLION'];
+
+function numToEnglish(num) {
+  if (!num || num <= 0) return 'ZERO TZS ONLY';
+  let n = Math.round(num);
+  if (n === 0) return 'ZERO TZS ONLY';
+  function convertHundred(m) {
+    let s = '';
+    if (m >= 100) { s += ONES[Math.floor(m/100)] + ' HUNDRED'; m %= 100; if (m > 0) s += ' AND '; }
+    if (m >= 20) { s += TENS[Math.floor(m/10)]; if (m % 10 > 0) s += ' ' + ONES[m % 10]; }
+    else if (m > 0) { s += ONES[m]; }
+    return s;
   }
-  renderInvoice();
-  updateInvoiceTotals();
+  let parts = [], ui = 0;
+  while (n > 0) {
+    let c = n % 1000;
+    if (c > 0) { let cs = convertHundred(c); if (THOUSANDS[ui]) cs += ' ' + THOUSANDS[ui]; parts.unshift(cs); }
+    n = Math.floor(n / 1000); ui++;
+  }
+  return parts.join(' ') + ' TZS ONLY';
 }
 
-async function loadInvoiceAutocomplete() {
+function invDatePrefix(dateStr) {
+  const d = dateStr ? new Date(dateStr + 'T00:00:00') : new Date();
+  const yy = String(d.getFullYear()).slice(2);
+  const mm = String(d.getMonth() + 1).padStart(2, '0');
+  const dd = String(d.getDate()).padStart(2, '0');
+  return yy + mm + dd;
+}
+
+function onInvDateChange() {
+  const dateStr = document.getElementById('invDate').value;
+  const curNo = document.getElementById('invOrderNo').value;
+  const expectedPrefix = invDatePrefix(dateStr);
+  if (!curNo || curNo.startsWith(expectedPrefix) || curNo.length === 8) {
+    refreshOrderNo();
+  }
+}
+
+async function refreshOrderNo() {
+  const date = document.getElementById('invDate').value || new Date().toISOString().slice(0,10);
+  try {
+    const data = await api('/api/invoices/next-order-no?date=' + date);
+    document.getElementById('invOrderNo').value = data.orderNo;
+  } catch(e) { /* ignore */ }
+}
+
+async function initInvoice() {
+  if (!invInited) {
+    document.getElementById('invDate').value = new Date().toISOString().slice(0, 10);
+    await refreshOrderNo();
+    loadInvAutocomplete();
+    buildInvTable();
+    invInited = true;
+  }
+  calcInvTotals();
+  renderInvSavedList();
+}
+
+async function loadInvAutocomplete() {
   try {
     const data = await api('/api/autocomplete');
     const fillDl = (id, items) => {
@@ -576,8 +647,97 @@ async function loadInvoiceAutocomplete() {
     };
     fillDl('dlInvPlate', data.plate_numbers || []);
     fillDl('dlInvPart', data.spare_parts || []);
-    fillDl('dlInvFundi', data.used_by || []);
   } catch(e) { /* ignore */ }
+}
+
+function buildInvTable() {
+  const tbody = document.getElementById('invPartsTable');
+  let html = '';
+  for (let i = 1; i <= INV_TOTAL_ROWS; i++) {
+    html += `<tr>
+      <td class="inv-row-num">${i}</td>
+      <td><input class="inv-inp-name" data-invrow="${i}" data-invfield="name" placeholder="" list="dlInvPart" autocomplete="off"></td>
+      <td><input class="inv-inp-unit" data-invrow="${i}" data-invfield="unit" placeholder=""></td>
+      <td><input class="inv-inp-qty" data-invrow="${i}" data-invfield="qty" type="number" step="1" placeholder="1" oninput="calcInvRow(${i});calcInvTotals()"></td>
+      <td><input class="inv-inp-cost" data-invrow="${i}" data-invfield="cost" type="number" step="0.01" placeholder="0" oninput="calcInvRow(${i});calcInvTotals()"></td>
+      <td><input class="inv-inp-labor" data-invrow="${i}" data-invfield="labor" type="number" step="0.01" placeholder="0" oninput="calcInvRow(${i});calcInvTotals()"></td>
+      <td><input class="inv-inp-amount" data-invrow="${i}" data-invfield="amount" type="text" placeholder="0" readonly></td>
+      <td><input class="inv-inp-remark" data-invrow="${i}" data-invfield="remark" placeholder=""></td>
+    </tr>`;
+  }
+  tbody.innerHTML = html;
+}
+
+function calcInvRow(row) {
+  const qty = parseFloat(document.querySelector('[data-invrow="'+row+'"][data-invfield="qty"]').value) || 0;
+  const cost = parseFloat(document.querySelector('[data-invrow="'+row+'"][data-invfield="cost"]').value) || 0;
+  const labor = parseFloat(document.querySelector('[data-invrow="'+row+'"][data-invfield="labor"]').value) || 0;
+  const amount = qty * cost + labor;
+  document.querySelector('[data-invrow="'+row+'"][data-invfield="amount"]').value = amount > 0 ? amount.toLocaleString('en-US') : '';
+}
+
+function calcInvTotals() {
+  let total = 0;
+  for (let i = 1; i <= INV_TOTAL_ROWS; i++) {
+    const qty = parseFloat(document.querySelector('[data-invrow="'+i+'"][data-invfield="qty"]').value) || 0;
+    const cost = parseFloat(document.querySelector('[data-invrow="'+i+'"][data-invfield="cost"]').value) || 0;
+    const labor = parseFloat(document.querySelector('[data-invrow="'+i+'"][data-invfield="labor"]').value) || 0;
+    total += qty * cost + labor;
+  }
+  document.getElementById('invTotalAll').textContent = total.toLocaleString('en-US');
+  document.getElementById('invEngAmount').textContent = numToEnglish(total);
+}
+
+function getInvFormData() {
+  const items = [];
+  for (let i = 1; i <= INV_TOTAL_ROWS; i++) {
+    const name = document.querySelector('[data-invrow="'+i+'"][data-invfield="name"]').value.trim();
+    const unit = document.querySelector('[data-invrow="'+i+'"][data-invfield="unit"]').value.trim();
+    const qty = document.querySelector('[data-invrow="'+i+'"][data-invfield="qty"]').value.trim();
+    const cost = document.querySelector('[data-invrow="'+i+'"][data-invfield="cost"]').value.trim();
+    const labor = document.querySelector('[data-invrow="'+i+'"][data-invfield="labor"]').value.trim();
+    const amount = document.querySelector('[data-invrow="'+i+'"][data-invfield="amount"]').value.trim();
+    const remark = document.querySelector('[data-invrow="'+i+'"][data-invfield="remark"]').value.trim();
+    if (name) items.push({ name, unit, qty, cost, labor, amount, remark });
+  }
+  return {
+    orderNo: document.getElementById('invOrderNo').value,
+    plate: document.getElementById('invPlate').value.trim(),
+    customer: document.getElementById('invCustomer').value.trim(),
+    date: document.getElementById('invDate').value,
+    remark: document.getElementById('invRemark').value.trim(),
+    items
+  };
+}
+
+function setInvFormData(data) {
+  document.getElementById('invOrderNo').value = data.orderNo || '';
+  document.getElementById('invPlate').value = data.plate || '';
+  document.getElementById('invCustomer').value = data.customer || '';
+  document.getElementById('invDate').value = data.date || '';
+  document.getElementById('invRemark').value = data.remark || '';
+  // Clear all rows
+  for (let i = 1; i <= INV_TOTAL_ROWS; i++) {
+    ['name','unit','qty','cost','labor','amount','remark'].forEach(f => {
+      document.querySelector('[data-invrow="'+i+'"][data-invfield="'+f+'"]').value = '';
+    });
+  }
+  // Fill items
+  if (data.items && Array.isArray(data.items)) {
+    data.items.forEach((item, idx) => {
+      if (idx < INV_TOTAL_ROWS) {
+        const i = idx + 1;
+        document.querySelector('[data-invrow="'+i+'"][data-invfield="name"]').value = item.name || '';
+        document.querySelector('[data-invrow="'+i+'"][data-invfield="unit"]').value = item.unit || '';
+        document.querySelector('[data-invrow="'+i+'"][data-invfield="qty"]').value = item.qty || '';
+        document.querySelector('[data-invrow="'+i+'"][data-invfield="cost"]').value = item.cost || '';
+        document.querySelector('[data-invrow="'+i+'"][data-invfield="labor"]').value = item.labor || '';
+        document.querySelector('[data-invrow="'+i+'"][data-invfield="amount"]').value = item.amount || '';
+        document.querySelector('[data-invrow="'+i+'"][data-invfield="remark"]').value = item.remark || '';
+      }
+    });
+  }
+  calcInvTotals();
 }
 
 async function autoFillInvoice() {
@@ -588,127 +748,159 @@ async function autoFillInvoice() {
     const data = await api('/api/records?plate=' + encodeURIComponent(plate));
     if (!data.length) return;
 
-    // Auto-fill car type from most recent record
+    // Only auto-fill if form is empty (new invoice)
+    const hasContent = document.getElementById('invCustomer').value ||
+      document.querySelector('[data-invrow="1"][data-invfield="name"]').value;
+    if (hasContent) return;
+
     const latest = data[0];
-    document.getElementById('invCarType').value = latest.car_type || '';
+    // Auto-fill remark with car type info
+    if (!document.getElementById('invRemark').value) {
+      document.getElementById('invRemark').value = latest.car_type || '';
+    }
 
-    // Get unique descriptions as parts list
+    // Get unique descriptions and fill rows
     const parts = [...new Set(data.map(r => r.description).filter(Boolean))];
-
-    // Auto-fill fundi from most common used_by
-    const guys = data.map(r => r.used_by).filter(Boolean);
-    const topGuy = guys.sort((a,b) => guys.filter(v => v===a).length - guys.filter(v => v===b).length).pop() || '';
-    document.getElementById('invFundi').value = topGuy;
-
-    // Fill invoice rows with parts
-    invoiceRows = parts.map(p => ({ desc: p, godown: '', outside: '', paid: '' }));
-    if (!invoiceRows.length) invoiceRows = [{ desc: '', godown: '', outside: '', paid: '' }];
-    renderInvoice();
-    updateInvoiceTotals();
+    parts.slice(0, INV_TOTAL_ROWS).forEach((p, idx) => {
+      const i = idx + 1;
+      document.querySelector('[data-invrow="'+i+'"][data-invfield="name"]').value = p;
+    });
+    calcInvTotals();
   } catch(e) { /* ignore */ }
 }
 
-function addInvoiceRow() {
-  invoiceRows.push({ desc: '', godown: '', outside: '', paid: '' });
-  renderInvoice();
+async function saveInvoice() {
+  const data = getInvFormData();
+  if (!data.plate && !data.customer) {
+    alert(lang === 'en' ? 'Please fill in plate number or customer name' : '请至少填写车牌号或客户名称');
+    return;
+  }
+  if (!data.orderNo) { await refreshOrderNo(); data.orderNo = document.getElementById('invOrderNo').value; }
+
+  try {
+    let result;
+    if (invCurrentId) {
+      result = await api('/api/invoices/' + invCurrentId, { method: 'PUT', body: JSON.stringify(data) });
+    } else {
+      result = await api('/api/invoices', { method: 'POST', body: JSON.stringify(data) });
+    }
+    invCurrentId = result.id;
+    document.getElementById('invOrderNo').value = result.orderNo;
+    renderInvSavedList();
+    alert((lang === 'en' ? 'Saved! Order No: ' : '已保存！单号：') + result.orderNo);
+  } catch(e) { alert('Save failed / 保存失败: ' + e.message); }
 }
 
-function deleteInvoiceRow(idx) {
-  invoiceRows.splice(idx, 1);
-  if (!invoiceRows.length) invoiceRows = [{ desc: '', godown: '', outside: '', paid: '' }];
-  renderInvoice();
-  updateInvoiceTotals();
+async function loadInvoiceById(id) {
+  try {
+    const data = await api('/api/invoices/' + id);
+    invCurrentId = data.id;
+    switchTab('invoice');
+    setInvFormData(data);
+    window.scrollTo(0, 0);
+  } catch(e) { alert('Load failed / 加载失败'); }
 }
 
-function updateInvoiceRow(idx, field, value) {
-  invoiceRows[idx][field] = value;
-  updateInvoiceTotals();
+async function deleteInvoiceById(id, event) {
+  event.stopPropagation();
+  if (!confirm(lang === 'en' ? 'Delete this invoice?' : '确定删除这张单据？')) return;
+  try {
+    await api('/api/invoices/' + id, { method: 'DELETE' });
+    if (invCurrentId === id) { newInvoice(); }
+    renderInvSavedList();
+  } catch(e) { alert('Delete failed / 删除失败'); }
 }
 
-function updateInvoiceTotals() {
-  let totalGodown = 0, totalOutside = 0;
-  invoiceRows.forEach(r => {
-    totalGodown += parseInt(r.godown) || 0;
-    totalOutside += parseInt(r.outside) || 0;
-  });
-  document.getElementById('invTotalGodown').textContent =
-    (lang === 'en' ? 'Godown Total: ' : '仓库合计: ') + formatNum(totalGodown);
-  document.getElementById('invTotalOutside').textContent =
-    (lang === 'en' ? 'Outside Total: ' : '外面合计: ') + formatNum(totalOutside);
-  document.getElementById('invGrandTotal').textContent =
-    (lang === 'en' ? 'Grand Total: ' : '总金额: ') + formatNum(totalGodown + totalOutside);
+async function renderInvSavedList() {
+  try {
+    const data = await api('/api/invoices');
+    const container = document.getElementById('invSavedList');
+    const recent = data.slice(0, 10);
+    if (!recent.length) {
+      container.innerHTML = '<div style="text-align:center;color:#999;padding:20px">' + (lang === 'en' ? 'No records' : '暂无记录') + '</div>';
+      return;
+    }
+    container.innerHTML = recent.map(inv => {
+      const total = (inv.items || []).reduce((s, it) => s + (Number(it.amount) || Number(it.qty||0)*Number(it.cost||0)+Number(it.labor||0) || 0), 0);
+      return `<div class="inv-saved-item" onclick="loadInvoiceById(${inv.id})">
+        <div class="inv-si-info">
+          <div class="inv-si-plate">🚗 ${esc(inv.plate||'No Plate')} | ${esc(inv.orderNo||'')}</div>
+          <div class="inv-si-meta">${inv.date||''} | ${esc(inv.customer||'')} | ${(inv.items||[]).length} items | TZS ${total.toLocaleString('en-US')}</div>
+        </div>
+        <button class="inv-si-del" onclick="deleteInvoiceById(${inv.id}, event)">${lang === 'en' ? 'Delete' : '删除'}</button>
+      </div>`;
+    }).join('');
+  } catch(e) { /* ignore */ }
 }
 
-function renderInvoice() {
-  const tbody = document.getElementById('invoiceBody');
-  tbody.innerHTML = invoiceRows.map((r, i) => `
-    <tr>
-      <td class="w-seq text-center">${i + 1}</td>
-      <td><input type="text" value="${esc(r.desc)}" list="dlInvPart" autocomplete="off"
-        onchange="updateInvoiceRow(${i},'desc',this.value)" style="width:100%;border:1px solid #e8e8e8;padding:6px 8px;border-radius:4px;font-size:13px"></td>
-      <td class="w-amt"><input type="number" value="${r.godown || ''}"
-        onchange="updateInvoiceRow(${i},'godown',this.value)" style="width:100%;border:1px solid #e8e8e8;padding:6px 8px;border-radius:4px;font-size:13px;text-align:right"></td>
-      <td class="w-amt"><input type="number" value="${r.outside || ''}"
-        onchange="updateInvoiceRow(${i},'outside',this.value)" style="width:100%;border:1px solid #e8e8e8;padding:6px 8px;border-radius:4px;font-size:13px;text-align:right"></td>
-      <td><input type="text" value="${esc(r.paid)}"
-        onchange="updateInvoiceRow(${i},'paid',this.value)" style="width:100%;border:1px solid #e8e8e8;padding:6px 8px;border-radius:4px;font-size:13px"></td>
-      <td class="w-act text-center"><button class="btn-xs btn-del" onclick="deleteInvoiceRow(${i})">X</button></td>
-    </tr>
-  `).join('');
-  applyLang();
+function newInvoice() {
+  if (document.getElementById('invPlate').value || document.getElementById('invCustomer').value) {
+    if (!confirm(lang === 'en' ? 'Start new? Unsaved data will be lost.' : '确定新建？未保存的内容将丢失。')) return;
+  }
+  invCurrentId = null;
+  invInited = true; // keep table, just clear inputs
+  for (let i = 1; i <= INV_TOTAL_ROWS; i++) {
+    ['name','unit','qty','cost','labor','amount','remark'].forEach(f => {
+      document.querySelector('[data-invrow="'+i+'"][data-invfield="'+f+'"]').value = '';
+    });
+  }
+  document.getElementById('invPlate').value = '';
+  document.getElementById('invCustomer').value = '';
+  document.getElementById('invRemark').value = '';
+  document.getElementById('invDate').value = new Date().toISOString().split('T')[0];
+  refreshOrderNo();
+  calcInvTotals();
+  window.scrollTo(0, 0);
+}
+
+function buildInvPrintView() {
+  const data = getInvFormData();
+  document.getElementById('printOrderNo').textContent = data.orderNo || '';
+  document.getElementById('printCustomer').textContent = data.customer || '';
+  document.getElementById('printPlate').textContent = data.plate || '';
+  document.getElementById('printRemark').textContent = data.remark || '';
+  document.getElementById('printDate').textContent = data.date || '';
+
+  let total = 0;
+  const items = data.items.length > 0 ? data.items : [];
+  const rows = Math.max(items.length, 5);
+  const tbody = document.getElementById('invPrintTableBody');
+  tbody.innerHTML = '';
+  for (let i = 0; i < rows; i++) {
+    const item = items[i] || {};
+    const c = item.cost ? Number(item.cost).toLocaleString('en-US') : '';
+    const l = item.labor ? Number(item.labor).toLocaleString('en-US') : '';
+    const amt = Number(item.amount) || Number(item.qty||0)*Number(item.cost||0)+Number(item.labor||0) || 0;
+    total += amt;
+    const a = amt > 0 ? amt.toLocaleString('en-US') : '';
+    tbody.innerHTML += `<tr>
+      <td>${i+1}</td><td style="text-align:left">${esc(item.name||'')}</td><td>${esc(item.unit||'')}</td>
+      <td>${esc(item.qty||'')}</td><td style="text-align:right">${c}</td>
+      <td style="text-align:right">${l}</td><td style="text-align:right">${a}</td>
+      <td style="text-align:left">${esc(item.remark||'')}</td></tr>`;
+  }
+  document.getElementById('printTotal').textContent = total.toLocaleString('en-US');
+  document.getElementById('printEngAmount').textContent = numToEnglish(total);
 }
 
 function printInvoice() {
-  const date = document.getElementById('invDate').value;
-  const plate = document.getElementById('invPlate').value;
-  const carType = document.getElementById('invCarType').value;
-  const fundi = document.getElementById('invFundi').value;
+  buildInvPrintView();
+  window.print();
+}
 
-  let html = `<html><head><meta charset="utf-8"><title>Invoice</title>
-  <style>
-    body{font-family:sans-serif;padding:20px;max-width:800px;margin:0 auto}
-    h2{text-align:center;margin-bottom:2px}
-    .info{display:flex;gap:20px;margin:12px 0;font-size:14px}
-    .info div{flex:1}
-    table{width:100%;border-collapse:collapse;margin:12px 0}
-    th,td{border:1px solid #333;padding:7px 10px;font-size:14px}
-    th{background:#f0f0f0}
-    .totals{margin-top:12px;font-size:14px}
-    .totals div{margin:3px 0}
-    .grand{font-size:16px;font-weight:700;margin-top:8px}
-    @media print{body{padding:0} button{display:none}}
-    p.sign{font-size:13px;margin-top:20px}
-  </style></head><body>
-    <h2>HOPE PURCHASE FROM FOR SPARE PARTS</h2>
-    <div class="info">
-      <div><strong>Date:</strong> ${formatDate(date)}</div>
-      <div><strong>Plate No:</strong> ${plate}</div>
-      <div><strong>Car Type:</strong> ${carType}</div>
-      <div><strong>Fundi:</strong> ${fundi}</div>
-    </div>
-    <table>
-      <tr><th>#</th><th>Spare Parts</th><th>Godown Price</th><th>Outside Price</th><th>Who Paid</th></tr>
-      ${invoiceRows.filter(r => r.desc).map((r,i) => `<tr>
-        <td>${i+1}</td><td>${esc(r.desc)}</td>
-        <td style="text-align:right">${r.godown ? formatNum(parseInt(r.godown)) : ''}</td>
-        <td style="text-align:right">${r.outside ? formatNum(parseInt(r.outside)) : ''}</td>
-        <td>${esc(r.paid)}</td>
-      </tr>`).join('')}
-    </table>
-    <div class="totals">
-      ${(() => {
-        const tg = invoiceRows.reduce((s,r) => s + (parseInt(r.godown)||0), 0);
-        const to = invoiceRows.reduce((s,r) => s + (parseInt(r.outside)||0), 0);
-        return `<div>Total Godown: ${formatNum(tg)}</div><div>Total Outside: ${formatNum(to)}</div><div class="grand">Grand Total: ${formatNum(tg+to)}</div>`;
-      })()}
-    </div>
-    <p class="sign">Who paid to buy spare parts, sign here: ________________________</p>
-    <br><button onclick="window.print()" style="padding:10px 30px;font-size:14px">Print</button>
-  </body></html>`;
-
-  const w = window.open('', '_blank', 'width=850,height=700');
-  w.document.write(html);
-  w.document.close();
+function exportInvoice() {
+  const data = getInvFormData();
+  if (!data.plate && !data.orderNo) {
+    alert(lang === 'en' ? 'Please fill in order no or plate number' : '请先填写单号或车牌号');
+    return;
+  }
+  const blob = new Blob([JSON.stringify(data, null, 2)], {type: 'application/json'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'INVOICE_' + (data.orderNo || data.plate) + '_' + (data.date || 'nodate') + '.json';
+  a.click();
+  URL.revokeObjectURL(url);
 }
 
 // ─── Reports ──────────────────────────────────────────────────

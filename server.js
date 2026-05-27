@@ -2,7 +2,7 @@ const express = require('express');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const path = require('path');
-const { user, record, payment, deposit, report, reload: reloadDB } = require('./database');
+const { user, record, payment, invoice, deposit, report, reload: reloadDB } = require('./database');
 const XLSX = require('xlsx');
 
 const app = express();
@@ -297,6 +297,42 @@ app.put('/api/payments/:id', authRequired, (req, res) => {
 app.delete('/api/payments/:id', authRequired, (req, res) => {
   payment.delete(req.params.id);
   broadcastSSE('payment_updated', {});
+  res.json({ ok: true });
+});
+
+// ─── Invoices CRUD ──────────────────────────────────────────
+app.get('/api/invoices', authRequired, (req, res) => {
+  res.json(invoice.list(req.query));
+});
+
+app.get('/api/invoices/next-order-no', authRequired, (req, res) => {
+  const date = req.query.date || new Date().toISOString().slice(0, 10);
+  res.json({ orderNo: invoice.nextOrderNo(date) });
+});
+
+app.post('/api/invoices', authRequired, (req, res) => {
+  const data = { ...req.body, created_by: req.user.username };
+  const newInvoice = invoice.create(data);
+  broadcastSSE('invoice_updated', {});
+  res.status(201).json(newInvoice);
+});
+
+app.get('/api/invoices/:id', authRequired, (req, res) => {
+  const inv = invoice.getById(req.params.id);
+  if (!inv) return res.status(404).json({ error: 'Not found' });
+  res.json(inv);
+});
+
+app.put('/api/invoices/:id', authRequired, (req, res) => {
+  invoice.update(req.params.id, req.body);
+  const updated = invoice.getById(req.params.id);
+  broadcastSSE('invoice_updated', {});
+  res.json(updated);
+});
+
+app.delete('/api/invoices/:id', authRequired, (req, res) => {
+  invoice.delete(req.params.id);
+  broadcastSSE('invoice_updated', {});
   res.json({ ok: true });
 });
 
