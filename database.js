@@ -1,17 +1,32 @@
 // ═══════════════════════════════════════════════════════════════
 // JSON file database — zero native dependencies
+// Data stored in DATA_DIR (default /app/data) for PVC persistence
 // ═══════════════════════════════════════════════════════════════
 const fs = require('fs');
 const path = require('path');
 const bcrypt = require('bcryptjs');
 
-const DB_PATH = path.join(__dirname, 'data.json');
+const DATA_DIR = process.env.DATA_DIR || path.join(__dirname, 'data');
+const DB_PATH = path.join(DATA_DIR, 'data.json');
 
 // In-memory data
 let data = { users: [], records: [], payments: [], invoices: [], deposit: 0, daily_deposits: {}, nextId: 1 };
 
 // ─── Load / Save ─────────────────────────────────────────────
+function ensureDir() {
+  if (!fs.existsSync(DATA_DIR)) {
+    fs.mkdirSync(DATA_DIR, { recursive: true });
+  }
+}
+
 function load() {
+  ensureDir();
+  // Migrate from old root data.json to new DATA_DIR/data.json
+  const oldPath = path.join(__dirname, 'data.json');
+  if (fs.existsSync(oldPath) && !fs.existsSync(DB_PATH)) {
+    fs.copyFileSync(oldPath, DB_PATH);
+    console.log('Migrated data.json to ' + DB_PATH);
+  }
   try {
     if (fs.existsSync(DB_PATH)) {
       const raw = fs.readFileSync(DB_PATH, 'utf-8');
@@ -25,7 +40,11 @@ function load() {
 }
 
 function save() {
-  fs.writeFileSync(DB_PATH, JSON.stringify(data, null, 2), 'utf-8');
+  ensureDir();
+  // Write to temp file first, then rename (atomic write to prevent corruption)
+  const tmp = DB_PATH + '.tmp';
+  fs.writeFileSync(tmp, JSON.stringify(data, null, 2), 'utf-8');
+  fs.renameSync(tmp, DB_PATH);
 }
 
 function nextId() {
