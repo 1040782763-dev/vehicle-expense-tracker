@@ -640,13 +640,13 @@ function translatePart(name, lang) {
   const entry = PARTS_ZH[upper];
   if (entry) {
     const t = typeof entry === 'string' ? entry : (entry[lang] || entry.zh || '');
-    return t ? name + ' - ' + t : name;
+    return t ? name + ' | ' + t : name;
   }
   // Try partial match
   for (const [en, val] of Object.entries(PARTS_ZH)) {
     if (upper.includes(en)) {
       const t = typeof val === 'string' ? val : (val[lang] || val.zh || '');
-      return t ? name + ' - ' + t : name;
+      return t ? name + ' | ' + t : name;
     }
   }
   return name;
@@ -896,9 +896,13 @@ async function autoFillInvoice() {
 
     if (!records.length) return;
 
-    // Only auto-fill items if table is empty
-    const hasItems = document.querySelector('[data-invrow="1"][data-invfield="name"]').value;
-    if (hasItems) return;
+    // Clear existing items before auto-filling for the new plate
+    for (let i = 1; i <= INV_TOTAL_ROWS; i++) {
+      ['name','unit','cost','amount','cost_price','remark'].forEach(f => {
+        document.querySelector('[data-invrow="'+i+'"][data-invfield="'+f+'"]').value = '';
+      });
+      document.querySelector('[data-invrow="'+i+'"][data-invfield="qty"]').value = '1';
+    }
 
     const latest = records[0];
 
