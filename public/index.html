@@ -54,6 +54,7 @@
   <div class="tabs">
     <button class="tab active" data-tab="expenses" data-en="Expenses" data-zh="费用记录">Expenses</button>
     <button class="tab" data-tab="payments" data-en="Payments" data-zh="付款记录">Payments</button>
+    <button class="tab" data-tab="invoice" data-en="Invoice" data-zh="开单">Invoice</button>
     <button class="tab" data-tab="reports" data-en="Reports" data-zh="统计报表">Reports</button>
     <button class="tab" data-tab="users" data-en="Users" data-zh="用户管理" id="tabUsers" style="display:none">Users</button>
   </div>
@@ -127,6 +128,45 @@
         </thead>
         <tbody id="paymentsBody"></tbody>
       </table>
+    </div>
+  </div>
+
+  <!-- ═══ INVOICE TAB ═══ -->
+  <div class="tab-content" id="tabInvoice">
+    <div class="invoice-header">
+      <div class="inv-title" data-en="HOPE PURCHASE FROM FOR SPARE PARTS" data-zh="维修车辆采购单据">HOPE PURCHASE FROM FOR SPARE PARTS</div>
+      <div class="inv-info">
+        <div class="form-row-inline"><label>Date</label><input type="date" id="invDate"></div>
+        <div class="form-row-inline"><label>Plate No.</label><input type="text" id="invPlate" list="dlInvPlate" autocomplete="off" onchange="autoFillInvoice()"></div>
+        <datalist id="dlInvPlate"></datalist>
+        <div class="form-row-inline"><label>Car Type</label><input type="text" id="invCarType"></div>
+        <div class="form-row-inline"><label>Fundi</label><input type="text" id="invFundi" list="dlInvFundi" autocomplete="off"></div>
+        <datalist id="dlInvFundi"></datalist>
+      </div>
+    </div>
+    <div class="table-wrap" style="max-height:45vh">
+      <table>
+        <thead>
+          <tr>
+            <th class="w-seq">#</th>
+            <th data-en="Spare Parts" data-zh="需要更换的配件">Spare Parts</th>
+            <th data-en="Godown Price" data-zh="仓库价格">Godown Price</th>
+            <th data-en="Outside Price" data-zh="外面价格">Outside Price</th>
+            <th data-en="Who Paid" data-zh="谁付款">Who Paid</th>
+            <th class="w-act"></th>
+          </tr>
+        </thead>
+        <tbody id="invoiceBody"></tbody>
+      </table>
+    </div>
+    <datalist id="dlInvPart"></datalist>
+    <div class="invoice-actions">
+      <button class="btn btn-outline" onclick="addInvoiceRow()">+ <span data-en="Add Row" data-zh="添加行">Add Row</span></button>
+      <span style="flex:1"></span>
+      <span class="inv-total" id="invTotalGodown"></span>
+      <span class="inv-total" id="invTotalOutside"></span>
+      <span class="inv-total" style="font-size:15px;font-weight:700" id="invGrandTotal"></span>
+      <button class="btn btn-primary" onclick="printInvoice()">Print</button>
     </div>
   </div>
 

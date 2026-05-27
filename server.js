@@ -82,16 +82,44 @@ app.get('/api/autocomplete', authRequired, (req, res) => {
     'VOXY', 'WINGROAD', 'WISH', 'X-TRAIL', 'YARIS'
   ];
 
+  // Predefined common car spare parts (EN/CN bilingual)
+  const presetParts = [
+    'AC GAS', 'AIR FILTER', 'ALTERNATOR', 'BALL JOINT', 'BATTERY',
+    'BRAKE CALIPER', 'BRAKE DISC', 'BRAKE DRUM', 'BRAKE MASTER CYLINDER', 'BRAKE PAD',
+    'BRAKE PIPE', 'BRAKE SHOE', 'BULB', 'BUMPER', 'CAMSHAFT',
+    'CAR WASH', 'CLUTCH', 'CLUTCH CYLINDER', 'CLUTCH DISC', 'COIL SPRING',
+    'COMPRESSOR', 'COMPRESSOR OIL', 'CONDENSER', 'CONNECTING ROD', 'CONTROL ARM',
+    'COOLANT', 'CRANKSHAFT', 'CV JOINT', 'CYLINDER HEAD',
+    'DIFFERENTIAL', 'DRIVE SHAFT', 'ENGINE', 'ENGINE GASKET', 'ENGINE MOUNTING',
+    'ENGINE OIL', 'EVAPORATOR', 'EXHAUST MUFFLER', 'EXPANSION', 'EXPANSION VALVE',
+    'FLYWHEEL', 'FOG LIGHT', 'FUEL FILTER', 'FUEL INJECTOR', 'FUEL PUMP',
+    'FUSE', 'GASKET', 'GASKET MAKER', 'GEAR OIL', 'GEARBOX',
+    'HEAD GASKET', 'HEADLIGHT', 'HORN', 'HOSE', 'IGNITION COIL',
+    'INJECTION NOZZLE', 'LED BULB', 'LOWER ARM', 'MASTER CYLINDER',
+    'OIL COOLER', 'OIL FILTER', 'OIL PAN', 'OIL PUMP', 'OIL SEAL',
+    'OXYGEN SENSOR', 'PETROL', 'PISTON', 'PISTON RING', 'RADIATOR',
+    'RADIATOR CAP', 'RADIATOR FAN', 'RADIATOR HOSE', 'RELAY', 'SHOCK ABSORBER',
+    'SPARK PLUG', 'STARTER', 'STARTER MOTOR', 'STEERING RACK',
+    'SUSPENSION BUSHING', 'TAILLIGHT', 'TENSIONER', 'THERMOSTAT',
+    'TIE ROD END', 'TIMING BELT', 'TIMING CHAIN', 'TIRE', 'TURBOCHARGER',
+    'TYRE', 'VALVE', 'VALVE SEAL', 'VALVE SPRING', 'WATER PUMP',
+    'WHEEL BEARING', 'WHEEL CYLINDER', 'WIPER', 'WIPER BLADE', 'WIRING HARNESS'
+  ];
+
   const allRecords = record.list({});
   const carTypes = [...new Set([
     ...presetCarTypes,
     ...allRecords.map(r => r.car_type).filter(Boolean)
   ])].sort();
   const plateNumbers = [...new Set(allRecords.map(r => r.plate_number).filter(Boolean))].sort();
-  const descriptions = [...new Set(allRecords.map(r => r.description).filter(Boolean))].sort();
+  const descriptions = [...new Set([
+    ...presetParts,
+    ...allRecords.map(r => r.description).filter(Boolean)
+  ])].sort();
   const usedBy = [...new Set(allRecords.map(r => r.used_by).filter(Boolean))].sort();
+  const spareParts = descriptions; // same source, used for invoicing autocomplete
 
-  res.json({ car_types: carTypes, plate_numbers: plateNumbers, descriptions, used_by: usedBy });
+  res.json({ car_types: carTypes, plate_numbers: plateNumbers, descriptions, spare_parts: spareParts, used_by: usedBy });
 });
 
 app.get('/api/users', authRequired, (req, res) => {

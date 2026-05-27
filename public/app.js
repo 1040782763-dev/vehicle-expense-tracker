@@ -109,6 +109,7 @@ function applyLang() {
     const key = tab.getAttribute('data-tab');
     if (key === 'expenses') tab.textContent = t('expenses');
     else if (key === 'payments') tab.textContent = t('payments');
+    else if (key === 'invoice') tab.textContent = lang === 'en' ? 'Invoice' : '开单';
     else if (key === 'reports') tab.textContent = t('reports');
     else if (key === 'users') tab.textContent = t('users');
   });
@@ -199,6 +200,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const id = tab.getAttribute('data-tab');
       if (id === 'expenses') { document.getElementById('tabExpenses').classList.add('active'); renderRecords(); }
       else if (id === 'payments') { document.getElementById('tabPayments').classList.add('active'); renderPayments(); }
+      else if (id === 'invoice') { document.getElementById('tabInvoice').classList.add('active'); initInvoice(); }
       else if (id === 'reports') { document.getElementById('tabReports').classList.add('active'); loadReport('daily'); }
       else if (id === 'users') { document.getElementById('tabUsers').classList.add('active'); loadUsers(); }
       applyLang();
@@ -549,6 +551,164 @@ async function deletePayment(id) {
     await api('/api/payments/' + id, { method: 'DELETE' });
     renderPayments();
   } catch(e) { alert(e.message); }
+}
+
+// ─── Invoice ───────────────────────────────────────────────────
+let invoiceRows = [];
+
+function initInvoice() {
+  document.getElementById('invDate').value = new Date().toISOString().slice(0, 10);
+  loadInvoiceAutocomplete();
+  if (!invoiceRows.length) {
+    invoiceRows = [{ desc: '', godown: '', outside: '', paid: '' }];
+  }
+  renderInvoice();
+  updateInvoiceTotals();
+}
+
+async function loadInvoiceAutocomplete() {
+  try {
+    const data = await api('/api/autocomplete');
+    const fillDl = (id, items) => {
+      const dl = document.getElementById(id);
+      if (!dl || dl.children.length > 0) return;
+      items.forEach(v => { const o = document.createElement('option'); o.value = v; dl.appendChild(o); });
+    };
+    fillDl('dlInvPlate', data.plate_numbers || []);
+    fillDl('dlInvPart', data.spare_parts || []);
+    fillDl('dlInvFundi', data.used_by || []);
+  } catch(e) { /* ignore */ }
+}
+
+async function autoFillInvoice() {
+  const plate = document.getElementById('invPlate').value.trim();
+  if (!plate) return;
+
+  try {
+    const data = await api('/api/records?plate=' + encodeURIComponent(plate));
+    if (!data.length) return;
+
+    // Auto-fill car type from most recent record
+    const latest = data[0];
+    document.getElementById('invCarType').value = latest.car_type || '';
+
+    // Get unique descriptions as parts list
+    const parts = [...new Set(data.map(r => r.description).filter(Boolean))];
+
+    // Auto-fill fundi from most common used_by
+    const guys = data.map(r => r.used_by).filter(Boolean);
+    const topGuy = guys.sort((a,b) => guys.filter(v => v===a).length - guys.filter(v => v===b).length).pop() || '';
+    document.getElementById('invFundi').value = topGuy;
+
+    // Fill invoice rows with parts
+    invoiceRows = parts.map(p => ({ desc: p, godown: '', outside: '', paid: '' }));
+    if (!invoiceRows.length) invoiceRows = [{ desc: '', godown: '', outside: '', paid: '' }];
+    renderInvoice();
+    updateInvoiceTotals();
+  } catch(e) { /* ignore */ }
+}
+
+function addInvoiceRow() {
+  invoiceRows.push({ desc: '', godown: '', outside: '', paid: '' });
+  renderInvoice();
+}
+
+function deleteInvoiceRow(idx) {
+  invoiceRows.splice(idx, 1);
+  if (!invoiceRows.length) invoiceRows = [{ desc: '', godown: '', outside: '', paid: '' }];
+  renderInvoice();
+  updateInvoiceTotals();
+}
+
+function updateInvoiceRow(idx, field, value) {
+  invoiceRows[idx][field] = value;
+  updateInvoiceTotals();
+}
+
+function updateInvoiceTotals() {
+  let totalGodown = 0, totalOutside = 0;
+  invoiceRows.forEach(r => {
+    totalGodown += parseInt(r.godown) || 0;
+    totalOutside += parseInt(r.outside) || 0;
+  });
+  document.getElementById('invTotalGodown').textContent =
+    (lang === 'en' ? 'Godown Total: ' : '仓库合计: ') + formatNum(totalGodown);
+  document.getElementById('invTotalOutside').textContent =
+    (lang === 'en' ? 'Outside Total: ' : '外面合计: ') + formatNum(totalOutside);
+  document.getElementById('invGrandTotal').textContent =
+    (lang === 'en' ? 'Grand Total: ' : '总金额: ') + formatNum(totalGodown + totalOutside);
+}
+
+function renderInvoice() {
+  const tbody = document.getElementById('invoiceBody');
+  tbody.innerHTML = invoiceRows.map((r, i) => `
+    <tr>
+      <td class="w-seq text-center">${i + 1}</td>
+      <td><input type="text" value="${esc(r.desc)}" list="dlInvPart" autocomplete="off"
+        onchange="updateInvoiceRow(${i},'desc',this.value)" style="width:100%;border:1px solid #e8e8e8;padding:6px 8px;border-radius:4px;font-size:13px"></td>
+      <td class="w-amt"><input type="number" value="${r.godown || ''}"
+        onchange="updateInvoiceRow(${i},'godown',this.value)" style="width:100%;border:1px solid #e8e8e8;padding:6px 8px;border-radius:4px;font-size:13px;text-align:right"></td>
+      <td class="w-amt"><input type="number" value="${r.outside || ''}"
+        onchange="updateInvoiceRow(${i},'outside',this.value)" style="width:100%;border:1px solid #e8e8e8;padding:6px 8px;border-radius:4px;font-size:13px;text-align:right"></td>
+      <td><input type="text" value="${esc(r.paid)}"
+        onchange="updateInvoiceRow(${i},'paid',this.value)" style="width:100%;border:1px solid #e8e8e8;padding:6px 8px;border-radius:4px;font-size:13px"></td>
+      <td class="w-act text-center"><button class="btn-xs btn-del" onclick="deleteInvoiceRow(${i})">X</button></td>
+    </tr>
+  `).join('');
+  applyLang();
+}
+
+function printInvoice() {
+  const date = document.getElementById('invDate').value;
+  const plate = document.getElementById('invPlate').value;
+  const carType = document.getElementById('invCarType').value;
+  const fundi = document.getElementById('invFundi').value;
+
+  let html = `<html><head><meta charset="utf-8"><title>Invoice</title>
+  <style>
+    body{font-family:sans-serif;padding:20px;max-width:800px;margin:0 auto}
+    h2{text-align:center;margin-bottom:2px}
+    .info{display:flex;gap:20px;margin:12px 0;font-size:14px}
+    .info div{flex:1}
+    table{width:100%;border-collapse:collapse;margin:12px 0}
+    th,td{border:1px solid #333;padding:7px 10px;font-size:14px}
+    th{background:#f0f0f0}
+    .totals{margin-top:12px;font-size:14px}
+    .totals div{margin:3px 0}
+    .grand{font-size:16px;font-weight:700;margin-top:8px}
+    @media print{body{padding:0} button{display:none}}
+    p.sign{font-size:13px;margin-top:20px}
+  </style></head><body>
+    <h2>HOPE PURCHASE FROM FOR SPARE PARTS</h2>
+    <div class="info">
+      <div><strong>Date:</strong> ${formatDate(date)}</div>
+      <div><strong>Plate No:</strong> ${plate}</div>
+      <div><strong>Car Type:</strong> ${carType}</div>
+      <div><strong>Fundi:</strong> ${fundi}</div>
+    </div>
+    <table>
+      <tr><th>#</th><th>Spare Parts</th><th>Godown Price</th><th>Outside Price</th><th>Who Paid</th></tr>
+      ${invoiceRows.filter(r => r.desc).map((r,i) => `<tr>
+        <td>${i+1}</td><td>${esc(r.desc)}</td>
+        <td style="text-align:right">${r.godown ? formatNum(parseInt(r.godown)) : ''}</td>
+        <td style="text-align:right">${r.outside ? formatNum(parseInt(r.outside)) : ''}</td>
+        <td>${esc(r.paid)}</td>
+      </tr>`).join('')}
+    </table>
+    <div class="totals">
+      ${(() => {
+        const tg = invoiceRows.reduce((s,r) => s + (parseInt(r.godown)||0), 0);
+        const to = invoiceRows.reduce((s,r) => s + (parseInt(r.outside)||0), 0);
+        return `<div>Total Godown: ${formatNum(tg)}</div><div>Total Outside: ${formatNum(to)}</div><div class="grand">Grand Total: ${formatNum(tg+to)}</div>`;
+      })()}
+    </div>
+    <p class="sign">Who paid to buy spare parts, sign here: ________________________</p>
+    <br><button onclick="window.print()" style="padding:10px 30px;font-size:14px">Print</button>
+  </body></html>`;
+
+  const w = window.open('', '_blank', 'width=850,height=700');
+  w.document.write(html);
+  w.document.close();
 }
 
 // ─── Reports ──────────────────────────────────────────────────

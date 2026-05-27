@@ -47,6 +47,23 @@ if (data.users.length === 0) {
   console.log('Default admin created: admin / admin123');
 }
 
+// Ensure default accounts exist
+function ensureUser(username, password, role) {
+  if (!data.users.find(u => u.username === username)) {
+    data.users.push({
+      id: nextId(),
+      username,
+      password_hash: bcrypt.hashSync(password, 10),
+      role,
+      created_at: new Date().toISOString()
+    });
+    save();
+    console.log(`User created: ${username} (${role})`);
+  }
+}
+ensureUser('MARRY', 'MARRY123', 'user');
+ensureUser('HOPE', '240408', 'admin');
+
 // ─── Users ───────────────────────────────────────────────────
 const user = {
   create(username, passwordHash, role = 'user') {
