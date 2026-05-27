@@ -297,4 +297,4 @@ const report = {
   }
 };
 
-module.exports = { user, record, payment, deposit, report };
+module.exports = { user, record, payment, deposit, report, reload: load };

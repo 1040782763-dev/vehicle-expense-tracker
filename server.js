@@ -2,7 +2,7 @@ const express = require('express');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const path = require('path');
-const { user, record, payment, deposit, report } = require('./database');
+const { user, record, payment, deposit, report, reload: reloadDB } = require('./database');
 const XLSX = require('xlsx');
 
 const app = express();
@@ -327,22 +327,30 @@ app.get('/api/reports/by-plate', authRequired, (req, res) => {
   res.json(report.byPlate());
 });
 
-// ─── Stats ───────────────────────────────────────────────────
-app.get('/api/stats', authRequired, (req, res) => {
-  const summary = deposit.summary();
-  let totalDeposit = 0, totalExpense = 0;
-  for (const d of summary) {
-    totalDeposit += d.deposit;
-    totalExpense += d.expense;
-  }
-  res.json({ total_deposit: totalDeposit, total_expense: totalExpense, net: totalDeposit - totalExpense });
-});
-
 // ─── Backup ──────────────────────────────────────────────────
 app.get('/api/backup', authRequired, (req, res) => {
   const d = new Date().toISOString().slice(0, 10).replace(/-/g, '');
   res.setHeader('Content-Disposition', `attachment; filename=backup-${d}.json`);
   res.sendFile(path.join(__dirname, 'data.json'));
+});
+
+// Restore: admin uploads a backup JSON file to replace data.json
+app.post('/api/restore', authRequired, (req, res) => {
+  if (req.user.role !== 'admin') return res.status(403).json({ error: 'Admin only' });
+  const backupData = req.body;
+  if (!backupData || !backupData.users || !backupData.records) {
+    return res.status(400).json({ error: 'Invalid backup file format' });
+  }
+  const fs = require('fs');
+  const dbPath = path.join(__dirname, 'data.json');
+  const backupPath = path.join(__dirname, 'data_backup_' + Date.now() + '.json');
+  fs.copyFileSync(dbPath, backupPath);
+  fs.writeFileSync(dbPath, JSON.stringify(backupData, null, 2), 'utf-8');
+  reloadDB();
+  broadcastSSE('record_created', {});
+  broadcastSSE('payment_updated', {});
+  broadcastSSE('deposit_updated', {});
+  res.json({ ok: true });
 });
 
 // ─── SSE Stream (token via query param — EventSource can't set headers) ──

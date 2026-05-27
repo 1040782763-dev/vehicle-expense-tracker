@@ -167,7 +167,6 @@ function initApp() {
   applyLang();
   loadRecords();
   loadDeposit();
-  loadStats();
   connectSSE();
   document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
   document.querySelector('.tab[data-tab="expenses"]').classList.add('active');
@@ -215,11 +214,11 @@ document.addEventListener('DOMContentLoaded', () => {
 // ─── SSE ──────────────────────────────────────────────────────
 function connectSSE() {
   const es = new EventSource('/api/events?token=' + encodeURIComponent(token));
-  es.addEventListener('record_created', () => { loadRecords(); loadDeposit(); loadStats(); });
-  es.addEventListener('record_updated', () => { loadRecords(); loadDeposit(); loadStats(); });
-  es.addEventListener('record_deleted', () => { loadRecords(); loadDeposit(); loadStats(); });
+  es.addEventListener('record_created', () => { loadRecords(); loadDeposit(); });
+  es.addEventListener('record_updated', () => { loadRecords(); loadDeposit(); });
+  es.addEventListener('record_deleted', () => { loadRecords(); loadDeposit(); });
   es.addEventListener('payment_updated', () => renderPayments());
-  es.addEventListener('deposit_updated', () => { loadDeposit(); loadStats(); });
+  es.addEventListener('deposit_updated', () => loadDeposit());
   es.addEventListener('connected', () => {});
   es.onerror = () => { es.close(); setTimeout(connectSSE, 5000); };
 }
@@ -262,15 +261,6 @@ async function loadDeposit() {
     document.getElementById('sumBalance').textContent = formatNum(data.balance);
     const balEl = document.getElementById('sumBalance');
     balEl.style.color = data.balance >= 0 ? 'var(--blue)' : 'var(--danger)';
-  } catch(e) { /* ignore */ }
-}
-
-async function loadStats() {
-  try {
-    const data = await api('/api/stats');
-    const netEl = document.getElementById('sumNet');
-    netEl.textContent = formatNum(data.net);
-    netEl.style.color = data.net >= 0 ? 'var(--green)' : 'var(--danger)';
   } catch(e) { /* ignore */ }
 }
 
@@ -783,6 +773,24 @@ function handleXLSXFile(event) {
     }
   };
   reader.readAsDataURL(file);
+  event.target.value = '';
+}
+
+// ─── Backup Restore ──────────────────────────────────────────
+async function handleRestoreFile(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  if (!confirm(lang === 'en' ? 'Restore backup? This will replace ALL current data. A safety backup will be saved on the server.' : '确认恢复备份？将替换所有现有数据，服务器会保留一份安全备份。')) return;
+
+  try {
+    const text = await file.text();
+    const data = JSON.parse(text);
+    await api('/api/restore', { method: 'POST', body: JSON.stringify(data) });
+    alert(lang === 'en' ? 'Restore successful. Reloading...' : '恢复成功，重新加载...');
+    location.reload();
+  } catch(e) {
+    alert((lang === 'en' ? 'Restore failed: ' : '恢复失败: ') + e.message);
+  }
   event.target.value = '';
 }
 
