@@ -240,6 +240,7 @@ function connectSSE() {
   es.addEventListener('record_updated', () => { loadRecords(); loadDeposit(); refreshProfitIfActive(); });
   es.addEventListener('record_deleted', () => { loadRecords(); loadDeposit(); refreshProfitIfActive(); });
   es.addEventListener('payment_updated', () => { renderPayments(); refreshProfitIfActive(); });
+  es.addEventListener('invoice_updated', () => { renderInvSavedList(); refreshProfitIfActive(); });
   es.addEventListener('deposit_updated', () => loadDeposit());
   es.addEventListener('invoice_updated', () => { if (document.getElementById('tabInvoice').classList.contains('active')) renderInvSavedList(); });
   es.addEventListener('connected', () => {});

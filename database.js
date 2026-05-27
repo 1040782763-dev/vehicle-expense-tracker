@@ -452,6 +452,20 @@ const report = {
       costMap[key] = (costMap[key] || 0) + (r.amount || 0);
     }
 
+    // Cost from invoice items (cost_price per item)
+    for (const inv of data.invoices) {
+      for (const item of (inv.items || [])) {
+        if (!item.cost_price) continue;
+        const cp = parseFloat(String(item.cost_price).replace(/,/g, '')) || 0;
+        if (cp <= 0) continue;
+        const key = groupBy === 'monthly' ? (inv.date || '').slice(0, 7)
+                  : groupBy === 'plate' ? (inv.plate || 'Unknown')
+                  : 'all';
+        if (!key || key === 'Unknown') continue;
+        costMap[key] = (costMap[key] || 0) + cp;
+      }
+    }
+
     // Merge and calculate profit (with VAT deduction)
     const allKeys = [...new Set([...Object.keys(revenueMap), ...Object.keys(costMap)])].sort();
     const result = allKeys.map(key => {
