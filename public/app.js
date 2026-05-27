@@ -236,10 +236,10 @@ function switchTab(id) {
 // ─── SSE ──────────────────────────────────────────────────────
 function connectSSE() {
   const es = new EventSource('/api/events?token=' + encodeURIComponent(token));
-  es.addEventListener('record_created', () => { loadRecords(); loadDeposit(); });
-  es.addEventListener('record_updated', () => { loadRecords(); loadDeposit(); });
-  es.addEventListener('record_deleted', () => { loadRecords(); loadDeposit(); });
-  es.addEventListener('payment_updated', () => renderPayments());
+  es.addEventListener('record_created', () => { loadRecords(); loadDeposit(); refreshProfitIfActive(); });
+  es.addEventListener('record_updated', () => { loadRecords(); loadDeposit(); refreshProfitIfActive(); });
+  es.addEventListener('record_deleted', () => { loadRecords(); loadDeposit(); refreshProfitIfActive(); });
+  es.addEventListener('payment_updated', () => { renderPayments(); refreshProfitIfActive(); });
   es.addEventListener('deposit_updated', () => loadDeposit());
   es.addEventListener('invoice_updated', () => { if (document.getElementById('tabInvoice').classList.contains('active')) renderInvSavedList(); });
   es.addEventListener('connected', () => {});
@@ -719,7 +719,7 @@ function buildInvTable() {
       <td class="inv-row-num">${i}</td>
       <td><input class="inv-inp-name" data-invrow="${i}" data-invfield="name" placeholder="" list="dlInvPart" autocomplete="off" oninput="onInvNameChange(${i})"></td>
       <td><input class="inv-inp-unit" data-invrow="${i}" data-invfield="unit" placeholder=""></td>
-      <td><input class="inv-inp-qty" data-invrow="${i}" data-invfield="qty" type="number" step="1" placeholder="1" oninput="calcInvRow(${i});calcInvTotals()"></td>
+      <td><input class="inv-inp-qty" data-invrow="${i}" data-invfield="qty" type="number" step="1" value="1" oninput="calcInvRow(${i});calcInvTotals()"></td>
       <td><input class="inv-inp-cost" data-invrow="${i}" data-invfield="cost" type="number" step="0.01" placeholder="0" oninput="calcInvRow(${i});calcInvTotals()"></td>
       <td><input class="inv-inp-amount" data-invrow="${i}" data-invfield="amount" type="text" placeholder="0" readonly></td>
       <td><input class="inv-inp-remark" data-invrow="${i}" data-invfield="remark" placeholder=""></td>
@@ -837,9 +837,10 @@ async function autoFillInvoice() {
   // Clear items when plate is cleared
   if (!plate) {
     for (let i = 1; i <= INV_TOTAL_ROWS; i++) {
-      ['name','unit','qty','cost','amount','remark'].forEach(f => {
+      ['name','unit','cost','amount','remark'].forEach(f => {
         document.querySelector('[data-invrow="'+i+'"][data-invfield="'+f+'"]').value = '';
       });
+      document.querySelector('[data-invrow="'+i+'"][data-invfield="qty"]').value = '1';
     }
     document.getElementById('invRemark').value = '';
     calcInvTotals();
@@ -973,9 +974,10 @@ function newInvoice() {
   invCurrentId = null;
   invInited = true; // keep table, just clear inputs
   for (let i = 1; i <= INV_TOTAL_ROWS; i++) {
-    ['name','unit','qty','cost','amount','remark'].forEach(f => {
+    ['name','unit','cost','amount','remark'].forEach(f => {
       document.querySelector('[data-invrow="'+i+'"][data-invfield="'+f+'"]').value = '';
     });
+    document.querySelector('[data-invrow="'+i+'"][data-invfield="qty"]').value = '1';
   }
   document.getElementById('invPlate').value = '';
   document.getElementById('invCustomer').value = '';
@@ -1222,6 +1224,13 @@ async function loadByPlateReport(btn) {
     totalEl.textContent = (lang === 'en' ? 'Total: ' : '合计: ') + formatNum(totalAmount);
     applyLang();
   } catch(e) { /* ignore */ }
+}
+
+function refreshProfitIfActive() {
+  if (document.getElementById('profitBtn') && document.getElementById('profitBtn').classList.contains('active')) {
+    const group = document.getElementById('profitGroup').value || 'plate';
+    loadProfitReport(group, document.getElementById('profitBtn'));
+  }
 }
 
 async function loadProfitReport(group, btn) {
