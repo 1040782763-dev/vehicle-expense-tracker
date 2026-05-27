@@ -270,6 +270,7 @@ function parseDisplayDate(str) {
 }
 
 function formatNum(n) { return Number(n || 0).toLocaleString('en-US'); }
+function parseNum(v) { return parseFloat(String(v||'').replace(/,/g,'')) || 0; }
 function esc(v) { if (!v && v !== 0) return ''; return String(v).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
 
 // ─── Deposit ──────────────────────────────────────────────────
@@ -756,13 +757,13 @@ function calcInvTotals() {
     if (name === 'VAT' || name.includes('VAT')) { vatRow = i; break; }
   }
 
-  // Calculate non-VAT rows and update their AMOUNT
+  // Calculate non-VAT rows and update their AMOUNT: QTY × COST + LABOR
   let nonVatTotal = 0;
   for (let i = 1; i <= INV_TOTAL_ROWS; i++) {
     if (i === vatRow) continue;
-    const qty = parseFloat(document.querySelector('[data-invrow="'+i+'"][data-invfield="qty"]').value) || 0;
-    const cost = parseFloat(document.querySelector('[data-invrow="'+i+'"][data-invfield="cost"]').value) || 0;
-    const labor = parseFloat(document.querySelector('[data-invrow="'+i+'"][data-invfield="labor"]').value) || 0;
+    const qty = parseNum(document.querySelector('[data-invrow="'+i+'"][data-invfield="qty"]').value);
+    const cost = parseNum(document.querySelector('[data-invrow="'+i+'"][data-invfield="cost"]').value);
+    const labor = parseNum(document.querySelector('[data-invrow="'+i+'"][data-invfield="labor"]').value);
     const amt = qty * cost + labor;
     document.querySelector('[data-invrow="'+i+'"][data-invfield="amount"]').value = amt > 0 ? amt : '';
     nonVatTotal += amt;
@@ -1006,7 +1007,7 @@ function buildInvPrintView() {
     const item = items[i] || {};
     const c = item.cost ? Number(item.cost).toLocaleString('en-US') : '';
     const l = item.labor ? Number(item.labor).toLocaleString('en-US') : '';
-    const amt = (Number(item.qty)||0) * (Number(item.cost)||0) + (Number(item.labor)||0);
+    const amt = parseNum(item.qty) * parseNum(item.cost) + parseNum(item.labor);
     total += amt;
     const a = amt > 0 ? amt.toLocaleString('en-US') : '';
     tbody.innerHTML += `<tr>
@@ -1031,7 +1032,7 @@ function printInvoice() {
     const item = items[i] || {};
     const c = item.cost ? Number(item.cost).toLocaleString('en-US') : '';
     const l = item.labor ? Number(item.labor).toLocaleString('en-US') : '';
-    const amt = (Number(item.qty)||0) * (Number(item.cost)||0) + (Number(item.labor)||0);
+    const amt = parseNum(item.qty) * parseNum(item.cost) + parseNum(item.labor);
     total += amt;
     const a = amt > 0 ? amt.toLocaleString('en-US') : '';
     rowsHtml += `<tr>

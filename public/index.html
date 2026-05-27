@@ -266,10 +266,10 @@
       <button class="btn btn-outline report-btn" onclick="loadReport('yearly', this)" data-en="Yearly" data-zh="年报">Yearly</button>
       <button class="btn btn-outline report-btn" onclick="loadDailySummary(this)" data-en="Daily Summary" data-zh="每日结算">Daily Summary</button>
       <button class="btn btn-outline report-btn" onclick="loadByPlateReport(this)" data-en="By Plate" data-zh="按车牌">By Plate</button>
-      <button class="btn btn-outline report-btn" id="profitBtn" onclick="loadProfitReport('monthly', this)" data-en="Profit" data-zh="毛利分析" style="display:none">Profit</button>
+      <button class="btn btn-outline report-btn" id="profitBtn" onclick="loadProfitReport('plate', this)" data-en="Profit" data-zh="毛利分析" style="display:none">Profit</button>
       <select id="profitGroup" onchange="loadProfitReport(this.value, document.getElementById('profitBtn'))" style="display:none;padding:8px 12px;border:1px solid #d9d9d9;border-radius:6px;font-size:13px">
-        <option value="monthly" data-en="By Month" data-zh="按月">By Month</option>
         <option value="plate" data-en="By Plate" data-zh="按车牌">By Plate</option>
+        <option value="monthly" data-en="By Month" data-zh="按月">By Month</option>
       </select>
       <span style="flex:1"></span>
       <span id="reportTotal" style="font-weight:700;font-size:15px"></span>
@@ -387,6 +387,6 @@
   </div>
 </div>
 
-<script src="/app.js"></script>
+<script src="/app.js?v=3"></script>
 </body>
 </html>
