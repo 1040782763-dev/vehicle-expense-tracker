@@ -224,15 +224,15 @@ function connectSSE() {
 }
 
 // ─── Date Formatting ──────────────────────────────────────────
-// Display: DDMMMYY (e.g., 26MAY26)
+// English: DDMMMYY (e.g., 26MAY26). Chinese: YYYY年MM月DD日
 function formatDate(dateStr) {
   if (!dateStr) return '';
   const parts = dateStr.split('-');
   if (parts.length !== 3) return dateStr;
   const d = parts[2];
   const m = parseInt(parts[1]) - 1;
-  const y = parts[0].slice(2);
-  return d + MONTHS[m] + y;
+  if (lang === 'zh') return parts[0] + '年' + parts[1] + '月' + parts[2] + '日';
+  return d + MONTHS[m] + parts[0].slice(2);
 }
 
 // Parse DDMMMYY back to YYYY-MM-DD for input fields
@@ -370,7 +370,12 @@ async function saveRecord() {
   const amount = parseInt(document.getElementById('mAmount').value) || 0;
   const guy = document.getElementById('mGuy').value.trim();
 
-  if (!date) { alert(t('selectDate')); return; }
+  if (!date) { alert(lang === 'en' ? 'Date is required' : '请选择日期'); return; }
+  if (!desc) { alert(lang === 'en' ? 'Description is required' : '请填写描述'); return; }
+  if (!carType) { alert(lang === 'en' ? 'Car Type is required' : '请填写车型'); return; }
+  if (!plate) { alert(lang === 'en' ? 'Plate No. is required' : '请填写车牌号'); return; }
+  if (!amount) { alert(lang === 'en' ? 'Amount is required' : '请填写金额'); return; }
+  if (!guy) { alert(lang === 'en' ? 'Used By is required' : '请填写使用人'); return; }
 
   const body = { date, description: desc, qty, car_type: carType, plate_number: plate, amount, used_by: guy };
 
@@ -427,6 +432,18 @@ async function renderPayments() {
       </td>
     </tr>
   `).join('');
+}
+
+async function syncPayments() {
+  try {
+    const result = await api('/api/payments/sync', { method: 'POST' });
+    if (result.created.length > 0) {
+      alert((lang === 'en' ? 'Synced ' : '已同步 ') + result.created.length + (lang === 'en' ? ' plate(s) from recent expenses' : ' 个车牌号'));
+    } else {
+      alert(lang === 'en' ? 'All plates already synced' : '所有车牌号已同步');
+    }
+    renderPayments();
+  } catch(e) { alert(e.message); }
 }
 
 function showPaymentModal() {

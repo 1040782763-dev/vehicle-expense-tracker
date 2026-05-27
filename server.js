@@ -171,6 +171,41 @@ app.get('/api/payments', authRequired, (req, res) => {
   res.json(payment.list(req.query));
 });
 
+// Sync: auto-create payment entries from recent 3 days' expense plate numbers
+app.post('/api/payments/sync', authRequired, (req, res) => {
+  // Get unique plates from last 3 days
+  const today = new Date().toISOString().slice(0, 10);
+  const d3 = new Date();
+  d3.setDate(d3.getDate() - 3);
+  const threeDaysAgo = d3.toISOString().slice(0, 10);
+
+  const recentRecords = record.list({ date_from: threeDaysAgo, date_to: today });
+  const recentPlates = [...new Set(recentRecords.map(r => r.plate_number).filter(Boolean))];
+
+  // Get existing payment plate numbers
+  const existingPayments = payment.list({});
+  const existingPlates = new Set(existingPayments.map(p => p.plate_number));
+
+  // Create payment for plates not yet in payments
+  const created = [];
+  for (const plate of recentPlates) {
+    if (!existingPlates.has(plate)) {
+      const p = payment.create({
+        plate_number: plate,
+        status: 'unpaid',
+        amount: 0,
+        payment_date: '',
+        notes: '',
+        created_by: req.user.username
+      });
+      created.push(p);
+    }
+  }
+
+  broadcastSSE('payment_updated', {});
+  res.json({ created, total: recentPlates.length });
+});
+
 app.post('/api/payments', authRequired, (req, res) => {
   const data = { ...req.body, created_by: req.user.username };
   const newPayment = payment.create(data);
