@@ -5,6 +5,10 @@ const path = require('path');
 const { user, record, payment, invoice, deposit, report, reload: reloadDB } = require('./database');
 const XLSX = require('xlsx');
 
+// Load master parts dictionary for autocomplete
+const PARTS_MASTER = JSON.parse(require('fs').readFileSync(path.join(__dirname, 'parts_master.json'), 'utf-8'));
+const MASTER_PART_NAMES = Object.keys(PARTS_MASTER).sort();
+
 const app = express();
 const PORT = process.env.PORT || 3000;
 const JWT_SECRET = process.env.JWT_SECRET || 'vts-jwt-secret-change-in-production';
@@ -82,29 +86,8 @@ app.get('/api/autocomplete', authRequired, (req, res) => {
     'VOXY', 'WINGROAD', 'WISH', 'X-TRAIL', 'YARIS'
   ];
 
-  // Predefined common car spare parts (EN/CN bilingual)
-  const presetParts = [
-    'AC GAS', 'AIR FILTER', 'ALTERNATOR', 'BALL JOINT', 'BATTERY',
-    'BRAKE CALIPER', 'BRAKE DISC', 'BRAKE DRUM', 'BRAKE MASTER CYLINDER', 'BRAKE PAD',
-    'BRAKE PIPE', 'BRAKE SHOE', 'BULB', 'BUMPER', 'CAMSHAFT',
-    'CAR WASH', 'CLUTCH', 'CLUTCH CYLINDER', 'CLUTCH DISC', 'COIL SPRING',
-    'COMPRESSOR', 'COMPRESSOR OIL', 'CONDENSER', 'CONNECTING ROD', 'CONTROL ARM',
-    'COOLANT', 'CRANKSHAFT', 'CV JOINT', 'CYLINDER HEAD',
-    'DIFFERENTIAL', 'DRIVE SHAFT', 'ENGINE', 'ENGINE GASKET', 'ENGINE MOUNTING',
-    'ENGINE OIL', 'EVAPORATOR', 'EXHAUST MUFFLER', 'EXPANSION', 'EXPANSION VALVE',
-    'FLYWHEEL', 'FOG LIGHT', 'FUEL FILTER', 'FUEL INJECTOR', 'FUEL PUMP',
-    'FUSE', 'GASKET', 'GASKET MAKER', 'GEAR OIL', 'GEARBOX',
-    'HEAD GASKET', 'HEADLIGHT', 'HORN', 'HOSE', 'IGNITION COIL',
-    'INJECTION NOZZLE', 'LED BULB', 'LOWER ARM', 'MASTER CYLINDER',
-    'OIL COOLER', 'OIL FILTER', 'OIL PAN', 'OIL PUMP', 'OIL SEAL',
-    'OXYGEN SENSOR', 'PETROL', 'PISTON', 'PISTON RING', 'RADIATOR',
-    'RADIATOR CAP', 'RADIATOR FAN', 'RADIATOR HOSE', 'RELAY', 'SHOCK ABSORBER',
-    'SPARK PLUG', 'STARTER', 'STARTER MOTOR', 'STEERING RACK',
-    'SUSPENSION BUSHING', 'TAILLIGHT', 'TENSIONER', 'THERMOSTAT',
-    'TIE ROD END', 'TIMING BELT', 'TIMING CHAIN', 'TIRE', 'TURBOCHARGER',
-    'TYRE', 'VALVE', 'VALVE SEAL', 'VALVE SPRING', 'WATER PUMP',
-    'WHEEL BEARING', 'WHEEL CYLINDER', 'WIPER', 'WIPER BLADE', 'WIRING HARNESS'
-  ];
+  // Master parts dictionary (loaded from parts_master.json)
+  const presetParts = MASTER_PART_NAMES;
 
   const allRecords = record.list({});
   const carTypes = [...new Set([
@@ -120,6 +103,11 @@ app.get('/api/autocomplete', authRequired, (req, res) => {
   const spareParts = descriptions; // same source, used for invoicing autocomplete
 
   res.json({ car_types: carTypes, plate_numbers: plateNumbers, descriptions, spare_parts: spareParts, used_by: usedBy });
+});
+
+// Master parts dictionary (EN → ZH) for frontend translation
+app.get('/api/parts-master', (req, res) => {
+  res.json(PARTS_MASTER);
 });
 
 app.get('/api/users', authRequired, (req, res) => {

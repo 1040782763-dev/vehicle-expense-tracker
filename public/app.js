@@ -175,6 +175,7 @@ function initApp() {
   applyLang();
   loadRecords();
   loadDeposit();
+  loadPartsMaster();
   connectSSE();
   document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
   document.querySelector('.tab[data-tab="expenses"]').classList.add('active');
@@ -598,36 +599,23 @@ async function deletePayment(id) {
 }
 
 // ─── Car Parts Bilingual Map (EN → ZH) ─────────────────────
-const PARTS_ZH = {
-  'AC GAS':'空调冷媒','AIR FILTER':'空气滤清器','ALTERNATOR':'发电机','BALL JOINT':'球头',
-  'BATTERY':'电瓶','BRAKE CALIPER':'刹车分泵','BRAKE DISC':'刹车盘','BRAKE DRUM':'刹车鼓',
-  'BRAKE MASTER CYLINDER':'刹车总泵','BRAKE PAD':'刹车片','BRAKE PIPE':'刹车管',
-  'BRAKE SHOE':'刹车蹄','BULB':'灯泡','BUMPER':'保险杠','CAMSHAFT':'凸轮轴',
-  'CAR WASH':'洗车','CLUTCH':'离合器','CLUTCH CYLINDER':'离合器分泵','CLUTCH DISC':'离合器片',
-  'COIL SPRING':'弹簧','COMPRESSOR':'压缩机','COMPRESSOR OIL':'压缩机油','CONDENSER':'冷凝器',
-  'CONNECTING ROD':'连杆','CONTROL ARM':'控制臂','COOLANT':'冷却液','CRANKSHAFT':'曲轴',
-  'CV JOINT':'球笼','CYLINDER HEAD':'缸盖','DIFFERENTIAL':'差速器','DRIVE SHAFT':'传动轴',
-  'ENGINE':'发动机','ENGINE GASKET':'发动机垫片','ENGINE MOUNTING':'发动机支架',
-  'ENGINE OIL':'机油','EVAPORATOR':'蒸发器','EXHAUST MUFFLER':'排气管消声器',
-  'EXPANSION':'膨胀阀','EXPANSION VALVE':'膨胀阀','FLYWHEEL':'飞轮','FOG LIGHT':'雾灯',
-  'FUEL FILTER':'燃油滤清器','FUEL INJECTOR':'喷油嘴','FUEL PUMP':'燃油泵','FUSE':'保险丝',
-  'GASKET':'垫片','GASKET MAKER':'密封胶','GEAR OIL':'齿轮油','GEARBOX':'变速箱',
-  'HEAD GASKET':'缸垫','HEADLIGHT':'大灯','HORN':'喇叭','HOSE':'软管',
-  'IGNITION COIL':'点火线圈','INJECTION NOZZLE':'喷油嘴','LED BULB':'LED灯泡',
-  'LOWER ARM':'下摆臂','MASTER CYLINDER':'总泵','OIL COOLER':'机油冷却器',
-  'OIL FILTER':'机油滤清器','OIL PAN':'油底壳','OIL PUMP':'机油泵','OIL SEAL':'油封',
-  'OXYGEN SENSER':'氧传感器','OXYGEN SENSOR':'氧传感器','PETROL':'汽油','PISTON':'活塞',
-  'PISTON RING':'活塞环','RADIATOR':'水箱','RADIATOR CAP':'水箱盖','RADIATOR FAN':'散热风扇',
-  'RADIATOR HOSE':'水箱管','RELAY':'继电器','SHOCK ABSORBER':'减震器','SPARK PLUG':'火花塞',
-  'STARTER':'启动机','STARTER MOTOR':'启动马达','STEERING RACK':'方向机',
-  'SUSPENSION BUSHING':'悬挂胶套','TAILLIGHT':'尾灯','TENSIONER':'涨紧轮','THERMOSTAT':'节温器',
-  'TIE ROD END':'方向机拉杆球头','TIMING BELT':'正时皮带','TIMING CHAIN':'正时链条',
-  'TIRE':'轮胎','TURBOCHARGER':'涡轮增压器','TYRE':'轮胎','VALVE':'气门',
-  'VALVE SEAL':'气门油封','VALVE SPRING':'气门弹簧','WATER PUMP':'水泵',
-  'WHEEL BEARING':'轮毂轴承','WHEEL CYLINDER':'刹车分泵','WIPER':'雨刮器',
-  'WIPER BLADE':'雨刮片','WIRING HARNESS':'线束','FUNDI':'人工费','CAR WASH':'洗车',
-  'TRANSPORT':'运输费','OVERHAUL':'大修','DRIVER':'司机费',
-};
+// Loaded from server (parts_master.json) — 300+ standardized entries
+let PARTS_ZH = {};
+
+async function loadPartsMaster() {
+  try {
+    PARTS_ZH = await api('/api/parts-master');
+  } catch(e) {
+    // fallback minimal dictionary
+    PARTS_ZH = {
+      'AC GAS':'空调冷媒','AIR FILTER':'空气滤清器','BATTERY':'电瓶','BRAKE PAD':'刹车片',
+      'BULB':'灯泡','CAR WASH':'洗车','COMPRESSOR':'压缩机','ENGINE OIL':'机油',
+      'FUEL FILTER':'燃油滤清器','FUNDI':'人工费','OIL FILTER':'机油滤清器',
+      'PETROL':'汽油','SPARK PLUG':'火花塞','TRANSPORT':'运输费','WATER':'水'
+    };
+  }
+}
+
 function translatePart(name) {
   const upper = (name || '').trim().toUpperCase();
   if (PARTS_ZH[upper]) return name + ' - ' + PARTS_ZH[upper];
