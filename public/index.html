@@ -48,6 +48,10 @@
       <div class="card-label" data-en="Balance" data-zh="余额">Balance</div>
       <div class="card-value" id="sumBalance">0</div>
     </div>
+    <div class="card card-profit">
+      <div class="card-label" data-en="Net Profit" data-zh="净利润">Net Profit</div>
+      <div class="card-value" id="sumNet">0</div>
+    </div>
   </div>
 
   <!-- Tabs -->
@@ -67,7 +71,9 @@
       <input type="text" id="fCarType" placeholder="Car Type / 车型" oninput="renderRecords()">
       <input type="text" id="fPlate" placeholder="Plate No. / 车牌号" oninput="renderRecords()">
       <input type="text" id="fGuy" placeholder="Used By / 使用人" oninput="renderRecords()">
+      <span id="recordCount" style="font-size:12px;color:#888"></span>
       <span style="flex:1"></span>
+      <button class="btn btn-outline btn-sm" onclick="downloadBackup()" data-en="Backup" data-zh="备份">Backup</button>
       <button class="btn btn-success" onclick="showRecordModal()">+ <span data-en="New" data-zh="新增">New</span></button>
       <button class="btn btn-outline" onclick="importXLSX()" data-en="Import XLSX" data-zh="导入Excel">Import XLSX</button>
       <button class="btn btn-outline" onclick="loadSampleData()" data-en="Load Sample" data-zh="加载示例">Load Sample</button>
@@ -134,6 +140,7 @@
       <button class="btn btn-outline report-btn" onclick="loadReport('monthly', this)" data-en="Monthly" data-zh="月报">Monthly</button>
       <button class="btn btn-outline report-btn" onclick="loadReport('yearly', this)" data-en="Yearly" data-zh="年报">Yearly</button>
       <button class="btn btn-outline report-btn" onclick="loadDailySummary(this)" data-en="Daily Summary" data-zh="每日结算">Daily Summary</button>
+      <button class="btn btn-outline report-btn" onclick="loadByPlateReport(this)" data-en="By Plate" data-zh="按车牌">By Plate</button>
       <span style="flex:1"></span>
       <span id="reportTotal" style="font-weight:700;font-size:15px"></span>
     </div>

@@ -167,6 +167,7 @@ function initApp() {
   applyLang();
   loadRecords();
   loadDeposit();
+  loadStats();
   connectSSE();
   document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
   document.querySelector('.tab[data-tab="expenses"]').classList.add('active');
@@ -214,11 +215,11 @@ document.addEventListener('DOMContentLoaded', () => {
 // ─── SSE ──────────────────────────────────────────────────────
 function connectSSE() {
   const es = new EventSource('/api/events?token=' + encodeURIComponent(token));
-  es.addEventListener('record_created', () => { loadRecords(); loadDeposit(); });
-  es.addEventListener('record_updated', () => { loadRecords(); loadDeposit(); });
-  es.addEventListener('record_deleted', () => { loadRecords(); loadDeposit(); });
+  es.addEventListener('record_created', () => { loadRecords(); loadDeposit(); loadStats(); });
+  es.addEventListener('record_updated', () => { loadRecords(); loadDeposit(); loadStats(); });
+  es.addEventListener('record_deleted', () => { loadRecords(); loadDeposit(); loadStats(); });
   es.addEventListener('payment_updated', () => renderPayments());
-  es.addEventListener('deposit_updated', () => loadDeposit());
+  es.addEventListener('deposit_updated', () => { loadDeposit(); loadStats(); });
   es.addEventListener('connected', () => {});
   es.onerror = () => { es.close(); setTimeout(connectSSE, 5000); };
 }
@@ -261,6 +262,15 @@ async function loadDeposit() {
     document.getElementById('sumBalance').textContent = formatNum(data.balance);
     const balEl = document.getElementById('sumBalance');
     balEl.style.color = data.balance >= 0 ? 'var(--blue)' : 'var(--danger)';
+  } catch(e) { /* ignore */ }
+}
+
+async function loadStats() {
+  try {
+    const data = await api('/api/stats');
+    const netEl = document.getElementById('sumNet');
+    netEl.textContent = formatNum(data.net);
+    netEl.style.color = data.net >= 0 ? 'var(--green)' : 'var(--danger)';
   } catch(e) { /* ignore */ }
 }
 
@@ -317,6 +327,7 @@ function renderRecords() { loadRecords(); }
 
 function renderRecordsData(data) {
   const tbody = document.getElementById('recordsBody');
+  document.getElementById('recordCount').textContent = (lang === 'en' ? 'Records: ' : '记录数: ') + data.length;
   if (!data.length) {
     tbody.innerHTML = '<tr><td colspan="9" class="no-data">' + t('noRecords') + '</td></tr>';
     return;
@@ -626,7 +637,55 @@ async function loadDailySummary(btn) {
   } catch(e) { /* ignore */ }
 }
 
-// ─── Users ────────────────────────────────────────────────────
+async function loadByPlateReport(btn) {
+  document.querySelectorAll('.report-btn').forEach(b => b.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+
+  try {
+    const data = await api('/api/reports/by-plate');
+    const tbody = document.getElementById('reportsBody');
+    const totalEl = document.getElementById('reportTotal');
+    let totalAmount = 0;
+
+    document.getElementById('reportHead').innerHTML = `<tr>
+      <th data-en="Plate No." data-zh="车牌号">Plate No.</th>
+      <th data-en="Records" data-zh="记录数">Records</th>
+      <th data-en="Total Amount" data-zh="合计金额">Total Amount</th>
+    </tr>`;
+
+    if (!data.length) {
+      tbody.innerHTML = '<tr><td colspan="3" class="no-data">No data</td></tr>';
+      totalEl.textContent = '';
+      return;
+    }
+
+    tbody.innerHTML = data.map(r => {
+      totalAmount += r.total || 0;
+      return `<tr>
+        <td>${esc(r.plate_number)}</td>
+        <td class="text-center">${r.count}</td>
+        <td class="w-amt text-right">${formatNum(r.total)}</td>
+      </tr>`;
+    }).join('');
+
+    totalEl.textContent = (lang === 'en' ? 'Total: ' : '合计: ') + formatNum(totalAmount);
+    applyLang();
+  } catch(e) { /* ignore */ }
+}
+
+async function downloadBackup() {
+  try {
+    const res = await fetch('/api/backup', { headers: { 'Authorization': 'Bearer ' + token } });
+    if (!res.ok) throw new Error('Failed');
+    const blob = await res.blob();
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'backup-' + new Date().toISOString().slice(0,10).replace(/-/g,'') + '.json';
+    a.click();
+    URL.revokeObjectURL(url);
+  } catch(e) { alert('Backup failed'); }
+}
 async function loadUsers() {
   if (!currentUser || currentUser.role !== 'admin') return;
   try {

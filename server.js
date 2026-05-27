@@ -323,6 +323,28 @@ app.get('/api/reports/yearly', authRequired, (req, res) => {
   res.json(report.yearly());
 });
 
+app.get('/api/reports/by-plate', authRequired, (req, res) => {
+  res.json(report.byPlate());
+});
+
+// ─── Stats ───────────────────────────────────────────────────
+app.get('/api/stats', authRequired, (req, res) => {
+  const summary = deposit.summary();
+  let totalDeposit = 0, totalExpense = 0;
+  for (const d of summary) {
+    totalDeposit += d.deposit;
+    totalExpense += d.expense;
+  }
+  res.json({ total_deposit: totalDeposit, total_expense: totalExpense, net: totalDeposit - totalExpense });
+});
+
+// ─── Backup ──────────────────────────────────────────────────
+app.get('/api/backup', authRequired, (req, res) => {
+  const d = new Date().toISOString().slice(0, 10).replace(/-/g, '');
+  res.setHeader('Content-Disposition', `attachment; filename=backup-${d}.json`);
+  res.sendFile(path.join(__dirname, 'data.json'));
+});
+
 // ─── SSE Stream (token via query param — EventSource can't set headers) ──
 app.get('/api/events', (req, res) => {
   const tok = req.query.token;

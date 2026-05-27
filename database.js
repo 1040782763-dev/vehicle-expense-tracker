@@ -284,6 +284,16 @@ const report = {
       map[y].total += r.amount;
     }
     return Object.values(map).sort((a, b) => b.year.localeCompare(a.year));
+  },
+  byPlate() {
+    const map = {};
+    for (const r of data.records) {
+      if (!r.plate_number) continue;
+      map[r.plate_number] = map[r.plate_number] || { plate_number: r.plate_number, count: 0, total: 0 };
+      map[r.plate_number].count++;
+      map[r.plate_number].total += r.amount;
+    }
+    return Object.values(map).sort((a, b) => b.total - a.total);
   }
 };
 

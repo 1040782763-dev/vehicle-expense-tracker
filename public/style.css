@@ -19,13 +19,14 @@ header h1 span{font-size:13px;opacity:.65;margin-left:10px;font-weight:400}
 .user-badge{font-size:13px;opacity:.85}
 
 /* ─── Summary ─── */
-.summary-row{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;padding:16px 24px;background:#fff;border-bottom:1px solid #e8e8e8}
+.summary-row{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;padding:16px 24px;background:#fff;border-bottom:1px solid #e8e8e8}
 .card{padding:18px;border-radius:8px;text-align:center;border:1px solid #e8e8e8}
 .card-label{font-size:11px;color:#888;text-transform:uppercase;letter-spacing:1.5px;margin-bottom:4px}
 .card-value{font-size:26px;font-weight:700}
 .card-green{background:#f6ffed}.card-green .card-value{color:var(--green)}
 .card-orange{background:#fff7e6}.card-orange .card-value{color:var(--orange)}
 .card-blue{background:#e6f7ff}.card-blue .card-value{color:var(--blue)}
+.card-profit{background:#f9f0ff}.card-profit .card-value{color:#531dab}
 
 /* ─── Tabs ─── */
 .tabs{display:flex;padding:0 24px;background:#fff;border-bottom:2px solid #f0f0f0}
@@ -94,7 +95,7 @@ td.w-amt{font-weight:600;font-variant-numeric:tabular-nums}
 .report-btn.active{background:var(--primary);color:#fff;border-color:var(--primary)}
 
 @media(max-width:768px){
-  .summary-row{grid-template-columns:1fr;padding:10px}
+  .summary-row{grid-template-columns:repeat(2,1fr);padding:10px}
   .filter-bar{flex-direction:column;align-items:stretch}
   .filter-bar input{width:100%}
   .table-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
