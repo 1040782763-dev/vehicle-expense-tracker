@@ -424,8 +424,11 @@ app.get('/api/reports/profit', authRequired, (req, res) => {
 // ─── Backup ──────────────────────────────────────────────────
 app.get('/api/backup', authRequired, (req, res) => {
   const d = new Date().toISOString().slice(0, 10).replace(/-/g, '');
-  res.setHeader('Content-Disposition', `attachment; filename=backup-${d}.json`);
-  res.sendFile(path.join(__dirname, 'data.json'));
+  const filePath = path.join(__dirname, 'data.json');
+  if (!require('fs').existsSync(filePath)) {
+    return res.status(404).json({ error: 'Backup file not found' });
+  }
+  res.download(filePath, `backup-${d}.json`);
 });
 
 // Restore: admin uploads a backup JSON file to replace data.json
