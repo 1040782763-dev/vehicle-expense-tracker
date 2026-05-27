@@ -171,29 +171,42 @@ app.get('/api/payments', authRequired, (req, res) => {
   res.json(payment.list(req.query));
 });
 
-// Sync: auto-create payment entries from recent 3 days' expense plate numbers
+// Sync: auto-create payment entries grouped by plate + date from recent 3 days
 app.post('/api/payments/sync', authRequired, (req, res) => {
-  // Get unique plates from last 3 days
   const today = new Date().toISOString().slice(0, 10);
   const d3 = new Date();
   d3.setDate(d3.getDate() - 3);
   const threeDaysAgo = d3.toISOString().slice(0, 10);
 
   const recentRecords = record.list({ date_from: threeDaysAgo, date_to: today });
-  const recentPlates = [...new Set(recentRecords.map(r => r.plate_number).filter(Boolean))];
 
-  // Get existing payment plate numbers
+  // Group by (plate_number, date) — each unique pair = one potential payment
+  const groups = new Map();
+  for (const r of recentRecords) {
+    if (!r.plate_number) continue;
+    const key = r.plate_number + '|' + r.date;
+    if (!groups.has(key)) {
+      groups.set(key, { plate_number: r.plate_number, date: r.date, total: 0 });
+    }
+    groups.get(key).total += r.amount || 0;
+  }
+
+  // Get existing payments to avoid duplicates
   const existingPayments = payment.list({});
-  const existingPlates = new Set(existingPayments.map(p => p.plate_number));
+  const existingKeys = new Set(
+    existingPayments.map(p => p.plate_number + '|' + p.in_date)
+  );
 
-  // Create payment for plates not yet in payments
+  // Create payment for each group not already in payments
   const created = [];
-  for (const plate of recentPlates) {
-    if (!existingPlates.has(plate)) {
+  for (const [key, grp] of groups) {
+    if (!existingKeys.has(key)) {
       const p = payment.create({
-        plate_number: plate,
+        plate_number: grp.plate_number,
         status: 'unpaid',
-        amount: 0,
+        amount: grp.total,
+        in_date: grp.date,
+        out_date: '',
         payment_date: '',
         notes: '',
         created_by: req.user.username
@@ -203,7 +216,7 @@ app.post('/api/payments/sync', authRequired, (req, res) => {
   }
 
   broadcastSSE('payment_updated', {});
-  res.json({ created, total: recentPlates.length });
+  res.json({ created, total: groups.size });
 });
 
 app.post('/api/payments', authRequired, (req, res) => {
