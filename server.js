@@ -61,6 +61,39 @@ app.post('/api/register', authRequired, (req, res) => {
   res.status(201).json({ ok: true });
 });
 
+// ─── Autocomplete ──────────────────────────────────────────────
+app.get('/api/autocomplete', authRequired, (req, res) => {
+  // Predefined Tanzania car makes / models
+  const presetCarTypes = [
+    'ALPHARD', 'ALPHARD NEW', 'AURIS', 'AVENSIS', 'AVANZA', 'BELTA',
+    'COROLLA', 'COROLLA AXIO', 'COROLLA FIELDER',
+    'CROWN', 'DUALIS', 'ESQUIRE', 'ESTIMA', 'FIT', 'FIT SHUTTLE',
+    'FORESTER', 'FORTUNER', 'FREELANDER',
+    'HARRIER', 'HIACE', 'HIACE WAGON', 'HILUX', 'HILUX SURF',
+    'INSIGHT', 'ISIS', 'IST', 'JIMNY', 'JUKE',
+    'LAND CRUISER', 'LAND CRUISER PRADO', 'LAND CRUISER V8',
+    'MARK II', 'MARK X', 'MARK X ZIO', 'MURANO',
+    'NAVARA', 'NOAH', 'NOTE', 'OUTLANDER', 'PAJERO', 'PAJERO MINI',
+    'PASSO', 'PATROL', 'PLATZ', 'PORTE', 'PRADO', 'PREMIO',
+    'PROBOX', 'RACTIS', 'RAF4', 'RANGER', 'RANGE ROVER',
+    'RAV4', 'RUNX', 'RUSH', 'SAI', 'SIENTA', 'SPACIO',
+    'SUCCEED', 'SURF', 'SWIFT', 'TERIOS', 'TIIDA',
+    'TUNDRA', 'VANGUARD', 'VEZEL', 'VITZ', 'VOLVO XC60',
+    'VOXY', 'WINGROAD', 'WISH', 'X-TRAIL', 'YARIS'
+  ];
+
+  const allRecords = record.list({});
+  const carTypes = [...new Set([
+    ...presetCarTypes,
+    ...allRecords.map(r => r.car_type).filter(Boolean)
+  ])].sort();
+  const plateNumbers = [...new Set(allRecords.map(r => r.plate_number).filter(Boolean))].sort();
+  const descriptions = [...new Set(allRecords.map(r => r.description).filter(Boolean))].sort();
+  const usedBy = [...new Set(allRecords.map(r => r.used_by).filter(Boolean))].sort();
+
+  res.json({ car_types: carTypes, plate_numbers: plateNumbers, descriptions, used_by: usedBy });
+});
+
 app.get('/api/users', authRequired, (req, res) => {
   if (req.user.role !== 'admin') return res.status(403).json({ error: 'Admin only' });
   res.json(user.list());

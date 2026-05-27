@@ -178,12 +178,16 @@
   <div class="modal">
     <h2 id="recordModalTitle">New Record</h2>
     <div class="form-row"><label>Date</label><input type="date" id="mDate"></div>
-    <div class="form-row"><label>Description</label><input type="text" id="mDesc"></div>
+    <div class="form-row"><label>Description</label><input type="text" id="mDesc" list="dlDesc" autocomplete="off"></div>
     <div class="form-row"><label>QTY</label><input type="text" id="mQty" class="short"></div>
-    <div class="form-row"><label>Car Type</label><input type="text" id="mCarType"></div>
-    <div class="form-row"><label>Plate No.</label><input type="text" id="mPlate"></div>
+    <div class="form-row"><label>Car Type</label><input type="text" id="mCarType" list="dlCarType" autocomplete="off"></div>
+    <div class="form-row"><label>Plate No.</label><input type="text" id="mPlate" list="dlPlate" autocomplete="off"></div>
     <div class="form-row"><label>Amount</label><input type="number" id="mAmount"></div>
-    <div class="form-row"><label>Used By</label><input type="text" id="mGuy"></div>
+    <div class="form-row"><label>Used By</label><input type="text" id="mGuy" list="dlGuy" autocomplete="off"></div>
+    <datalist id="dlDesc"></datalist>
+    <datalist id="dlCarType"></datalist>
+    <datalist id="dlPlate"></datalist>
+    <datalist id="dlGuy"></datalist>
     <div class="btn-row">
       <button class="btn btn-outline" onclick="closeModal('recordModal')" data-en="Cancel" data-zh="取消">Cancel</button>
       <button class="btn btn-primary" id="btnSaveRecord" onclick="saveRecord()" data-en="Save" data-zh="保存">Save</button>

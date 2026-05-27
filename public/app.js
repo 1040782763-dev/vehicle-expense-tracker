@@ -351,6 +351,36 @@ function showRecordModal() {
   document.getElementById('mAmount').value = '';
   document.getElementById('mGuy').value = '';
   document.getElementById('recordModal').classList.add('active');
+  loadAutocomplete();
+}
+
+let autocompleteCache = null;
+
+async function loadAutocomplete() {
+  // Skip if already loaded within last 30 seconds
+  if (autocompleteCache && Date.now() - autocompleteCache.ts < 30000) {
+    return;
+  }
+  try {
+    const data = await api('/api/autocomplete');
+    autocompleteCache = { ...data, ts: Date.now() };
+  } catch(e) { /* use cached or empty */ }
+  if (!autocompleteCache) return;
+
+  const fillDatalist = (id, items) => {
+    const dl = document.getElementById(id);
+    if (!dl || dl.children.length > 0) return; // already populated
+    items.forEach(v => {
+      const opt = document.createElement('option');
+      opt.value = v;
+      dl.appendChild(opt);
+    });
+  };
+
+  fillDatalist('dlDesc', autocompleteCache.descriptions || []);
+  fillDatalist('dlCarType', autocompleteCache.car_types || []);
+  fillDatalist('dlPlate', autocompleteCache.plate_numbers || []);
+  fillDatalist('dlGuy', autocompleteCache.used_by || []);
 }
 
 async function editRecord(id) {
