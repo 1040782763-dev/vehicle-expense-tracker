@@ -78,6 +78,7 @@
       <table>
         <thead>
           <tr>
+            <th class="w-seq">#</th>
             <th class="w-date" data-en="Date" data-zh="日期">Date</th>
             <th class="w-desc" data-en="Description" data-zh="描述">Description</th>
             <th class="w-qty">QTY</th>
@@ -112,6 +113,8 @@
           <tr>
             <th class="w-plate" data-en="Plate No." data-zh="车牌号">Plate No.</th>
             <th class="w-status" data-en="Status" data-zh="状态">Status</th>
+            <th class="w-date" data-en="In Date" data-zh="进场日期">In Date</th>
+            <th class="w-date" data-en="Out Date" data-zh="出厂日期">Out Date</th>
             <th class="w-date" data-en="Pay Date" data-zh="付款日期">Pay Date</th>
             <th class="w-amt" data-en="Amount" data-zh="金额">Amount</th>
             <th class="w-desc" data-en="Notes" data-zh="备注">Notes</th>
@@ -196,6 +199,8 @@
       <label>Status</label>
       <select id="mPStatus"><option value="paid">Paid</option><option value="unpaid">Unpaid</option></select>
     </div>
+    <div class="form-row"><label>In Date</label><input type="date" id="mPInDate"></div>
+    <div class="form-row"><label>Out Date</label><input type="date" id="mPOutDate"></div>
     <div class="form-row"><label>Pay Date</label><input type="date" id="mPPayDate"></div>
     <div class="form-row"><label>Amount</label><input type="number" id="mPAmount"></div>
     <div class="form-row"><label>Notes</label><input type="text" id="mPNotes"></div>
@@ -210,6 +215,7 @@
 <div class="modal-overlay" id="depositModal">
   <div class="modal">
     <h2 data-en="Manage Deposit" data-zh="管理预存款">Manage Deposit</h2>
+    <div class="form-row"><label>Date</label><input type="date" id="dDate"></div>
     <div class="form-row"><label data-en="Current" data-zh="当前">Current</label><input type="text" id="dCurrent" readonly class="readonly"></div>
     <div class="form-row">
       <label data-en="Action" data-zh="操作">Action</label>

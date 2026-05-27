@@ -252,7 +252,9 @@ function esc(v) { if (!v && v !== 0) return ''; return String(v).replace(/&/g,'&
 // ─── Deposit ──────────────────────────────────────────────────
 async function loadDeposit() {
   try {
-    const data = await api('/api/deposit');
+    const fDate = document.getElementById('fDate').value;
+    const date = fDate || new Date().toISOString().slice(0,10);
+    const data = await api('/api/deposit?date=' + date);
     document.getElementById('sumDeposit').textContent = formatNum(data.amount);
     document.getElementById('sumExpense').textContent = formatNum(data.expense);
     document.getElementById('sumBalance').textContent = formatNum(data.balance);
@@ -265,6 +267,8 @@ function showDepositModal() {
   document.getElementById('dCurrent').value = formatNum(document.getElementById('sumDeposit').textContent.replace(/,/g,''));
   document.getElementById('dOp').value = 'set';
   document.getElementById('dAmount').value = '';
+  const fDate = document.getElementById('fDate').value;
+  document.getElementById('dDate').value = fDate || new Date().toISOString().slice(0,10);
   document.getElementById('depositModal').classList.add('active');
   applyLang();
 }
@@ -276,8 +280,9 @@ async function updateDeposit() {
   if (op === 'add') current += amt;
   else if (op === 'sub') current = Math.max(0, current - amt);
   else current = amt;
+  const date = document.getElementById('dDate').value || new Date().toISOString().slice(0,10);
   try {
-    await api('/api/deposit', { method: 'PUT', body: JSON.stringify({ amount: current, date: new Date().toISOString().slice(0,10) }) });
+    await api('/api/deposit', { method: 'PUT', body: JSON.stringify({ amount: current, date: date }) });
     document.getElementById('depositModal').classList.remove('active');
     loadDeposit();
   } catch(e) { alert(e.message); }
@@ -300,6 +305,7 @@ async function loadRecords() {
 
     const data = await api('/api/records?' + params.toString());
     renderRecordsData(data);
+    loadDeposit(); // sync deposit card to selected date
   } catch(e) { /* ignore */ }
 }
 
@@ -308,11 +314,12 @@ function renderRecords() { loadRecords(); }
 function renderRecordsData(data) {
   const tbody = document.getElementById('recordsBody');
   if (!data.length) {
-    tbody.innerHTML = '<tr><td colspan="8" class="no-data">' + t('noRecords') + '</td></tr>';
+    tbody.innerHTML = '<tr><td colspan="9" class="no-data">' + t('noRecords') + '</td></tr>';
     return;
   }
   tbody.innerHTML = data.map(r => `
     <tr>
+      <td class="w-seq text-center">${r.seq || ''}</td>
       <td class="w-date">${formatDate(r.date)}</td>
       <td class="w-desc">${esc(r.description)}</td>
       <td class="w-qty text-center">${esc(r.qty)}</td>
@@ -372,7 +379,6 @@ async function saveRecord() {
 
   if (!date) { alert(lang === 'en' ? 'Date is required' : '请选择日期'); return; }
   if (!desc) { alert(lang === 'en' ? 'Description is required' : '请填写描述'); return; }
-  if (!carType) { alert(lang === 'en' ? 'Car Type is required' : '请填写车型'); return; }
   if (!plate) { alert(lang === 'en' ? 'Plate No. is required' : '请填写车牌号'); return; }
   if (!amount) { alert(lang === 'en' ? 'Amount is required' : '请填写金额'); return; }
   if (!guy) { alert(lang === 'en' ? 'Used By is required' : '请填写使用人'); return; }
@@ -414,7 +420,7 @@ async function renderPayments() {
   const data = await loadPayments();
   const tbody = document.getElementById('paymentsBody');
   if (!data.length) {
-    tbody.innerHTML = '<tr><td colspan="6" class="no-data">' + t('noPayments') + '</td></tr>';
+    tbody.innerHTML = '<tr><td colspan="8" class="no-data">' + t('noPayments') + '</td></tr>';
     return;
   }
   tbody.innerHTML = data.map(p => `
@@ -423,6 +429,8 @@ async function renderPayments() {
       <td class="w-status">
         <span class="badge ${p.status === 'paid' ? 'badge-paid' : 'badge-unpaid'}">${t(p.status)}</span>
       </td>
+      <td class="w-date">${p.in_date ? formatDate(p.in_date) : '-'}</td>
+      <td class="w-date">${p.out_date ? formatDate(p.out_date) : '-'}</td>
       <td class="w-date">${p.payment_date ? formatDate(p.payment_date) : '-'}</td>
       <td class="w-amt text-right">${p.amount ? formatNum(p.amount) : '-'}</td>
       <td class="w-desc">${esc(p.notes)}</td>
@@ -452,6 +460,8 @@ function showPaymentModal() {
   document.getElementById('btnSavePayment').textContent = t('save');
   document.getElementById('mPPlate').value = '';
   document.getElementById('mPStatus').value = 'unpaid';
+  document.getElementById('mPInDate').value = '';
+  document.getElementById('mPOutDate').value = '';
   document.getElementById('mPPayDate').value = '';
   document.getElementById('mPAmount').value = '';
   document.getElementById('mPNotes').value = '';
@@ -467,6 +477,8 @@ async function editPayment(id) {
   document.getElementById('btnSavePayment').textContent = t('update');
   document.getElementById('mPPlate').value = p.plate_number;
   document.getElementById('mPStatus').value = p.status;
+  document.getElementById('mPInDate').value = p.in_date || '';
+  document.getElementById('mPOutDate').value = p.out_date || '';
   document.getElementById('mPPayDate').value = p.payment_date || '';
   document.getElementById('mPAmount').value = p.amount || '';
   document.getElementById('mPNotes').value = p.notes || '';
@@ -476,13 +488,15 @@ async function editPayment(id) {
 async function savePayment() {
   const plate = document.getElementById('mPPlate').value.trim();
   const status = document.getElementById('mPStatus').value;
+  const inDate = document.getElementById('mPInDate').value;
+  const outDate = document.getElementById('mPOutDate').value;
   const payDate = document.getElementById('mPPayDate').value;
   const amount = parseInt(document.getElementById('mPAmount').value) || 0;
   const notes = document.getElementById('mPNotes').value.trim();
 
   if (!plate) { alert('Plate number is required'); return; }
 
-  const body = { plate_number: plate, status, payment_date: payDate, amount, notes };
+  const body = { plate_number: plate, status, in_date: inDate, out_date: outDate, payment_date: payDate, amount, notes };
   try {
     if (editingPaymentId) {
       await api('/api/payments/' + editingPaymentId, { method: 'PUT', body: JSON.stringify(body) });

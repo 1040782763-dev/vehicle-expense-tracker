@@ -79,7 +79,8 @@ const record = {
   },
 
   create(d) {
-    const r = { id: nextId(), date: d.date, description: d.description || '', qty: d.qty || '',
+    const maxSeq = data.records.reduce((max, r) => Math.max(max, r.seq || 0), 0);
+    const r = { id: nextId(), seq: maxSeq + 1, date: d.date, description: d.description || '', qty: d.qty || '',
                 car_type: d.car_type || '', plate_number: d.plate_number || '',
                 amount: Number(d.amount) || 0, used_by: d.used_by || '',
                 created_by: d.created_by || '',
@@ -123,6 +124,7 @@ const payment = {
   create(d) {
     const p = { id: nextId(), plate_number: d.plate_number || '', status: d.status || 'unpaid',
                 amount: Number(d.amount) || 0, payment_date: d.payment_date || '',
+                in_date: d.in_date || '', out_date: d.out_date || '',
                 notes: d.notes || '', created_by: d.created_by || '',
                 created_at: new Date().toISOString(), updated_at: new Date().toISOString() };
     data.payments.push(p);
@@ -133,7 +135,7 @@ const payment = {
   update(id, d) {
     const p = data.payments.find(x => x.id === Number(id));
     if (!p) return null;
-    const fields = ['plate_number','status','amount','payment_date','notes'];
+    const fields = ['plate_number','status','amount','payment_date','in_date','out_date','notes'];
     for (const f of fields) if (d[f] !== undefined) p[f] = d[f];
     p.updated_at = new Date().toISOString();
     save();
@@ -180,22 +182,12 @@ const deposit = {
     return this.getFor(today());
   },
 
-  // Get opening deposit for a specific date
+  // Get opening deposit for a specific date (manual entry only, no auto-carry)
   getFor(date) {
-    // If explicitly set, use it
     if (data.daily_deposits[date] !== undefined && data.daily_deposits[date] !== null) {
       return data.daily_deposits[date];
     }
-    // Auto-calculate: look for the most recent previous day that has data
-    const allDates = activeDates();
-    let lastBalance = 0;
-    for (const d of allDates) {
-      if (d >= date) break;
-      const dep = data.daily_deposits[d] !== undefined ? data.daily_deposits[d] : lastBalance;
-      const exp = dayExpense(d);
-      lastBalance = dep - exp;
-    }
-    return lastBalance;
+    return 0;
   },
 
   // Set today's opening deposit
@@ -235,16 +227,14 @@ const deposit = {
     const dates = activeDates();
     if (!dates.length) return [];
 
-    let carriedDeposit = 0;
     const result = [];
     for (const d of dates) {
       const opening = data.daily_deposits[d] !== undefined
         ? data.daily_deposits[d]
-        : carriedDeposit;
+        : 0;
       const expense = dayExpense(d);
       const balance = opening - expense;
       result.push({ date: d, deposit: opening, expense, balance });
-      carriedDeposit = balance;
     }
     return result.reverse(); // newest first
   }

@@ -55,14 +55,15 @@ header h1 span{font-size:13px;opacity:.65;margin-left:10px;font-weight:400}
 .btn-xs{padding:3px 8px;font-size:11px;border:none;border-radius:3px;cursor:pointer;margin:0 1px}
 
 /* ─── Table ─── */
-.table-wrap{background:#fff;border:1px solid #e8e8e8;border-radius:8px;overflow:hidden;max-height:55vh;overflow-y:auto}
-table{width:100%;border-collapse:collapse}
+.table-wrap{background:#fff;border:1px solid #e8e8e8;border-radius:8px;overflow-x:auto;max-height:55vh;overflow-y:auto;-webkit-overflow-scrolling:touch}
+table{width:100%;border-collapse:collapse;min-width:800px}
 th{background:#fafafa;padding:10px 8px;text-align:left;font-size:12px;font-weight:600;color:#555;border-bottom:2px solid #e8e8e8;white-space:nowrap;position:sticky;top:0}
 td{padding:9px 8px;border-bottom:1px solid #f0f0f0;font-size:13px}
 tr:hover td{background:#fafafa}
-.w-date{width:95px}.w-desc{min-width:180px}.w-qty{width:55px;text-align:center}
-.w-type{width:120px}.w-plate{width:115px}.w-amt{width:110px;text-align:right}
-.w-guy{width:90px}.w-act{width:90px;text-align:center}.w-status{width:90px}
+.w-seq{width:40px;text-align:center;color:#999;font-size:12px}
+.w-date{width:95px}.w-desc{min-width:150px}.w-qty{width:55px;text-align:center}
+.w-type{width:100px}.w-plate{width:105px}.w-amt{width:100px;text-align:right}
+.w-guy{width:80px}.w-act{width:80px;text-align:center}.w-status{width:80px}
 td.w-amt{font-weight:600;font-variant-numeric:tabular-nums}
 .text-right{text-align:right}.text-center{text-align:center}
 .no-data{text-align:center;padding:50px;color:#bbb;font-size:14px}
