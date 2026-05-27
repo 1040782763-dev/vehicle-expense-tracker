@@ -148,6 +148,8 @@ async function doLogin() {
     document.getElementById('userBadge').textContent = data.username + (data.role === 'admin' ? ' (admin)' : '');
     if (data.role === 'admin') {
       document.getElementById('tabUsers').style.display = '';
+      document.getElementById('profitBtn').style.display = '';
+      document.getElementById('profitGroup').style.display = '';
     } else {
       ['tabInvoice','tabReports','tabUsers'].forEach(id => { const el = document.getElementById(id); if (el) el.style.display = 'none'; });
       ['invoice','reports','users'].forEach(t => { const el = document.querySelector('.tab[data-tab="'+t+'"]'); if (el) el.style.display = 'none'; });
@@ -473,8 +475,17 @@ async function loadPayments() {
 async function renderPayments() {
   const data = await loadPayments();
   const tbody = document.getElementById('paymentsBody');
+  const isAdmin = currentUser && currentUser.role === 'admin';
+  const colSpan = isAdmin ? 8 : 7;
+
+  // Show/hide amount header and modal field
+  const amtHeader = document.getElementById('payAmtHeader');
+  const amtRow = document.getElementById('payAmtRow');
+  if (amtHeader) amtHeader.style.display = isAdmin ? '' : 'none';
+  if (amtRow) amtRow.style.display = isAdmin ? '' : 'none';
+
   if (!data.length) {
-    tbody.innerHTML = '<tr><td colspan="8" class="no-data">' + t('noPayments') + '</td></tr>';
+    tbody.innerHTML = '<tr><td colspan="'+colSpan+'" class="no-data">' + t('noPayments') + '</td></tr>';
     return;
   }
   tbody.innerHTML = data.map(p => `
@@ -486,7 +497,7 @@ async function renderPayments() {
       <td class="w-date">${p.in_date ? formatDate(p.in_date) : '-'}</td>
       <td class="w-date">${p.out_date ? formatDate(p.out_date) : '-'}</td>
       <td class="w-date">${p.payment_date ? formatDate(p.payment_date) : '-'}</td>
-      <td class="w-amt text-right">${p.amount ? formatNum(p.amount) : '-'}</td>
+      ${isAdmin ? `<td class="w-amt text-right">${p.amount ? formatNum(p.amount) : '-'}</td>` : ''}
       <td class="w-desc">${esc(p.notes)}</td>
       <td class="w-act text-center">
         <button class="btn-xs btn-edit" onclick="editPayment(${p.id})">${lang==='en'?'Edit':'编辑'}</button>
@@ -570,6 +581,47 @@ async function deletePayment(id) {
   } catch(e) { alert(e.message); }
 }
 
+// ─── Car Parts Bilingual Map (EN → ZH) ─────────────────────
+const PARTS_ZH = {
+  'AC GAS':'空调冷媒','AIR FILTER':'空气滤清器','ALTERNATOR':'发电机','BALL JOINT':'球头',
+  'BATTERY':'电瓶','BRAKE CALIPER':'刹车分泵','BRAKE DISC':'刹车盘','BRAKE DRUM':'刹车鼓',
+  'BRAKE MASTER CYLINDER':'刹车总泵','BRAKE PAD':'刹车片','BRAKE PIPE':'刹车管',
+  'BRAKE SHOE':'刹车蹄','BULB':'灯泡','BUMPER':'保险杠','CAMSHAFT':'凸轮轴',
+  'CAR WASH':'洗车','CLUTCH':'离合器','CLUTCH CYLINDER':'离合器分泵','CLUTCH DISC':'离合器片',
+  'COIL SPRING':'弹簧','COMPRESSOR':'压缩机','COMPRESSOR OIL':'压缩机油','CONDENSER':'冷凝器',
+  'CONNECTING ROD':'连杆','CONTROL ARM':'控制臂','COOLANT':'冷却液','CRANKSHAFT':'曲轴',
+  'CV JOINT':'球笼','CYLINDER HEAD':'缸盖','DIFFERENTIAL':'差速器','DRIVE SHAFT':'传动轴',
+  'ENGINE':'发动机','ENGINE GASKET':'发动机垫片','ENGINE MOUNTING':'发动机支架',
+  'ENGINE OIL':'机油','EVAPORATOR':'蒸发器','EXHAUST MUFFLER':'排气管消声器',
+  'EXPANSION':'膨胀阀','EXPANSION VALVE':'膨胀阀','FLYWHEEL':'飞轮','FOG LIGHT':'雾灯',
+  'FUEL FILTER':'燃油滤清器','FUEL INJECTOR':'喷油嘴','FUEL PUMP':'燃油泵','FUSE':'保险丝',
+  'GASKET':'垫片','GASKET MAKER':'密封胶','GEAR OIL':'齿轮油','GEARBOX':'变速箱',
+  'HEAD GASKET':'缸垫','HEADLIGHT':'大灯','HORN':'喇叭','HOSE':'软管',
+  'IGNITION COIL':'点火线圈','INJECTION NOZZLE':'喷油嘴','LED BULB':'LED灯泡',
+  'LOWER ARM':'下摆臂','MASTER CYLINDER':'总泵','OIL COOLER':'机油冷却器',
+  'OIL FILTER':'机油滤清器','OIL PAN':'油底壳','OIL PUMP':'机油泵','OIL SEAL':'油封',
+  'OXYGEN SENSER':'氧传感器','OXYGEN SENSOR':'氧传感器','PETROL':'汽油','PISTON':'活塞',
+  'PISTON RING':'活塞环','RADIATOR':'水箱','RADIATOR CAP':'水箱盖','RADIATOR FAN':'散热风扇',
+  'RADIATOR HOSE':'水箱管','RELAY':'继电器','SHOCK ABSORBER':'减震器','SPARK PLUG':'火花塞',
+  'STARTER':'启动机','STARTER MOTOR':'启动马达','STEERING RACK':'方向机',
+  'SUSPENSION BUSHING':'悬挂胶套','TAILLIGHT':'尾灯','TENSIONER':'涨紧轮','THERMOSTAT':'节温器',
+  'TIE ROD END':'方向机拉杆球头','TIMING BELT':'正时皮带','TIMING CHAIN':'正时链条',
+  'TIRE':'轮胎','TURBOCHARGER':'涡轮增压器','TYRE':'轮胎','VALVE':'气门',
+  'VALVE SEAL':'气门油封','VALVE SPRING':'气门弹簧','WATER PUMP':'水泵',
+  'WHEEL BEARING':'轮毂轴承','WHEEL CYLINDER':'刹车分泵','WIPER':'雨刮器',
+  'WIPER BLADE':'雨刮片','WIRING HARNESS':'线束','FUNDI':'人工费','CAR WASH':'洗车',
+  'TRANSPORT':'运输费','OVERHAUL':'大修','DRIVER':'司机费',
+};
+function translatePart(name) {
+  const upper = (name || '').trim().toUpperCase();
+  if (PARTS_ZH[upper]) return name + ' - ' + PARTS_ZH[upper];
+  // Try partial match
+  for (const [en, zh] of Object.entries(PARTS_ZH)) {
+    if (upper.includes(en)) return name + ' - ' + zh;
+  }
+  return name;
+}
+
 // ─── Invoice ───────────────────────────────────────────────────
 const INV_TOTAL_ROWS = 14;
 let invCurrentId = null;
@@ -639,14 +691,20 @@ async function initInvoice() {
 
 async function loadInvAutocomplete() {
   try {
-    const data = await api('/api/autocomplete');
+    const [autoData, invoices] = await Promise.all([
+      api('/api/autocomplete'),
+      api('/api/invoices')
+    ]);
     const fillDl = (id, items) => {
       const dl = document.getElementById(id);
       if (!dl || dl.children.length > 0) return;
       items.forEach(v => { const o = document.createElement('option'); o.value = v; dl.appendChild(o); });
     };
-    fillDl('dlInvPlate', data.plate_numbers || []);
-    fillDl('dlInvPart', data.spare_parts || []);
+    fillDl('dlInvPlate', autoData.plate_numbers || []);
+    fillDl('dlInvPart', autoData.spare_parts || []);
+    // Client names from invoice history
+    const customers = [...new Set(invoices.map(inv => inv.customer).filter(Boolean))].sort();
+    fillDl('dlInvCustomer', customers);
   } catch(e) { /* ignore */ }
 }
 
@@ -742,28 +800,58 @@ function setInvFormData(data) {
 
 async function autoFillInvoice() {
   const plate = document.getElementById('invPlate').value.trim();
-  if (!plate) return;
+
+  // Clear items when plate is cleared
+  if (!plate) {
+    for (let i = 1; i <= INV_TOTAL_ROWS; i++) {
+      ['name','unit','qty','cost','labor','amount','remark'].forEach(f => {
+        document.querySelector('[data-invrow="'+i+'"][data-invfield="'+f+'"]').value = '';
+      });
+    }
+    document.getElementById('invRemark').value = '';
+    calcInvTotals();
+    return;
+  }
 
   try {
-    const data = await api('/api/records?plate=' + encodeURIComponent(plate));
-    if (!data.length) return;
+    // Fetch records for this plate AND invoice history for client name
+    const [records, invoices] = await Promise.all([
+      api('/api/records?plate=' + encodeURIComponent(plate)),
+      api('/api/invoices')
+    ]);
 
-    // Only auto-fill if form is empty (new invoice)
-    const hasContent = document.getElementById('invCustomer').value ||
-      document.querySelector('[data-invrow="1"][data-invfield="name"]').value;
-    if (hasContent) return;
-
-    const latest = data[0];
-    // Auto-fill remark with car type info
-    if (!document.getElementById('invRemark').value) {
-      document.getElementById('invRemark').value = latest.car_type || '';
+    // --- Auto-fill client name from invoice history ---
+    const prevInvoices = invoices.filter(inv => inv.plate && inv.plate.toUpperCase() === plate.toUpperCase());
+    if (prevInvoices.length > 0 && !document.getElementById('invCustomer').value) {
+      // Use most recent invoice's customer name
+      const latestInv = prevInvoices[0];
+      if (latestInv.customer) {
+        document.getElementById('invCustomer').value = latestInv.customer;
+      }
     }
 
-    // Get unique descriptions and fill rows
-    const parts = [...new Set(data.map(r => r.description).filter(Boolean))];
+    if (!records.length) return;
+
+    // Only auto-fill items if table is empty
+    const hasItems = document.querySelector('[data-invrow="1"][data-invfield="name"]').value;
+    if (hasItems) return;
+
+    const latest = records[0];
+
+    // Auto-fill remark with car type, from records
+    if (!document.getElementById('invRemark').value) {
+      const types = [...new Set(records.map(r => r.car_type).filter(Boolean))];
+      const topType = types.sort((a,b) =>
+        records.filter(r => r.car_type === b).length - records.filter(r => r.car_type === a).length
+      )[0] || '';
+      document.getElementById('invRemark').value = topType;
+    }
+
+    // Get unique descriptions with bilingual names and fill rows
+    const parts = [...new Set(records.map(r => r.description).filter(Boolean))];
     parts.slice(0, INV_TOTAL_ROWS).forEach((p, idx) => {
       const i = idx + 1;
-      document.querySelector('[data-invrow="'+i+'"][data-invfield="name"]').value = p;
+      document.querySelector('[data-invrow="'+i+'"][data-invfield="name"]').value = translatePart(p);
     });
     calcInvTotals();
   } catch(e) { /* ignore */ }
@@ -813,9 +901,21 @@ async function deleteInvoiceById(id, event) {
 
 async function renderInvSavedList() {
   try {
-    const data = await api('/api/invoices');
+    const searchEl = document.getElementById('invSearch');
+    const search = searchEl ? searchEl.value.toLowerCase().trim() : '';
+    let data = await api('/api/invoices');
+    // Client-side search filter
+    if (search) {
+      data = data.filter(inv => {
+        const total = (inv.items || []).reduce((s, it) => s + (Number(it.amount) || Number(it.qty||0)*Number(it.cost||0)+Number(it.labor||0) || 0), 0);
+        return (inv.orderNo||'').toLowerCase().includes(search) ||
+               (inv.plate||'').toLowerCase().includes(search) ||
+               (inv.customer||'').toLowerCase().includes(search) ||
+               String(total).includes(search);
+      });
+    }
     const container = document.getElementById('invSavedList');
-    const recent = data.slice(0, 10);
+    const recent = data.slice(0, 20);
     if (!recent.length) {
       container.innerHTML = '<div style="text-align:center;color:#999;padding:20px">' + (lang === 'en' ? 'No records' : '暂无记录') + '</div>';
       return;
@@ -1089,6 +1189,47 @@ async function loadByPlateReport(btn) {
     }).join('');
 
     totalEl.textContent = (lang === 'en' ? 'Total: ' : '合计: ') + formatNum(totalAmount);
+    applyLang();
+  } catch(e) { /* ignore */ }
+}
+
+async function loadProfitReport(group, btn) {
+  if (!currentUser || currentUser.role !== 'admin') return;
+  document.querySelectorAll('.report-btn').forEach(b => b.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+
+  try {
+    const data = await api('/api/reports/profit?group=' + group);
+    document.getElementById('reportHead').innerHTML = `<tr>
+      <th>${group === 'monthly' ? (lang === 'en' ? 'Month' : '月份') : (lang === 'en' ? 'Plate No.' : '车牌号')}</th>
+      <th style="text-align:right">${lang === 'en' ? 'Revenue (TZS)' : '收入（坦桑先令）'}</th>
+      <th style="text-align:right">${lang === 'en' ? 'Cost (TZS)' : '成本（坦桑先令）'}</th>
+      <th style="text-align:right">${lang === 'en' ? 'Profit (TZS)' : '毛利（坦桑先令）'}</th>
+      <th style="text-align:center">${lang === 'en' ? 'Margin %' : '毛利率'}</th>
+    </tr>`;
+
+    let totalRevenue = 0, totalCost = 0, totalProfit = 0;
+    document.getElementById('reportsBody').innerHTML = data.map(r => {
+      totalRevenue += r.revenue;
+      totalCost += r.cost;
+      totalProfit += r.profit;
+      const marginColor = r.margin >= 20 ? 'var(--green)' : r.margin >= 0 ? 'var(--orange)' : 'var(--danger)';
+      return `<tr>
+        <td>${esc(r.key)}</td>
+        <td class="w-amt text-right">${formatNum(r.revenue)}</td>
+        <td class="w-amt text-right">${formatNum(r.cost)}</td>
+        <td class="w-amt text-right" style="color:${r.profit >= 0 ? 'var(--green)' : 'var(--danger)'}">${formatNum(r.profit)}</td>
+        <td class="text-center" style="font-weight:600;color:${marginColor}">${r.margin}%</td>
+      </tr>`;
+    }).join('');
+
+    const overallMargin = totalRevenue > 0 ? ((totalProfit / totalRevenue) * 100).toFixed(1) : '0.0';
+    document.getElementById('reportTotal').innerHTML = `
+      <span>${lang === 'en' ? 'Revenue:' : '收入:'} ${formatNum(totalRevenue)}</span>
+      <span style="margin-left:12px">${lang === 'en' ? 'Cost:' : '成本:'} ${formatNum(totalCost)}</span>
+      <span style="margin-left:12px;color:var(--green)">${lang === 'en' ? 'Profit:' : '毛利:'} ${formatNum(totalProfit)}</span>
+      <span style="margin-left:12px;color:var(--blue)">${lang === 'en' ? 'Margin:' : '毛利率:'} ${overallMargin}%</span>
+    `;
     applyLang();
   } catch(e) { /* ignore */ }
 }

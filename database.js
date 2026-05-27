@@ -407,6 +407,43 @@ const report = {
       map[r.plate_number].total += r.amount;
     }
     return Object.values(map).sort((a, b) => b.total - a.total);
+  },
+
+  // Profit margin analysis: revenue (paid payments) vs cost (expenses)
+  profit(groupBy = 'monthly') {
+    // Revenue from paid payments
+    const revenueMap = {};
+    for (const p of data.payments) {
+      if (p.status !== 'paid' || !p.amount) continue;
+      const key = groupBy === 'monthly' ? (p.payment_date || p.in_date || '').slice(0, 7)
+                : groupBy === 'plate' ? (p.plate_number || 'Unknown')
+                : 'all';
+      if (!key || key === 'Unknown') continue;
+      revenueMap[key] = (revenueMap[key] || 0) + (Number(p.amount) || 0);
+    }
+
+    // Cost from expense records
+    const costMap = {};
+    for (const r of data.records) {
+      const key = groupBy === 'monthly' ? r.date.slice(0, 7)
+                : groupBy === 'plate' ? (r.plate_number || 'Unknown')
+                : 'all';
+      if (!key || key === 'Unknown') continue;
+      costMap[key] = (costMap[key] || 0) + (r.amount || 0);
+    }
+
+    // Merge and calculate profit
+    const allKeys = [...new Set([...Object.keys(revenueMap), ...Object.keys(costMap)])].sort();
+    const result = allKeys.map(key => {
+      const revenue = revenueMap[key] || 0;
+      const cost = costMap[key] || 0;
+      const profit = revenue - cost;
+      const margin = revenue > 0 ? ((profit / revenue) * 100).toFixed(1) : '0.0';
+      return { key, revenue, cost, profit, margin: Number(margin) };
+    });
+
+    if (groupBy === 'monthly') return result.reverse();
+    return result.sort((a, b) => b.profit - a.profit);
   }
 };
 

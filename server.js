@@ -391,6 +391,12 @@ app.get('/api/reports/by-plate', authRequired, (req, res) => {
   res.json(report.byPlate());
 });
 
+app.get('/api/reports/profit', authRequired, (req, res) => {
+  if (req.user.role !== 'admin') return res.status(403).json({ error: 'Admin only' });
+  const groupBy = req.query.group || 'monthly';
+  res.json(report.profit(groupBy));
+});
+
 // ─── Backup ──────────────────────────────────────────────────
 app.get('/api/backup', authRequired, (req, res) => {
   const d = new Date().toISOString().slice(0, 10).replace(/-/g, '');

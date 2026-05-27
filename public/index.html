@@ -121,7 +121,7 @@
             <th class="w-date" data-en="In Date" data-zh="进场日期">In Date</th>
             <th class="w-date" data-en="Out Date" data-zh="出厂日期">Out Date</th>
             <th class="w-date" data-en="Pay Date" data-zh="付款日期">Pay Date</th>
-            <th class="w-amt" data-en="Amount" data-zh="金额">Amount</th>
+            <th class="w-amt" id="payAmtHeader" data-en="Amount" data-zh="金额">Amount</th>
             <th class="w-desc" data-en="Notes" data-zh="备注">Notes</th>
             <th class="w-act" data-en="Action" data-zh="操作">Action</th>
           </tr>
@@ -154,7 +154,8 @@
         </div>
         <div class="inv-field">
           <label data-en="Client Name" data-zh="客户名称">Client Name</label>
-          <input type="text" id="invCustomer" placeholder="">
+          <input type="text" id="invCustomer" placeholder="" list="dlInvCustomer" autocomplete="off">
+          <datalist id="dlInvCustomer"></datalist>
         </div>
         <div class="inv-field">
           <label data-en="Date" data-zh="日期">Date</label>
@@ -213,6 +214,10 @@
     <!-- Recent Saved List -->
     <div class="inv-card" id="invSavedSection">
       <div class="inv-card-title">📂 <span data-en="Recent Saved" data-zh="最近保存">Recent Saved</span></div>
+      <div style="margin-bottom:10px">
+        <input type="text" id="invSearch" placeholder="Search order/plate/customer..." oninput="renderInvSavedList()"
+          style="width:100%;padding:8px 12px;border:1px solid #ddd;border-radius:8px;font-size:13px;background:#fafafa">
+      </div>
       <div id="invSavedList"></div>
     </div>
 
@@ -261,6 +266,11 @@
       <button class="btn btn-outline report-btn" onclick="loadReport('yearly', this)" data-en="Yearly" data-zh="年报">Yearly</button>
       <button class="btn btn-outline report-btn" onclick="loadDailySummary(this)" data-en="Daily Summary" data-zh="每日结算">Daily Summary</button>
       <button class="btn btn-outline report-btn" onclick="loadByPlateReport(this)" data-en="By Plate" data-zh="按车牌">By Plate</button>
+      <button class="btn btn-outline report-btn" id="profitBtn" onclick="loadProfitReport('monthly', this)" data-en="Profit" data-zh="毛利分析" style="display:none">Profit</button>
+      <select id="profitGroup" onchange="loadProfitReport(this.value, document.getElementById('profitBtn'))" style="display:none;padding:8px 12px;border:1px solid #d9d9d9;border-radius:6px;font-size:13px">
+        <option value="monthly" data-en="By Month" data-zh="按月">By Month</option>
+        <option value="plate" data-en="By Plate" data-zh="按车牌">By Plate</option>
+      </select>
       <span style="flex:1"></span>
       <span id="reportTotal" style="font-weight:700;font-size:15px"></span>
     </div>
@@ -333,7 +343,7 @@
     <div class="form-row"><label>In Date</label><input type="date" id="mPInDate"></div>
     <div class="form-row"><label>Out Date</label><input type="date" id="mPOutDate"></div>
     <div class="form-row"><label>Pay Date</label><input type="date" id="mPPayDate"></div>
-    <div class="form-row"><label>Amount</label><input type="number" id="mPAmount"></div>
+    <div class="form-row" id="payAmtRow"><label>Amount</label><input type="number" id="mPAmount"></div>
     <div class="form-row"><label>Notes</label><input type="text" id="mPNotes"></div>
     <div class="btn-row">
       <button class="btn btn-outline" onclick="closeModal('paymentModal')" data-en="Cancel" data-zh="取消">Cancel</button>
