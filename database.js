@@ -240,6 +240,7 @@ const invoice = {
         qty: item.qty || '',
         cost: item.cost || '',
         amount: item.amount || (item.qty && item.cost ? (parseFloat(String(item.qty||'').replace(/,/g,'')) * parseFloat(String(item.cost||'').replace(/,/g,''))).toString() : ''),
+        cost_price: item.cost_price || '',
         remark: item.remark || ''
       })),
       created_by: d.created_by || '',
@@ -264,6 +265,7 @@ const invoice = {
         qty: item.qty || '',
         cost: item.cost || '',
         amount: item.amount || (item.qty && item.cost ? (parseFloat(String(item.qty||'').replace(/,/g,'')) * parseFloat(String(item.cost||'').replace(/,/g,''))).toString() : ''),
+        cost_price: item.cost_price || '',
         remark: item.remark || ''
       }));
     }

@@ -118,12 +118,13 @@ td.w-amt{font-weight:600;font-variant-numeric:tabular-nums}
 .inv-table td input.inv-inp-qty{min-width:55px}
 .inv-table td input.inv-inp-cost{text-align:right;min-width:75px}
 .inv-table td input.inv-inp-amount{text-align:right;min-width:85px;font-weight:600;background:#f5f5f5}
+.inv-table td input.inv-inp-costprice{text-align:right;min-width:85px;background:#fffde7}
 .inv-table td input.inv-inp-remark{text-align:left;min-width:70px}
 .inv-table .inv-row-num{font-size:11px;color:#999;width:28px;text-align:center}
 .inv-table tr:nth-child(even) td{background:#fafafa}
 .inv-col-sn{width:30px}.inv-col-item{min-width:130px}.inv-col-unit{width:55px}
 .inv-col-qty{width:60px}.inv-col-cost{width:85px}
-.inv-col-amount{width:95px}.inv-col-remark{width:80px}
+.inv-col-amount{width:95px}.inv-col-costprice{width:85px}.inv-col-remark{width:80px}
 
 /* Invoice Totals */
 .inv-totals{margin-top:10px}
@@ -154,6 +155,7 @@ td.w-amt{font-weight:600;font-variant-numeric:tabular-nums}
 .inv-print-area{display:none}
 @media print{
   body>*{display:none!important}
+  .inv-col-costprice,.inv-inp-costprice{display:none!important}
 }
 
 /* ─── Reports ─── */

@@ -734,6 +734,7 @@ function buildInvTable() {
       <td><input class="inv-inp-qty" data-invrow="${i}" data-invfield="qty" type="number" step="1" value="1" oninput="calcInvRow(${i});calcInvTotals()"></td>
       <td><input class="inv-inp-cost" data-invrow="${i}" data-invfield="cost" type="number" step="0.01" placeholder="0" oninput="calcInvRow(${i});calcInvTotals()"></td>
       <td><input class="inv-inp-amount" data-invrow="${i}" data-invfield="amount" type="text" placeholder="0" readonly></td>
+      <td><input class="inv-inp-costprice" data-invrow="${i}" data-invfield="cost_price" type="number" step="0.01" placeholder="" oninput="calcInvTotals()"></td>
       <td><input class="inv-inp-remark" data-invrow="${i}" data-invfield="remark" placeholder=""></td>
     </tr>`;
   }
@@ -801,8 +802,9 @@ function getInvFormData() {
     const qty = document.querySelector('[data-invrow="'+i+'"][data-invfield="qty"]').value.trim();
     const cost = document.querySelector('[data-invrow="'+i+'"][data-invfield="cost"]').value.trim();
     const amount = document.querySelector('[data-invrow="'+i+'"][data-invfield="amount"]').value.trim();
+    const costPrice = document.querySelector('[data-invrow="'+i+'"][data-invfield="cost_price"]').value.trim();
     const remark = document.querySelector('[data-invrow="'+i+'"][data-invfield="remark"]').value.trim();
-    if (name) items.push({ name, unit, qty, cost, amount, remark });
+    if (name) items.push({ name, unit, qty, cost, amount, cost_price: costPrice, remark });
   }
   return {
     orderNo: document.getElementById('invOrderNo').value,
@@ -822,7 +824,7 @@ function setInvFormData(data) {
   document.getElementById('invRemark').value = data.remark || '';
   // Clear all rows
   for (let i = 1; i <= INV_TOTAL_ROWS; i++) {
-    ['name','unit','qty','cost','amount','remark'].forEach(f => {
+    ['name','unit','qty','cost','amount','cost_price','remark'].forEach(f => {
       document.querySelector('[data-invrow="'+i+'"][data-invfield="'+f+'"]').value = '';
     });
   }
@@ -836,6 +838,7 @@ function setInvFormData(data) {
         document.querySelector('[data-invrow="'+i+'"][data-invfield="qty"]').value = item.qty || '';
         document.querySelector('[data-invrow="'+i+'"][data-invfield="cost"]').value = item.cost || '';
         document.querySelector('[data-invrow="'+i+'"][data-invfield="amount"]').value = item.amount || '';
+        document.querySelector('[data-invrow="'+i+'"][data-invfield="cost_price"]').value = item.cost_price || '';
         document.querySelector('[data-invrow="'+i+'"][data-invfield="remark"]').value = item.remark || '';
       }
     });
@@ -849,7 +852,7 @@ async function autoFillInvoice() {
   // Clear items when plate is cleared
   if (!plate) {
     for (let i = 1; i <= INV_TOTAL_ROWS; i++) {
-      ['name','unit','cost','amount','remark'].forEach(f => {
+      ['name','unit','cost','amount','cost_price','remark'].forEach(f => {
         document.querySelector('[data-invrow="'+i+'"][data-invfield="'+f+'"]').value = '';
       });
       document.querySelector('[data-invrow="'+i+'"][data-invfield="qty"]').value = '1';
@@ -894,10 +897,24 @@ async function autoFillInvoice() {
     }
 
     // Get unique descriptions with bilingual names and fill rows
+    // Build a cost lookup map from expense records: description → latest amount
+    const costMap = {};
+    records.forEach(r => {
+      if (r.description && r.amount) {
+        const desc = r.description.toUpperCase().trim();
+        if (!costMap[desc]) costMap[desc] = r.amount; // first=latest (records are date-sorted desc)
+      }
+    });
+
     const parts = [...new Set(records.map(r => r.description).filter(Boolean))];
     parts.slice(0, INV_TOTAL_ROWS).forEach((p, idx) => {
       const i = idx + 1;
       document.querySelector('[data-invrow="'+i+'"][data-invfield="name"]').value = translatePart(p);
+      // Auto-fill cost_price from expense records
+      const cp = costMap[p.toUpperCase().trim()];
+      if (cp) {
+        document.querySelector('[data-invrow="'+i+'"][data-invfield="cost_price"]').value = cp;
+      }
     });
     calcInvTotals();
   } catch(e) { /* ignore */ }
@@ -986,7 +1003,7 @@ function newInvoice() {
   invCurrentId = null;
   invInited = true; // keep table, just clear inputs
   for (let i = 1; i <= INV_TOTAL_ROWS; i++) {
-    ['name','unit','cost','amount','remark'].forEach(f => {
+    ['name','unit','cost','amount','cost_price','remark'].forEach(f => {
       document.querySelector('[data-invrow="'+i+'"][data-invfield="'+f+'"]').value = '';
     });
     document.querySelector('[data-invrow="'+i+'"][data-invfield="qty"]').value = '1';
