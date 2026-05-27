@@ -194,6 +194,8 @@ document.addEventListener('DOMContentLoaded', () => {
       document.getElementById('userBadge').textContent = payload.username + (payload.role === 'admin' ? ' (admin)' : '');
       if (payload.role === 'admin') {
         document.getElementById('tabUsers').style.display = '';
+        document.getElementById('profitBtn').style.display = '';
+        document.getElementById('profitGroup').style.display = '';
       } else {
         // Non-admin: hide Invoice, Reports, Users tabs
         ['tabInvoice','tabReports','tabUsers'].forEach(id => { const el = document.getElementById(id); if (el) el.style.display = 'none'; });
@@ -226,7 +228,7 @@ function switchTab(id) {
   if (id === 'expenses') { document.getElementById('tabExpenses').classList.add('active'); renderRecords(); }
   else if (id === 'payments') { document.getElementById('tabPayments').classList.add('active'); renderPayments(); }
   else if (id === 'invoice') { document.getElementById('tabInvoice').classList.add('active'); initInvoice(); }
-  else if (id === 'reports') { document.getElementById('tabReports').classList.add('active'); loadReport('daily'); }
+  else if (id === 'reports') { document.getElementById('tabReports').classList.add('active'); if (currentUser && currentUser.role === 'admin') { document.getElementById('profitBtn').style.display = ''; document.getElementById('profitGroup').style.display = ''; } loadReport('daily'); }
   else if (id === 'users') { document.getElementById('tabUsers').classList.add('active'); loadUsers(); }
   applyLang();
 }
@@ -714,7 +716,7 @@ function buildInvTable() {
   for (let i = 1; i <= INV_TOTAL_ROWS; i++) {
     html += `<tr>
       <td class="inv-row-num">${i}</td>
-      <td><input class="inv-inp-name" data-invrow="${i}" data-invfield="name" placeholder="" list="dlInvPart" autocomplete="off"></td>
+      <td><input class="inv-inp-name" data-invrow="${i}" data-invfield="name" placeholder="" list="dlInvPart" autocomplete="off" oninput="onInvNameChange(${i})"></td>
       <td><input class="inv-inp-unit" data-invrow="${i}" data-invfield="unit" placeholder=""></td>
       <td><input class="inv-inp-qty" data-invrow="${i}" data-invfield="qty" type="number" step="1" placeholder="1" oninput="calcInvRow(${i});calcInvTotals()"></td>
       <td><input class="inv-inp-cost" data-invrow="${i}" data-invfield="cost" type="number" step="0.01" placeholder="0" oninput="calcInvRow(${i});calcInvTotals()"></td>
@@ -726,22 +728,56 @@ function buildInvTable() {
   tbody.innerHTML = html;
 }
 
+function onInvNameChange(row) {
+  const nameEl = document.querySelector('[data-invrow="'+row+'"][data-invfield="name"]');
+  const name = (nameEl.value || '').toUpperCase().trim();
+  // VAT detection: auto-set QTY to 0.18
+  if (name === 'VAT' || name.includes('VAT')) {
+    document.querySelector('[data-invrow="'+row+'"][data-invfield="qty"]').value = '0.18';
+  }
+  calcInvTotals();
+}
+
 function calcInvRow(row) {
-  const qty = parseFloat(document.querySelector('[data-invrow="'+row+'"][data-invfield="qty"]').value) || 0;
-  const cost = parseFloat(document.querySelector('[data-invrow="'+row+'"][data-invfield="cost"]').value) || 0;
-  const labor = parseFloat(document.querySelector('[data-invrow="'+row+'"][data-invfield="labor"]').value) || 0;
-  const amount = qty * cost + labor;
-  document.querySelector('[data-invrow="'+row+'"][data-invfield="amount"]').value = amount > 0 ? amount.toLocaleString('en-US') : '';
+  // Just updates this row's AMOUNT instantly; VAT handled in calcInvTotals
+  const nameEl = document.querySelector('[data-invrow="'+row+'"][data-invfield="name"]');
+  const name = (nameEl.value || '').toUpperCase().trim();
+  if (name === 'VAT' || name.includes('VAT')) {
+    document.querySelector('[data-invrow="'+row+'"][data-invfield="qty"]').value = '0.18';
+  }
+  calcInvTotals(); // let calcInvTotals handle everything
 }
 
 function calcInvTotals() {
-  let total = 0;
+  // Find VAT row
+  let vatRow = -1;
   for (let i = 1; i <= INV_TOTAL_ROWS; i++) {
+    const name = (document.querySelector('[data-invrow="'+i+'"][data-invfield="name"]').value || '').toUpperCase().trim();
+    if (name === 'VAT' || name.includes('VAT')) { vatRow = i; break; }
+  }
+
+  // Calculate non-VAT rows and update their AMOUNT
+  let nonVatTotal = 0;
+  for (let i = 1; i <= INV_TOTAL_ROWS; i++) {
+    if (i === vatRow) continue;
     const qty = parseFloat(document.querySelector('[data-invrow="'+i+'"][data-invfield="qty"]').value) || 0;
     const cost = parseFloat(document.querySelector('[data-invrow="'+i+'"][data-invfield="cost"]').value) || 0;
     const labor = parseFloat(document.querySelector('[data-invrow="'+i+'"][data-invfield="labor"]').value) || 0;
-    total += qty * cost + labor;
+    const amt = qty * cost + labor;
+    document.querySelector('[data-invrow="'+i+'"][data-invfield="amount"]').value = amt > 0 ? amt.toLocaleString('en-US') : '';
+    nonVatTotal += amt;
   }
+
+  let total = nonVatTotal;
+  if (vatRow > 0) {
+    // VAT: COST = sum of other AMOUNTs, QTY = 0.18, VAT AMOUNT = 0.18 * nonVatTotal
+    document.querySelector('[data-invrow="'+vatRow+'"][data-invfield="qty"]').value = '0.18';
+    document.querySelector('[data-invrow="'+vatRow+'"][data-invfield="cost"]').value = nonVatTotal;
+    const vatAmt = Math.round(0.18 * nonVatTotal);
+    document.querySelector('[data-invrow="'+vatRow+'"][data-invfield="amount"]').value = vatAmt > 0 ? vatAmt.toLocaleString('en-US') : '';
+    total = nonVatTotal + vatAmt;
+  }
+
   document.getElementById('invTotalAll').textContent = total.toLocaleString('en-US');
   document.getElementById('invEngAmount').textContent = numToEnglish(total);
 }
