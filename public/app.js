@@ -598,30 +598,56 @@ async function deletePayment(id) {
   } catch(e) { alert(e.message); }
 }
 
-// ─── Car Parts Bilingual Map (EN → ZH) ─────────────────────
-// Loaded from server (parts_master.json) — 300+ standardized entries
+// ─── Car Parts Trilingual Map (EN → {zh, sw}) ─────────────────
+// Loaded from server (parts_master.json) — 1600+ standardized entries
 let PARTS_ZH = {};
 
 async function loadPartsMaster() {
   try {
     PARTS_ZH = await api('/api/parts-master');
   } catch(e) {
-    // fallback minimal dictionary
+    // fallback minimal dictionary (new format: {zh, sw})
     PARTS_ZH = {
-      'AC GAS':'空调冷媒','AIR FILTER':'空气滤清器','BATTERY':'电瓶','BRAKE PAD':'刹车片',
-      'BULB':'灯泡','CAR WASH':'洗车','COMPRESSOR':'压缩机','ENGINE OIL':'机油',
-      'FUEL FILTER':'燃油滤清器','FUNDI':'人工费','OIL FILTER':'机油滤清器',
-      'PETROL':'汽油','SPARK PLUG':'火花塞','TRANSPORT':'运输费','WATER':'水'
+      'AC GAS':{zh:'空调冷媒',sw:'gesi ya AC'},
+      'AIR FILTER':{zh:'空气滤清器',sw:'chujio la hewa'},
+      'BATTERY':{zh:'电瓶',sw:'betri'},
+      'BRAKE PAD':{zh:'刹车片',sw:'padi ya breki'},
+      'BULB':{zh:'灯泡',sw:'bulb'},
+      'CAR WASH':{zh:'洗车',sw:'kuosha gari'},
+      'COMPRESSOR':{zh:'压缩机',sw:'compressor'},
+      'ENGINE OIL':{zh:'机油',sw:'mafuta ya injini'},
+      'FUEL FILTER':{zh:'燃油滤清器',sw:'chujio la mafuta'},
+      'FUNDI':{zh:'人工费',sw:'mshahara wa fundi'},
+      'OIL FILTER':{zh:'机油滤清器',sw:'chujio la mafuta'},
+      'PETROL':{zh:'汽油',sw:'petroli'},
+      'SPARK PLUG':{zh:'火花塞',sw:'spark plug'},
+      'TRANSPORT':{zh:'运输费',sw:'usafiri'},
+      'WATER':{zh:'水',sw:'maji'}
     };
   }
 }
 
-function translatePart(name) {
+// Get translation string from dict entry (supports both legacy string and new {zh,sw} format)
+function getZh(entry) {
+  if (!entry) return '';
+  if (typeof entry === 'string') return entry;
+  return entry.zh || entry.sw || '';
+}
+
+function translatePart(name, lang) {
+  lang = lang || 'zh';
   const upper = (name || '').trim().toUpperCase();
-  if (PARTS_ZH[upper]) return name + ' - ' + PARTS_ZH[upper];
+  const entry = PARTS_ZH[upper];
+  if (entry) {
+    const t = typeof entry === 'string' ? entry : (entry[lang] || entry.zh || '');
+    return t ? name + ' - ' + t : name;
+  }
   // Try partial match
-  for (const [en, zh] of Object.entries(PARTS_ZH)) {
-    if (upper.includes(en)) return name + ' - ' + zh;
+  for (const [en, val] of Object.entries(PARTS_ZH)) {
+    if (upper.includes(en)) {
+      const t = typeof val === 'string' ? val : (val[lang] || val.zh || '');
+      return t ? name + ' - ' + t : name;
+    }
   }
   return name;
 }

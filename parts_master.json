@@ -1,406 +1,5033 @@
 {
-  "AC COMPRESSOR": "空调压缩机",
-  "AC CONDENSER": "空调冷凝器",
-  "AC CONTROL PANEL": "空调控制面板",
-  "AC EVAPORATOR": "空调蒸发器",
-  "AC EXPANSION VALVE": "空调膨胀阀",
-  "AC FILTER": "空调过滤器",
-  "AC GAS": "空调冷媒",
-  "AC HOSE": "空调软管",
-  "AC PIPE": "空调管",
-  "AC PRESSURE SWITCH": "空调压力开关",
-  "ACCUMULATOR": "蓄压器",
-  "AIR FILTER": "空气滤清器",
-  "AIR FLOW SENSOR": "空气流量传感器",
-  "ALTERNATOR": "发电机",
-  "ALTERNATOR BELT": "发电机皮带",
-  "ANTENNA": "天线",
-  "ANTIFREEZE": "防冻液",
-  "ARALDITE": "环氧树脂胶",
-  "ARMATURE": "电枢",
-  "AUTO TRANSMISSION FLUID": "自动变速箱油",
-  "AXLE": "车轴",
-  "AXLE BOOT": "球笼防尘套",
-  "AXLE SEAL": "半轴油封",
-
-  "BALL JOINT": "球头",
-  "BATTERY": "电瓶",
-  "BATTERY TERMINAL": "电瓶桩头",
-  "BATTERY WATER": "电瓶水",
-  "BEARING": "轴承",
-  "BODA FARE": "摩托车费",
-  "BONNET": "引擎盖",
-  "BRAKE BOOSTER": "刹车助力器",
-  "BRAKE CALIPER": "刹车分泵",
-  "BRAKE DISC": "刹车盘",
-  "BRAKE DRUM": "刹车鼓",
-  "BRAKE FLUID": "刹车油",
-  "BRAKE HOSE": "刹车软管",
-  "BRAKE MASTER CYLINDER": "刹车总泵",
-  "BRAKE PAD": "刹车片",
-  "BRAKE PAD BACK": "后刹车片",
-  "BRAKE PAD FRONT": "前刹车片",
-  "BRAKE PIPE": "刹车管",
-  "BRAKE SHOE": "刹车蹄",
-  "BRAKE SWITCH": "刹车开关",
-  "BRAKE WHEEL CYLINDER": "刹车分泵",
-  "BROOM": "扫把",
-  "BULB": "灯泡",
-  "BUMPER": "保险杠",
-  "BUMPER BRACKET": "保险杠支架",
-  "BUMPER CLIP": "保险杠卡扣",
-  "BUSH": "胶套",
-
-  "CABLE TIE": "扎带",
-  "CAMSHAFT": "凸轮轴",
-  "CAMSHAFT SENSOR": "凸轮轴位置传感器",
-  "CAR WASH": "洗车",
-  "CARB CHOKE CLEANER": "化油器清洗剂",
-  "CARBURETOR": "化油器",
-  "CARBURETOR CLEANER": "化油器清洗剂",
-  "CATALYTIC CONVERTER": "三元催化器",
-  "CENTER BEARING": "过桥轴承",
-  "CIGARETTE LIGHTER": "点烟器",
-  "CLIP": "卡扣",
-  "CLUTCH": "离合器",
-  "CLUTCH BEARING": "离合器分离轴承",
-  "CLUTCH CABLE": "离合器拉线",
-  "CLUTCH CYLINDER": "离合器分泵",
-  "CLUTCH DISC": "离合器片",
-  "CLUTCH FORK": "离合器拨叉",
-  "CLUTCH MASTER CYLINDER": "离合器总泵",
-  "CLUTCH PLATE": "离合器压盘",
-  "COIL SPRING": "减震弹簧",
-  "COMBINATION SWITCH": "组合开关",
-  "COMPRESSOR": "压缩机",
-  "COMPRESSOR OIL": "压缩机油",
-  "CONDENSER": "冷凝器",
-  "CONDENSER FAN": "冷凝器风扇",
-  "CONDENSER FILTER": "冷凝器过滤器",
-  "CONNECTING ROD": "连杆",
-  "CONNECTING ROD BEARING": "连杆瓦",
-  "CONTROL ARM": "控制臂",
-  "CONTROL ARM BUSH": "控制臂胶套",
-  "COOLANT": "冷却液",
-  "CRANKSHAFT": "曲轴",
-  "CRANKSHAFT BEARING": "曲轴瓦",
-  "CRANKSHAFT PULLEY": "曲轴皮带轮",
-  "CRANKSHAFT SENSOR": "曲轴位置传感器",
-  "CROSS MEMBER BUSH": "横梁胶套",
-  "CV BOOT": "球笼防尘套",
-  "CV JOINT": "球笼",
-  "CYLINDER HEAD": "缸盖",
-
-  "DIESEL": "柴油",
-  "DIESEL FILTER": "柴油滤清器",
-  "DIESEL FILTER COMPLETE": "柴油滤清器总成",
-  "DIESEL PUMP": "柴油泵",
-  "DIESEL TANK": "柴油箱",
-  "DIFFERENTIAL": "差速器",
-  "DIFFERENTIAL OIL": "差速器油",
-  "DIP STICK": "机油尺",
-  "DISTILLED WATER": "蒸馏水",
-  "DISTRIBUTOR": "分电器",
-  "DISTRIBUTOR CAP": "分电器盖",
-  "DOOR HANDLE": "门把手",
-  "DOOR LOCK": "门锁",
-  "DOOR LOCK ACTUATOR": "门锁电机",
-  "DRAIN PLUG": "放油螺丝",
-  "DRINKING WATER": "饮用水",
-  "DRIVE BELT": "驱动皮带",
-  "DRIVE SHAFT": "传动轴",
-  "DRIVER": "司机费",
-  "DUST BIN": "垃圾桶",
-
-  "ECU": "发动机控制单元",
-  "ENGINE": "发动机",
-  "ENGINE GASKET": "发动机垫片",
-  "ENGINE GASKET SET": "发动机大修包",
-  "ENGINE MOUNTING": "发动机支架",
-  "ENGINE OIL": "机油",
-  "ENGINE OIL 5W-30": "机油5W-30",
-  "ENGINE OIL 5W-30 GOLDEN": "金色机油5W-30",
-  "ENGINE OIL 5W-30 1 LITRE": "机油5W-30 1升",
-  "ENGINE OIL 5W-30 4 LITRES": "机油5W-30 4升",
-  "ENGINE OIL 5W-40": "机油5W-40",
-  "ENGINE OIL 10W-40": "机油10W-40",
-  "ENGINE OIL 15W-40": "机油15W-40",
-  "ENGINE OIL 15W-40 BLACK": "黑色机油15W-40",
-  "ENGINE OIL 15W-40 2 LITRES": "机油15W-40 2升",
-  "ENGINE OIL 15W-40 5 LITRES": "机油15W-40 5升",
-  "ENGINE OIL 15W-40 8 LITRES": "机油15W-40 8升",
-  "EVAPORATOR": "蒸发器",
-  "EXHAUST GASKET": "排气管垫片",
-  "EXHAUST MANIFOLD": "排气歧管",
-  "EXHAUST MUFFLER": "排气管消声器",
-  "EXHAUST PIPE": "排气管",
-  "EXPANSION TANK": "膨胀水箱",
-  "EXPANSION VALVE": "膨胀阀",
-
-  "FAN BELT": "风扇皮带",
-  "FENDER": "翼子板",
-  "FENDER LINER": "内衬",
-  "FLASHER RELAY": "闪光继电器",
-  "FLYWHEEL": "飞轮",
-  "FOG LIGHT": "雾灯",
-  "FRONT GRILLE": "前中网",
-  "FUEL CAP": "油箱盖",
-  "FUEL FILTER": "燃油滤清器",
-  "FUEL GAUGE": "油位传感器",
-  "FUEL HOSE": "燃油管",
-  "FUEL INJECTOR": "喷油嘴",
-  "FUEL PUMP": "燃油泵",
-  "FUEL TANK": "油箱",
-  "FUNDI": "人工费",
-  "FUSE": "保险丝",
-  "FUSE BOX": "保险丝盒",
-
-  "GASKET": "垫片",
-  "GASKET MAKER": "密封胶",
-  "GEAR BOX OIL": "齿轮油",
-  "GEAR BOX OIL 1 LITRE": "齿轮油1升",
-  "GEAR BOX OIL 4 LITRES": "齿轮油4升",
-  "GEAR BOX OIL 5 LITRES": "齿轮油5升",
-  "GEAR SELECTOR": "换挡机构",
-  "GEARBOX": "变速箱",
-  "GEARBOX MOUNTING": "变速箱支架",
-  "GLASS": "玻璃",
-  "GLOW PLUG": "预热塞",
-  "GLUE": "胶水",
-  "GREASE": "黄油",
-  "GRILLE": "中网",
-
-  "H4 BULB": "H4灯泡",
-  "HAND BRAKE CABLE": "手刹拉线",
-  "HAND CLEANER": "洗手液",
-  "HAZARD SWITCH": "双闪开关",
-  "HEAD GASKET": "缸垫",
-  "HEADLIGHT": "大灯",
-  "HEADLIGHT BULB": "大灯灯泡",
-  "HEADLIGHT SWITCH": "大灯开关",
-  "HEATER RESISTOR": "暖风电阻",
-  "HIGH PRESSURE PUMP": "高压油泵",
-  "HINGE": "铰链",
-  "HORN": "喇叭",
-  "HOSE": "软管",
-  "HOSE CLAMP": "管箍",
-  "HUB": "轮毂",
-  "HUB CAP": "轮毂盖",
-  "HYDRAULIC OIL": "液压油",
-  "HYDRAULIC PUMP": "液压泵",
-
-  "IDLE CONTROL VALVE": "怠速控制阀",
-  "IDLER PULLEY": "惰轮",
-  "IGNITION COIL": "点火线圈",
-  "IGNITION SWITCH": "点火开关",
-  "IGNITION WIRE": "高压线",
-  "INJECTION NOZZLE": "喷油嘴",
-  "INJECTOR": "喷油嘴",
-  "INNER TIE ROD": "方向机内拉杆",
-  "INSULATION TAPE": "绝缘胶带",
-  "INTAKE MANIFOLD": "进气歧管",
-  "INTAKE MANIFOLD GASKET": "进气歧管垫片",
-  "INTERCOOLER": "中冷器",
-
-  "JACK": "千斤顶",
-  "JUMPER CABLE": "过江龙",
-
-  "KEY": "钥匙",
-  "KEY SHELL": "钥匙壳",
-  "KING PIN": "主销",
-  "KNOCK SENSOR": "爆震传感器",
-
-  "LED BULB": "LED灯泡",
-  "LEAF SPRING": "钢板弹簧",
-  "LEAF SPRING BUSH": "钢板胶套",
-  "LICENSE PLATE LIGHT": "牌照灯",
-  "LOWER ARM": "下摆臂",
-  "LOWER ARM BUSH": "下摆臂胶套",
-  "LUG NUT": "轮胎螺丝",
-
-  "MAP SENSOR": "进气压力传感器",
-  "MASTER CYLINDER": "总泵",
-  "MIRROR": "后视镜",
-  "MIRROR GLASS": "后视镜片",
-  "MOTORCYCLE PETROL": "摩托车汽油",
-  "MUD FLAP": "挡泥板",
-
-  "NOZZLE": "喷油嘴",
-  "NOZZLE SEAL": "喷油嘴密封圈",
-  "NOZZLE TEST": "喷油嘴检测",
-  "NUT": "螺母",
-
-  "O-RING": "密封圈",
-  "OIL COOLER": "机油冷却器",
-  "OIL DIPSTICK": "机油尺",
-  "OIL DRAIN PLUG": "放油螺丝",
-  "OIL FILTER": "机油滤清器",
-  "OIL PAN": "油底壳",
-  "OIL PAN GASKET": "油底壳垫片",
-  "OIL PRESSURE SENSOR": "机油压力传感器",
-  "OIL PUMP": "机油泵",
-  "OIL SEAL": "油封",
-  "OIL SWITCH": "机油开关",
-  "OUTER TIE ROD": "方向机外拉杆",
-  "OVERHAUL": "大修",
-  "OVERTIME": "加班费",
-  "OXYGEN SENSOR": "氧传感器",
-
-  "PAINT": "油漆",
-  "PAINT THINNER": "稀释剂",
-  "PARKING SENSOR": "倒车雷达",
-  "PETROL": "汽油",
-  "PISTON": "活塞",
-  "PISTON RING": "活塞环",
-  "PISTON RING SET": "活塞环组",
-  "POWER STEERING FLUID": "方向机油",
-  "POWER STEERING HOSE": "方向机高压管",
-  "POWER STEERING PUMP": "方向机助力泵",
-  "POWER STEERING RACK": "方向机",
-  "POWER WINDOW MOTOR": "玻璃升降电机",
-  "POWER WINDOW SWITCH": "玻璃升降开关",
-  "PRESSURE PLATE": "离合器压盘",
-  "PROPELLER SHAFT": "传动轴",
-
-  "RACK END": "方向机拉杆球头",
-  "RADIATOR": "水箱",
-  "RADIATOR CAP": "水箱盖",
-  "RADIATOR COOLANT": "水箱冷却液",
-  "RADIATOR COOLANT 1 LITRE": "水箱冷却液1升",
-  "RADIATOR COOLANT 4 LITRES": "水箱冷却液4升",
-  "RADIATOR FAN": "散热风扇",
-  "RADIATOR FAN MOTOR": "散热风扇电机",
-  "RADIATOR HOSE": "水箱管",
-  "RADIATOR HOSE LOWER": "水箱下水管",
-  "RADIATOR HOSE UPPER": "水箱上水管",
-  "RADIATOR OVERFLOW TANK": "副水壶",
-  "RADIATOR PRESSURE CAP": "水箱压力盖",
-  "REAR AXLE": "后桥",
-  "RELAY": "继电器",
-  "RELEASE BEARING": "分离轴承",
-  "REVOLUTION SENSOR": "转速传感器",
-  "ROCKER COVER GASKET": "气门室盖垫",
-
-  "SAND PAPER": "砂纸",
-  "SCREW": "螺丝",
-  "SEAL": "油封",
-  "SEALANT": "密封胶",
-  "SEAT COVER": "座套",
-  "SERPENTINE BELT": "多楔带",
-  "SHOCK ABSORBER": "减震器",
-  "SHOCK MOUNTING": "减震器顶胶",
-  "SIDE MIRROR": "后视镜",
-  "SILICONE": "硅胶",
-  "SILICONE GASKET MAKER": "硅胶密封胶",
-  "SILICONE HOSE": "硅胶管",
-  "SOAP": "肥皂",
-  "SOCKET": "套筒",
-  "SPARK PLUG": "火花塞",
-  "SPARK PLUG WIRE": "高压线",
-  "SPEED SENSOR": "车速传感器",
-  "SPEEDOMETER CABLE": "里程表线",
-  "SPINDLE": "转向节",
-  "SPRING": "弹簧",
-  "SPRING BUSH": "钢板胶套",
-  "STABILIZER BAR": "平衡杆",
-  "STABILIZER BUSH": "平衡杆胶套",
-  "STABILIZER LINK": "平衡杆小连杆",
-  "STARTER": "启动机",
-  "STARTER BRUSH": "启动机碳刷",
-  "STARTER MOTOR": "启动马达",
-  "STARTER RELAY": "启动继电器",
-  "STARTER SOLENOID": "启动机电磁开关",
-  "STEERING BOX": "方向机",
-  "STEERING PUMP": "方向机助力泵",
-  "STEERING RACK": "方向机",
-  "STEERING WHEEL": "方向盘",
-  "STUD": "螺丝柱",
-  "STUD AND NUT": "螺丝柱和螺母",
-  "SUMP GASKET": "油底壳垫片",
-  "SUPER GLUE": "强力胶",
-  "SUSPENSION BUSHING": "悬挂胶套",
-
-  "TAILLIGHT": "尾灯",
-  "TEMPERATURE SENSOR": "温度传感器",
-  "TENSIONER": "涨紧轮",
-  "TENSIONER PULLEY": "涨紧轮",
-  "THERMOSTAT": "节温器",
-  "THERMOSTAT GASKET": "节温器垫片",
-  "THROTTLE BODY": "节气门",
-  "THROTTLE CABLE": "油门拉线",
-  "TIE ROD": "方向机拉杆",
-  "TIE ROD END": "方向机拉杆球头",
-  "TIMING BELT": "正时皮带",
-  "TIMING BELT KIT": "正时皮带套装",
-  "TIMING BELT TENSIONER": "正时皮带涨紧轮",
-  "TIMING CHAIN": "正时链条",
-  "TIMING COVER GASKET": "正时盖垫片",
-  "TIRE": "轮胎",
-  "TIRE PRESSURE SENSOR": "胎压传感器",
-  "TIRE REPAIR": "补胎",
-  "TIRE VALVE": "气门嘴",
-  "TISSUE": "纸巾",
-  "TOILET CLEANER": "洁厕液",
-  "TOOL": "工具",
-  "TORSION BAR": "扭力杆",
-  "TOW HITCH": "拖车钩",
-  "TRANSMISSION": "变速箱",
-  "TRANSMISSION FLUID": "变速箱油",
-  "TRANSMISSION MOUNTING": "变速箱支架",
-  "TRANSPORT": "运输费",
-  "TURBO": "涡轮增压器",
-  "TURBO HOSE": "涡轮增压管",
-  "TURBOCHARGER": "涡轮增压器",
-  "TYRE": "轮胎",
-
-  "U-BOLT": "U型螺栓",
-  "UNIVERSAL JOINT": "万向节",
-  "UPPER ARM": "上摆臂",
-  "USB CHARGER": "USB充电器",
-
-  "VACUUM HOSE": "真空管",
-  "VACUUM PUMP": "真空泵",
-  "VALVE": "气门",
-  "VALVE COVER GASKET": "气门室盖垫",
-  "VALVE GUIDE": "气门导管",
-  "VALVE SEAL": "气门油封",
-  "VALVE SPRING": "气门弹簧",
-  "V-BELT": "三角皮带",
-  "VOLTAGE REGULATOR": "电压调节器",
-  "VVTI SENSOR": "VVT传感器",
-
-  "WASHER": "垫圈",
-  "WASHER FLUID": "玻璃水",
-  "WASHER MOTOR": "喷水电机",
-  "WASHER NOZZLE": "喷水嘴",
-  "WATER": "水",
-  "WATER HOSE": "水管",
-  "WATER PUMP": "水泵",
-  "WATER PUMP GASKET": "水泵垫片",
-  "WATER TEMPERATURE SENSOR": "水温传感器",
-  "WD-40": "除锈润滑剂",
-  "WELDING": "焊接",
-  "WHEEL ALIGNMENT": "四轮定位",
-  "WHEEL BALANCE": "轮胎动平衡",
-  "WHEEL BEARING": "轮毂轴承",
-  "WHEEL BEARING FRONT": "前轮轴承",
-  "WHEEL BEARING REAR": "后轮轴承",
-  "WHEEL CAP": "轮毂盖",
-  "WHEEL CYLINDER": "刹车分泵",
-  "WHEEL NUT": "轮胎螺母",
-  "WHEEL SPACER": "法兰盘",
-  "WHEEL STUD": "轮胎螺丝柱",
-  "WINDOW REGULATOR": "玻璃升降架",
-  "WINDSHIELD": "挡风玻璃",
-  "WINDSHIELD WASHER FLUID": "玻璃水",
-  "WIPER": "雨刮器",
-  "WIPER ARM": "雨刮臂",
-  "WIPER BLADE": "雨刮片",
-  "WIPER LINKAGE": "雨刮连杆",
-  "WIPER MOTOR": "雨刮电机",
-  "WIPER SWITCH": "雨刮开关",
-  "WIRING HARNESS": "线束",
-  "WISHBONE": "三角臂",
-  "WISHBONE BUSH": "三角臂胶套",
-  "WORKSHOP SUPPLIES": "车间耗材"
+  "ENGINE": {
+    "zh": "发动机"
+  },
+  "ENGINE ASSEMBLY": {
+    "zh": "发动机总成"
+  },
+  "ENGINE BLOCK": {
+    "zh": "缸体"
+  },
+  "ENGINE GASKET": {
+    "zh": "发动机垫片"
+  },
+  "ENGINE GASKET SET": {
+    "zh": "发动机大修包"
+  },
+  "ENGINE GASKET KIT": {
+    "zh": "发动机密封垫套装"
+  },
+  "ENGINE MOUNTING": {
+    "zh": "发动机支架"
+  },
+  "ENGINE MOUNT": {
+    "zh": "发动机支架"
+  },
+  "ENGINE BUSH": {
+    "zh": "发动机胶套"
+  },
+  "ENGINE OVERHAUL KIT": {
+    "zh": "发动机大修包"
+  },
+  "ENGINE VALVE": {
+    "zh": "发动机气门"
+  },
+  "ENGINE OIL": {
+    "zh": "机油"
+  },
+  "ENGINE OIL 0W-20": {
+    "zh": "机油0W-20"
+  },
+  "ENGINE OIL 5W-20": {
+    "zh": "机油5W-20"
+  },
+  "ENGINE OIL 5W-30": {
+    "zh": "机油5W-30"
+  },
+  "ENGINE OIL 5W-30 GOLDEN": {
+    "zh": "金色机油5W-30"
+  },
+  "ENGINE OIL 5W-30 1 LITRE": {
+    "zh": "机油5W-30 1升"
+  },
+  "ENGINE OIL 5W-30 4 LITRES": {
+    "zh": "机油5W-30 4升"
+  },
+  "ENGINE OIL 5W-30 5 LITRES": {
+    "zh": "机油5W-30 5升"
+  },
+  "ENGINE OIL 5W-40": {
+    "zh": "机油5W-40"
+  },
+  "ENGINE OIL 10W-30": {
+    "zh": "机油10W-30"
+  },
+  "ENGINE OIL 10W-40": {
+    "zh": "机油10W-40"
+  },
+  "ENGINE OIL 15W-40": {
+    "zh": "机油15W-40"
+  },
+  "ENGINE OIL 15W-40 BLACK": {
+    "zh": "黑色机油15W-40"
+  },
+  "ENGINE OIL 15W-40 1 LITRE": {
+    "zh": "机油15W-40 1升"
+  },
+  "ENGINE OIL 15W-40 2 LITRES": {
+    "zh": "机油15W-40 2升"
+  },
+  "ENGINE OIL 15W-40 5 LITRES": {
+    "zh": "机油15W-40 5升"
+  },
+  "ENGINE OIL 15W-40 8 LITRES": {
+    "zh": "机油15W-40 8升"
+  },
+  "ENGINE OIL 20W-50": {
+    "zh": "机油20W-50"
+  },
+  "SEMI SYNTHETIC OIL": {
+    "zh": "半合成机油"
+  },
+  "FULLY SYNTHETIC OIL": {
+    "zh": "全合成机油"
+  },
+  "MINERAL OIL": {
+    "zh": "矿物机油"
+  },
+  "MOTOR OIL": {
+    "zh": "发动机机油"
+  },
+  "ENGINE LUBRICANT": {
+    "zh": "发动机润滑油"
+  },
+  "OIL ADDITIVE": {
+    "zh": "机油添加剂"
+  },
+  "OIL CHANGE": {
+    "zh": "更换机油"
+  },
+  "OIL SERVICE": {
+    "zh": "机油保养"
+  },
+  "OIL FLUSH": {
+    "zh": "机油清洗"
+  },
+  "ENGINE OIL LEAK": {
+    "zh": "发动机漏油"
+  },
+  "ENGINE FLUSH": {
+    "zh": "发动机清洗"
+  },
+  "ENGINE TUNE-UP": {
+    "zh": "发动机调校"
+  },
+  "ENGINE DIAGNOSIS": {
+    "zh": "发动机诊断"
+  },
+  "ENGINE SCANNING": {
+    "zh": "发动机电脑检测"
+  },
+  "ENGINE OVERHAUL": {
+    "zh": "发动机大修"
+  },
+  "ENGINE REBUILD": {
+    "zh": "发动机翻新"
+  },
+  "ENGINE REPAIR": {
+    "zh": "发动机维修"
+  },
+  "ENGINE SWAP": {
+    "zh": "更换发动机"
+  },
+  "ENGINE TIMING": {
+    "zh": "发动机正时"
+  },
+  "ENGINE KNOCK": {
+    "zh": "发动机爆震"
+  },
+  "ENGINE OVERHEATING": {
+    "zh": "发动机过热"
+  },
+  "ENGINE MISFIRE": {
+    "zh": "发动机缺火"
+  },
+  "ENGINE VIBRATION": {
+    "zh": "发动机抖动"
+  },
+  "ENGINE NOISE": {
+    "zh": "发动机异响"
+  },
+  "CYLINDER HEAD": {
+    "zh": "缸盖"
+  },
+  "CYLINDER HEAD GASKET": {
+    "zh": "缸垫"
+  },
+  "HEAD GASKET": {
+    "zh": "缸垫"
+  },
+  "CYLINDER HEAD BOLT": {
+    "zh": "缸盖螺丝"
+  },
+  "CYLINDER HEAD COVER": {
+    "zh": "气门室盖"
+  },
+  "CYLINDER HEAD COVER GASKET": {
+    "zh": "气门室盖垫"
+  },
+  "ROCKER COVER": {
+    "zh": "气门室盖"
+  },
+  "ROCKER COVER GASKET": {
+    "zh": "气门室盖垫片"
+  },
+  "ROCKER ARM": {
+    "zh": "摇臂"
+  },
+  "ROCKER ARM SHAFT": {
+    "zh": "摇臂轴"
+  },
+  "CYLINDER LINER": {
+    "zh": "缸套"
+  },
+  "CYLINDER BLOCK": {
+    "zh": "缸体"
+  },
+  "CYLINDER BORE": {
+    "zh": "缸径"
+  },
+  "VALVE": {
+    "zh": "气门"
+  },
+  "INTAKE VALVE": {
+    "zh": "进气门"
+  },
+  "EXHAUST VALVE": {
+    "zh": "排气门"
+  },
+  "VALVE SEAT": {
+    "zh": "气门座"
+  },
+  "VALVE GUIDE": {
+    "zh": "气门导管"
+  },
+  "VALVE SEAL": {
+    "zh": "气门油封"
+  },
+  "VALVE STEM SEAL": {
+    "zh": "气门杆油封"
+  },
+  "VALVE SPRING": {
+    "zh": "气门弹簧"
+  },
+  "VALVE COTTER": {
+    "zh": "气门锁片"
+  },
+  "VALVE KEEPER": {
+    "zh": "气门锁片"
+  },
+  "VALVE LIFTER": {
+    "zh": "气门挺杆"
+  },
+  "VALVE TAPPET": {
+    "zh": "气门挺柱"
+  },
+  "VALVE PUSH ROD": {
+    "zh": "气门推杆"
+  },
+  "VALVE ROCKER": {
+    "zh": "气门摇臂"
+  },
+  "VALVE SPRING RETAINER": {
+    "zh": "气门弹簧座"
+  },
+  "VALVE TIMING": {
+    "zh": "气门正时"
+  },
+  "VALVE ADJUSTMENT": {
+    "zh": "气门间隙调整"
+  },
+  "VALVE CLEARANCE": {
+    "zh": "气门间隙"
+  },
+  "VALVE GRINDING": {
+    "zh": "气门研磨"
+  },
+  "VALVE LAPPING": {
+    "zh": "气门研磨"
+  },
+  "HYDRAULIC LIFTER": {
+    "zh": "液压挺柱"
+  },
+  "SOLID LIFTER": {
+    "zh": "固定挺柱"
+  },
+  "MULTIVALVE ENGINE": {
+    "zh": "多气门发动机"
+  },
+  "OVERHEAD VALVE": {
+    "zh": "顶置气门"
+  },
+  "OVERHEAD CAMSHAFT": {
+    "zh": "顶置凸轮轴"
+  },
+  "VARIABLE VALVE TIMING": {
+    "zh": "可变气门正时"
+  },
+  "VVT-I": {
+    "zh": "智能可变气门正时"
+  },
+  "VVTI": {
+    "zh": "可变气门正时"
+  },
+  "VTEC": {
+    "zh": "可变气门正时及升程"
+  },
+  "VANOS": {
+    "zh": "可变凸轮轴正时"
+  },
+  "CAMSHAFT": {
+    "zh": "凸轮轴"
+  },
+  "CAMSHAFT SENSOR": {
+    "zh": "凸轮轴传感器"
+  },
+  "CAMSHAFT POSITION SENSOR": {
+    "zh": "凸轮轴位置传感器"
+  },
+  "CAMSHAFT PULLEY": {
+    "zh": "凸轮轴皮带轮"
+  },
+  "CAMSHAFT SPROCKET": {
+    "zh": "凸轮轴链轮"
+  },
+  "CAMSHAFT SEAL": {
+    "zh": "凸轮轴油封"
+  },
+  "CAMSHAFT BEARING": {
+    "zh": "凸轮轴轴承"
+  },
+  "CAMSHAFT CAP": {
+    "zh": "凸轮轴盖"
+  },
+  "CAMSHAFT LOBE": {
+    "zh": "凸轮轴凸角"
+  },
+  "CAMSHAFT CHAIN": {
+    "zh": "凸轮轴链条"
+  },
+  "CAMSHAFT GEAR": {
+    "zh": "凸轮轴齿轮"
+  },
+  "CRANKSHAFT": {
+    "zh": "曲轴"
+  },
+  "CRANKSHAFT SENSOR": {
+    "zh": "曲轴传感器"
+  },
+  "CRANKSHAFT POSITION SENSOR": {
+    "zh": "曲轴位置传感器"
+  },
+  "CRANKSHAFT PULLEY": {
+    "zh": "曲轴皮带轮"
+  },
+  "CRANKSHAFT BEARING": {
+    "zh": "曲轴瓦"
+  },
+  "CRANKSHAFT MAIN BEARING": {
+    "zh": "曲轴主轴瓦"
+  },
+  "CRANKSHAFT JOURNAL": {
+    "zh": "曲轴轴颈"
+  },
+  "CRANKSHAFT SEAL": {
+    "zh": "曲轴油封"
+  },
+  "CRANKSHAFT FRONT SEAL": {
+    "zh": "曲轴前油封"
+  },
+  "CRANKSHAFT REAR SEAL": {
+    "zh": "曲轴后油封"
+  },
+  "CRANKSHAFT THROW": {
+    "zh": "曲轴曲柄"
+  },
+  "CRANKSHAFT SPROCKET": {
+    "zh": "曲轴链轮"
+  },
+  "CRANKSHAFT PULLEY BOLT": {
+    "zh": "曲轴皮带轮螺丝"
+  },
+  "CRANKSHAFT DAMPER": {
+    "zh": "曲轴减震器"
+  },
+  "CRANKSHAFT BALANCER": {
+    "zh": "曲轴平衡器"
+  },
+  "CRANKSHAFT KEY": {
+    "zh": "曲轴键"
+  },
+  "PISTON": {
+    "zh": "活塞"
+  },
+  "PISTON ASSEMBLY": {
+    "zh": "活塞总成"
+  },
+  "PISTON RING": {
+    "zh": "活塞环"
+  },
+  "PISTON RING SET": {
+    "zh": "活塞环组"
+  },
+  "PISTON RING COMPRESSOR": {
+    "zh": "活塞环压缩器"
+  },
+  "PISTON PIN": {
+    "zh": "活塞销"
+  },
+  "PISTON LINER": {
+    "zh": "活塞套"
+  },
+  "PISTON COOLING JET": {
+    "zh": "活塞冷却喷嘴"
+  },
+  "PISTON SLAP": {
+    "zh": "活塞敲缸"
+  },
+  "CONNECTING ROD": {
+    "zh": "连杆"
+  },
+  "CONNECTING ROD BEARING": {
+    "zh": "连杆瓦"
+  },
+  "CONNECTING ROD BOLT": {
+    "zh": "连杆螺丝"
+  },
+  "CONNECTING ROD BUSH": {
+    "zh": "连杆套"
+  },
+  "THRUST WASHER": {
+    "zh": "止推垫圈"
+  },
+  "WRIST PIN": {
+    "zh": "活塞销"
+  },
+  "TIMING BELT": {
+    "zh": "正时皮带"
+  },
+  "TIMING BELT KIT": {
+    "zh": "正时皮带套装"
+  },
+  "TIMING BELT TENSIONER": {
+    "zh": "正时皮带涨紧轮"
+  },
+  "TIMING BELT PULLEY": {
+    "zh": "正时皮带轮"
+  },
+  "TIMING BELT COVER": {
+    "zh": "正时皮带罩"
+  },
+  "TIMING CHAIN": {
+    "zh": "正时链条"
+  },
+  "TIMING CHAIN KIT": {
+    "zh": "正时链条套装"
+  },
+  "TIMING CHAIN TENSIONER": {
+    "zh": "正时链条涨紧器"
+  },
+  "TIMING CHAIN GUIDE": {
+    "zh": "正时链条导轨"
+  },
+  "TIMING CHAIN COVER": {
+    "zh": "正时链条盖"
+  },
+  "TIMING CHAIN COVER GASKET": {
+    "zh": "正时盖垫片"
+  },
+  "TIMING COVER GASKET": {
+    "zh": "正时盖垫片"
+  },
+  "TIMING GEAR": {
+    "zh": "正时齿轮"
+  },
+  "TIMING KIT": {
+    "zh": "正时套装"
+  },
+  "TIMING MARK": {
+    "zh": "正时标记"
+  },
+  "TIMING BELT REPLACEMENT": {
+    "zh": "更换正时皮带"
+  },
+  "TENSIONER": {
+    "zh": "涨紧轮"
+  },
+  "TENSIONER PULLEY": {
+    "zh": "涨紧轮"
+  },
+  "TENSIONER BELT": {
+    "zh": "皮带涨紧器"
+  },
+  "TENSIONER SPRING": {
+    "zh": "涨紧弹簧"
+  },
+  "IDLER PULLEY": {
+    "zh": "惰轮"
+  },
+  "IDLER ARM": {
+    "zh": "惰轮臂"
+  },
+  "IDLER GEAR": {
+    "zh": "惰齿轮"
+  },
+  "PULLEY": {
+    "zh": "皮带轮"
+  },
+  "ALTERNATOR PULLEY": {
+    "zh": "发电机皮带轮"
+  },
+  "POWER STEERING PUMP PULLEY": {
+    "zh": "助力泵皮带轮"
+  },
+  "AC PULLEY": {
+    "zh": "空调皮带轮"
+  },
+  "WATER PUMP PULLEY": {
+    "zh": "水泵皮带轮"
+  },
+  "FAN PULLEY": {
+    "zh": "风扇皮带轮"
+  },
+  "UNDERDRIVE PULLEY": {
+    "zh": "减速皮带轮"
+  },
+  "OVERDRIVE PULLEY": {
+    "zh": "加速皮带轮"
+  },
+  "PULLEY KIT": {
+    "zh": "皮带轮套装"
+  },
+  "SERPENTINE BELT": {
+    "zh": "多楔带"
+  },
+  "SERPENTINE BELT TENSIONER": {
+    "zh": "多楔带涨紧器"
+  },
+  "V-BELT": {
+    "zh": "三角皮带"
+  },
+  "FAN BELT": {
+    "zh": "风扇皮带"
+  },
+  "ALTERNATOR BELT": {
+    "zh": "发电机皮带"
+  },
+  "AC BELT": {
+    "zh": "空调皮带"
+  },
+  "POWER STEERING BELT": {
+    "zh": "助力泵皮带"
+  },
+  "DRIVE BELT": {
+    "zh": "驱动皮带"
+  },
+  "MAIN DRIVE BELT": {
+    "zh": "主驱动皮带"
+  },
+  "ACCESSORY BELT": {
+    "zh": "附件皮带"
+  },
+  "RIBBED BELT": {
+    "zh": "多楔带"
+  },
+  "FLAT BELT": {
+    "zh": "平皮带"
+  },
+  "COGGED BELT": {
+    "zh": "齿形皮带"
+  },
+  "BELT DRESSING": {
+    "zh": "皮带养护剂"
+  },
+  "BELT SQUEAL": {
+    "zh": "皮带异响"
+  },
+  "BELT SLIP": {
+    "zh": "皮带打滑"
+  },
+  "BELT TENSION": {
+    "zh": "皮带张力"
+  },
+  "BELT REPLACEMENT": {
+    "zh": "更换皮带"
+  },
+  "FLYWHEEL": {
+    "zh": "飞轮"
+  },
+  "FLYWHEEL RING GEAR": {
+    "zh": "飞轮齿圈"
+  },
+  "RING GEAR": {
+    "zh": "齿圈"
+  },
+  "FLYWHEEL BEARING": {
+    "zh": "飞轮轴承"
+  },
+  "FLYWHEEL BOLT": {
+    "zh": "飞轮螺丝"
+  },
+  "FLYWHEEL KEY": {
+    "zh": "飞轮键"
+  },
+  "FLEXPLATE": {
+    "zh": "飞轮盘"
+  },
+  "DUAL MASS FLYWHEEL": {
+    "zh": "双质量飞轮"
+  },
+  "PILOT BEARING": {
+    "zh": "导向轴承"
+  },
+  "PILOT BUSHING": {
+    "zh": "导向套"
+  },
+  "OIL PUMP": {
+    "zh": "机油泵"
+  },
+  "OIL PUMP GASKET": {
+    "zh": "机油泵垫片"
+  },
+  "OIL PUMP CHAIN": {
+    "zh": "机油泵链条"
+  },
+  "OIL PUMP DRIVE": {
+    "zh": "机油泵驱动"
+  },
+  "OIL PUMP PICKUP": {
+    "zh": "机油泵吸管"
+  },
+  "OIL PUMP STRAINER": {
+    "zh": "机油泵滤网"
+  },
+  "OIL PUMP RELIEF VALVE": {
+    "zh": "机油泵卸压阀"
+  },
+  "OIL PAN": {
+    "zh": "油底壳"
+  },
+  "OIL PAN GASKET": {
+    "zh": "油底壳垫片"
+  },
+  "SUMP GASKET": {
+    "zh": "油底壳垫片"
+  },
+  "OIL PAN PLUG": {
+    "zh": "油底壳放油螺丝"
+  },
+  "OIL DRAIN PLUG": {
+    "zh": "放油螺丝"
+  },
+  "OIL LEVEL GAUGE": {
+    "zh": "机油尺"
+  },
+  "OIL DIPSTICK": {
+    "zh": "机油尺"
+  },
+  "OIL DIPSTICK TUBE": {
+    "zh": "机油尺管"
+  },
+  "OIL LEVEL SENSOR": {
+    "zh": "机油液位传感器"
+  },
+  "OIL PRESSURE SENSOR": {
+    "zh": "机油压力传感器"
+  },
+  "OIL PRESSURE SWITCH": {
+    "zh": "机油压力开关"
+  },
+  "OIL PRESSURE GAUGE": {
+    "zh": "机油压力表"
+  },
+  "OIL TEMPERATURE SENSOR": {
+    "zh": "机油温度传感器"
+  },
+  "OIL SWITCH": {
+    "zh": "机油开关"
+  },
+  "OIL PRESSURE VALVE": {
+    "zh": "机油压力阀"
+  },
+  "OIL FILTER": {
+    "zh": "机油滤清器"
+  },
+  "OIL FILTER HOUSING": {
+    "zh": "机油滤清器座"
+  },
+  "OIL FILTER GASKET": {
+    "zh": "机油滤清器垫片"
+  },
+  "OIL FILTER WRENCH": {
+    "zh": "机油滤清器扳手"
+  },
+  "OIL STRAINER": {
+    "zh": "机油滤网"
+  },
+  "OIL COOLER": {
+    "zh": "机油冷却器"
+  },
+  "OIL COOLER HOSE": {
+    "zh": "机油冷却器软管"
+  },
+  "OIL COOLER GASKET": {
+    "zh": "机油冷却器垫片"
+  },
+  "OIL COOLER PIPE": {
+    "zh": "机油冷却器管"
+  },
+  "OIL GALLERY": {
+    "zh": "机油道"
+  },
+  "OIL PASSAGE": {
+    "zh": "机油道"
+  },
+  "OIL RETURN": {
+    "zh": "机油回路"
+  },
+  "OIL JET": {
+    "zh": "机油喷嘴"
+  },
+  "OIL FILLER CAP": {
+    "zh": "机油加注口盖"
+  },
+  "OIL FILLER NECK": {
+    "zh": "机油加注口"
+  },
+  "OIL SLUDGE": {
+    "zh": "油泥"
+  },
+  "OIL VISCOSITY": {
+    "zh": "机油粘度"
+  },
+  "OIL CONSUMPTION": {
+    "zh": "机油消耗"
+  },
+  "OIL BURNING": {
+    "zh": "烧机油"
+  },
+  "OIL LEAK": {
+    "zh": "漏油"
+  },
+  "HEAD GASKET SET": {
+    "zh": "缸垫套装"
+  },
+  "INTAKE MANIFOLD GASKET": {
+    "zh": "进气歧管垫片"
+  },
+  "INTAKE MANIFOLD": {
+    "zh": "进气歧管"
+  },
+  "INTAKE MANIFOLD GASKET SET": {
+    "zh": "进气歧管垫片套装"
+  },
+  "INTAKE PIPE": {
+    "zh": "进气管"
+  },
+  "INTAKE HOSE": {
+    "zh": "进气软管"
+  },
+  "INTAKE DUCT": {
+    "zh": "进气管"
+  },
+  "INTAKE BOOT": {
+    "zh": "进气套"
+  },
+  "AIR INTAKE": {
+    "zh": "进气系统"
+  },
+  "AIR INTAKE HOSE": {
+    "zh": "进气软管"
+  },
+  "AIR INTAKE TUBE": {
+    "zh": "进气歧管"
+  },
+  "AIR INTAKE RESONATOR": {
+    "zh": "进气谐振器"
+  },
+  "EXHAUST MANIFOLD GASKET": {
+    "zh": "排气歧管垫片"
+  },
+  "EXHAUST MANIFOLD": {
+    "zh": "排气歧管"
+  },
+  "EXHAUST GASKET": {
+    "zh": "排气管垫片"
+  },
+  "EXHAUST MANIFOLD BOLT": {
+    "zh": "排气歧管螺丝"
+  },
+  "EXHAUST MANIFOLD STUD": {
+    "zh": "排气歧管双头螺丝"
+  },
+  "EXHAUST PIPE GASKET": {
+    "zh": "排气管垫片"
+  },
+  "INTAKE MANIFOLD BOLT": {
+    "zh": "进气歧管螺丝"
+  },
+  "OIL SEAL": {
+    "zh": "油封"
+  },
+  "FRONT OIL SEAL": {
+    "zh": "前油封"
+  },
+  "REAR OIL SEAL": {
+    "zh": "后油封"
+  },
+  "CRANKSHAFT OIL SEAL": {
+    "zh": "曲轴油封"
+  },
+  "CAMSHAFT OIL SEAL": {
+    "zh": "凸轮轴油封"
+  },
+  "AXLE OIL SEAL": {
+    "zh": "半轴油封"
+  },
+  "DIFFERENTIAL OIL SEAL": {
+    "zh": "差速器油封"
+  },
+  "TRANSMISSION OIL SEAL": {
+    "zh": "变速箱油封"
+  },
+  "WHEEL SEAL": {
+    "zh": "轮毂油封"
+  },
+  "PINION SEAL": {
+    "zh": "小齿轮油封"
+  },
+  "GASKET": {
+    "zh": "垫片"
+  },
+  "RUBBER GASKET": {
+    "zh": "橡胶垫片"
+  },
+  "CORK GASKET": {
+    "zh": "软木垫片"
+  },
+  "METAL GASKET": {
+    "zh": "金属垫片"
+  },
+  "PAPER GASKET": {
+    "zh": "纸垫片"
+  },
+  "SILICONE GASKET": {
+    "zh": "硅胶垫片"
+  },
+  "O-RING": {
+    "zh": "O型密封圈"
+  },
+  "RUBBER O-RING": {
+    "zh": "橡胶密封圈"
+  },
+  "SILICONE O-RING": {
+    "zh": "硅胶密封圈"
+  },
+  "WASHER": {
+    "zh": "垫圈"
+  },
+  "COPPER WASHER": {
+    "zh": "铜垫圈"
+  },
+  "RUBBER WASHER": {
+    "zh": "橡胶垫圈"
+  },
+  "SPRING WASHER": {
+    "zh": "弹簧垫圈"
+  },
+  "FLAT WASHER": {
+    "zh": "平垫圈"
+  },
+  "LOCK WASHER": {
+    "zh": "锁紧垫圈"
+  },
+  "SEAL": {
+    "zh": "密封件"
+  },
+  "SEAL KIT": {
+    "zh": "密封套装"
+  },
+  "SEAL RING": {
+    "zh": "密封环"
+  },
+  "GASKET SET": {
+    "zh": "垫片套装"
+  },
+  "TRANSMISSION GASKET KIT": {
+    "zh": "变速箱垫片套装"
+  },
+  "GASKET SEALANT": {
+    "zh": "密封胶"
+  },
+  "SILICONE SEALANT": {
+    "zh": "硅胶密封胶"
+  },
+  "FUEL SYSTEM": {
+    "zh": "燃油系统"
+  },
+  "FUEL TANK": {
+    "zh": "油箱"
+  },
+  "FUEL CAP": {
+    "zh": "油箱盖"
+  },
+  "FUEL TANK CAP": {
+    "zh": "油箱盖"
+  },
+  "FUEL TANK STRAP": {
+    "zh": "油箱绑带"
+  },
+  "FUEL TANK SENDER": {
+    "zh": "油位传感器"
+  },
+  "FUEL GAUGE": {
+    "zh": "油量表"
+  },
+  "FUEL GAUGE UNIT": {
+    "zh": "油位传感器总成"
+  },
+  "FUEL LEVEL SENSOR": {
+    "zh": "油位传感器"
+  },
+  "FUEL PUMP": {
+    "zh": "燃油泵"
+  },
+  "FUEL PUMP ASSEMBLY": {
+    "zh": "燃油泵总成"
+  },
+  "FUEL PUMP MODULE": {
+    "zh": "燃油泵模块"
+  },
+  "FUEL PUMP RELAY": {
+    "zh": "燃油泵继电器"
+  },
+  "FUEL PUMP STRAINER": {
+    "zh": "燃油泵滤网"
+  },
+  "FUEL PUMP SEAL": {
+    "zh": "燃油泵密封圈"
+  },
+  "FUEL PUMP GASKET": {
+    "zh": "燃油泵垫片"
+  },
+  "ELECTRIC FUEL PUMP": {
+    "zh": "电动燃油泵"
+  },
+  "MECHANICAL FUEL PUMP": {
+    "zh": "机械燃油泵"
+  },
+  "HIGH PRESSURE PUMP": {
+    "zh": "高压油泵"
+  },
+  "HIGH PRESSURE FUEL PUMP": {
+    "zh": "高压燃油泵"
+  },
+  "INJECTION PUMP": {
+    "zh": "喷油泵"
+  },
+  "DIESEL PUMP": {
+    "zh": "柴油泵"
+  },
+  "LIFT PUMP": {
+    "zh": "输油泵"
+  },
+  "TRANSFER PUMP": {
+    "zh": "输油泵"
+  },
+  "FUEL FILTER": {
+    "zh": "燃油滤清器"
+  },
+  "DIESEL FILTER": {
+    "zh": "柴油滤清器"
+  },
+  "DIESEL FILTER COMPLETE": {
+    "zh": "柴油滤清器总成"
+  },
+  "DIESEL FILTER ELEMENT": {
+    "zh": "柴油滤芯"
+  },
+  "FUEL FILTER ELEMENT": {
+    "zh": "燃油滤芯"
+  },
+  "FUEL FILTER HOUSING": {
+    "zh": "燃油滤清器座"
+  },
+  "FUEL FILTER CAP": {
+    "zh": "燃油滤清器盖"
+  },
+  "FUEL WATER SEPARATOR": {
+    "zh": "油水分离器"
+  },
+  "FUEL INJECTOR": {
+    "zh": "喷油嘴"
+  },
+  "FUEL INJECTOR SEAL": {
+    "zh": "喷油嘴密封圈"
+  },
+  "FUEL INJECTOR O-RING": {
+    "zh": "喷油嘴O型圈"
+  },
+  "FUEL INJECTOR CLIP": {
+    "zh": "喷油嘴卡子"
+  },
+  "INJECTOR": {
+    "zh": "喷油嘴"
+  },
+  "INJECTION NOZZLE": {
+    "zh": "喷油嘴"
+  },
+  "NOZZLE": {
+    "zh": "喷油嘴"
+  },
+  "NOZZLE SEAL": {
+    "zh": "喷油嘴密封圈"
+  },
+  "NOZZLE TEST": {
+    "zh": "喷油嘴检测"
+  },
+  "NOZZLE CLEANING": {
+    "zh": "喷油嘴清洗"
+  },
+  "NOZZLE REPAIR": {
+    "zh": "喷油嘴维修"
+  },
+  "NOZZLE SPRING": {
+    "zh": "喷油嘴弹簧"
+  },
+  "NOZZLE HOLDER": {
+    "zh": "喷油嘴支架"
+  },
+  "NOZZLE WASHER": {
+    "zh": "喷油嘴垫圈"
+  },
+  "FUEL INJECTOR CLEANER": {
+    "zh": "喷油嘴清洗剂"
+  },
+  "FUEL INJECTOR CLEANING": {
+    "zh": "喷油嘴清洗"
+  },
+  "FUEL RAIL": {
+    "zh": "燃油导轨"
+  },
+  "FUEL RAIL PRESSURE SENSOR": {
+    "zh": "燃油压力传感器"
+  },
+  "FUEL INJECTOR RAIL": {
+    "zh": "喷油嘴导轨"
+  },
+  "FUEL PRESSURE REGULATOR": {
+    "zh": "燃油压力调节器"
+  },
+  "FUEL PRESSURE SENSOR": {
+    "zh": "燃油压力传感器"
+  },
+  "FUEL PRESSURE GAUGE": {
+    "zh": "燃油压力表"
+  },
+  "FUEL PRESSURE DAMPER": {
+    "zh": "燃油压力减震器"
+  },
+  "FUEL PIPE": {
+    "zh": "燃油管"
+  },
+  "FUEL HOSE": {
+    "zh": "燃油软管"
+  },
+  "FUEL LINE": {
+    "zh": "燃油管"
+  },
+  "FUEL RETURN HOSE": {
+    "zh": "回油管"
+  },
+  "FUEL RETURN LINE": {
+    "zh": "回油管"
+  },
+  "FUEL SUPPLY LINE": {
+    "zh": "供油管"
+  },
+  "FUEL VAPOR HOSE": {
+    "zh": "燃油蒸汽管"
+  },
+  "FUEL BREATHER": {
+    "zh": "燃油通气口"
+  },
+  "FUEL BREATHER VALVE": {
+    "zh": "燃油通气阀"
+  },
+  "FUEL SHUTOFF VALVE": {
+    "zh": "燃油切断阀"
+  },
+  "FUEL CHECK VALVE": {
+    "zh": "燃油单向阀"
+  },
+  "FUEL SOLENOID": {
+    "zh": "燃油电磁阀"
+  },
+  "FUEL CUT SOLENOID": {
+    "zh": "断油电磁阀"
+  },
+  "FUEL SOLENOID VALVE": {
+    "zh": "燃油电磁阀"
+  },
+  "CARBURETOR": {
+    "zh": "化油器"
+  },
+  "CARBURETOR GASKET": {
+    "zh": "化油器垫片"
+  },
+  "CARBURETOR REPAIR KIT": {
+    "zh": "化油器维修包"
+  },
+  "CARBURETOR FLOAT": {
+    "zh": "化油器浮子"
+  },
+  "CARBURETOR JET": {
+    "zh": "化油器量孔"
+  },
+  "CARBURETOR NEEDLE": {
+    "zh": "化油器针阀"
+  },
+  "CARBURETOR CLEANER": {
+    "zh": "化油器清洗剂"
+  },
+  "CARB CHOKE CLEANER": {
+    "zh": "化油器清洗剂"
+  },
+  "CHOKE": {
+    "zh": "阻风门"
+  },
+  "CHOKE VALVE": {
+    "zh": "阻风门"
+  },
+  "THROTTLE BODY": {
+    "zh": "节气门"
+  },
+  "THROTTLE BODY GASKET": {
+    "zh": "节气门垫片"
+  },
+  "THROTTLE BODY CLEANER": {
+    "zh": "节气门清洗剂"
+  },
+  "THROTTLE BODY CLEANING": {
+    "zh": "节气门清洗"
+  },
+  "THROTTLE VALVE": {
+    "zh": "节气门"
+  },
+  "THROTTLE CABLE": {
+    "zh": "油门拉线"
+  },
+  "THROTTLE POSITION SENSOR": {
+    "zh": "节气门位置传感器"
+  },
+  "THROTTLE ACTUATOR": {
+    "zh": "节气门执行器"
+  },
+  "ACCELERATOR PEDAL": {
+    "zh": "油门踏板"
+  },
+  "ACCELERATOR CABLE": {
+    "zh": "油门拉线"
+  },
+  "GAS PEDAL": {
+    "zh": "油门踏板"
+  },
+  "IDLE AIR CONTROL VALVE": {
+    "zh": "怠速控制阀"
+  },
+  "IDLE CONTROL VALVE": {
+    "zh": "怠速控制阀"
+  },
+  "IDLE AIR CONTROL": {
+    "zh": "怠速控制"
+  },
+  "IDLE SPEED CONTROL": {
+    "zh": "怠速控制"
+  },
+  "IDLE SPEED MOTOR": {
+    "zh": "怠速马达"
+  },
+  "AIR CONTROL VALVE": {
+    "zh": "空气控制阀"
+  },
+  "AIR CLEANER": {
+    "zh": "空气滤清器总成"
+  },
+  "AIR CLEANER ELEMENT": {
+    "zh": "空气滤芯"
+  },
+  "AIR CLEANER COVER": {
+    "zh": "空气滤清器盖"
+  },
+  "AIR CLEANER HOUSING": {
+    "zh": "空气滤清器壳体"
+  },
+  "AIR CLEANER PIPE": {
+    "zh": "空气滤清器管"
+  },
+  "AIR CLEANER HOSE": {
+    "zh": "空气滤清器软管"
+  },
+  "AIR FILTER": {
+    "zh": "空气滤清器"
+  },
+  "AIR FILTER ELEMENT": {
+    "zh": "空气滤芯"
+  },
+  "AIR FILTER BOX": {
+    "zh": "空气滤清器盒子"
+  },
+  "AIR FILTER COVER": {
+    "zh": "空气滤清器盖"
+  },
+  "AIR FILTER HOUSING": {
+    "zh": "空气滤清器座"
+  },
+  "PERFORMANCE AIR FILTER": {
+    "zh": "高性能空气滤清器"
+  },
+  "SPORTS AIR FILTER": {
+    "zh": "运动型空气滤清器"
+  },
+  "AIR MASS METER": {
+    "zh": "空气流量计"
+  },
+  "AIR FLOW SENSOR": {
+    "zh": "空气流量传感器"
+  },
+  "MASS AIR FLOW SENSOR": {
+    "zh": "空气流量传感器"
+  },
+  "MAP SENSOR": {
+    "zh": "进气压力传感器"
+  },
+  "MANIFOLD ABSOLUTE PRESSURE SENSOR": {
+    "zh": "绝对压力传感器"
+  },
+  "INTAKE AIR TEMPERATURE SENSOR": {
+    "zh": "进气温度传感器"
+  },
+  "AIR TEMPERATURE SENSOR": {
+    "zh": "空气温度传感器"
+  },
+  "BOOST PRESSURE SENSOR": {
+    "zh": "增压压力传感器"
+  },
+  "TURBO PRESSURE SENSOR": {
+    "zh": "涡轮压力传感器"
+  },
+  "AIR FILTER CLEANING KIT": {
+    "zh": "空气滤清器清洗套装"
+  },
+  "CATALYTIC CONVERTER": {
+    "zh": "三元催化器"
+  },
+  "CATALYTIC CONVERTER GASKET": {
+    "zh": "三元催化器垫片"
+  },
+  "DIESEL PARTICULATE FILTER": {
+    "zh": "柴油颗粒过滤器"
+  },
+  "DPF": {
+    "zh": "柴油颗粒过滤器"
+  },
+  "DPF CLEANING": {
+    "zh": "DPF清洗"
+  },
+  "DPF REGENERATION": {
+    "zh": "DPF再生"
+  },
+  "EGR VALVE": {
+    "zh": "废气再循环阀"
+  },
+  "EGR TUBE": {
+    "zh": "废气再循环管"
+  },
+  "EGR COOLER": {
+    "zh": "废气再循环冷却器"
+  },
+  "EGR GASKET": {
+    "zh": "废气再循环垫片"
+  },
+  "EGR SYSTEM": {
+    "zh": "废气再循环系统"
+  },
+  "EXHAUST SYSTEM": {
+    "zh": "排气系统"
+  },
+  "EXHAUST PIPE": {
+    "zh": "排气管"
+  },
+  "EXHAUST MUFFLER": {
+    "zh": "消声器"
+  },
+  "MUFFLER": {
+    "zh": "消声器"
+  },
+  "SILENCER": {
+    "zh": "消声器"
+  },
+  "EXHAUST TIP": {
+    "zh": "排气尾喉"
+  },
+  "TAILPIPE": {
+    "zh": "排气管尾段"
+  },
+  "EXHAUST BRACKET": {
+    "zh": "排气管支架"
+  },
+  "EXHAUST CLAMP": {
+    "zh": "排气管卡箍"
+  },
+  "EXHAUST HANGER": {
+    "zh": "排气管吊耳"
+  },
+  "EXHAUST RUBBER": {
+    "zh": "排气管吊耳橡胶"
+  },
+  "EXHAUST MOUNT": {
+    "zh": "排气管支架"
+  },
+  "EXHAUST DONUT GASKET": {
+    "zh": "排气管环形垫片"
+  },
+  "EXHAUST FLANGE": {
+    "zh": "排气管法兰"
+  },
+  "EXHAUST FLANGE GASKET": {
+    "zh": "排气管法兰垫片"
+  },
+  "EXHAUST RESONATOR": {
+    "zh": "排气谐振器"
+  },
+  "FLEX PIPE": {
+    "zh": "排气管软连接"
+  },
+  "EXHAUST FLEX JOINT": {
+    "zh": "排气管软接头"
+  },
+  "EXHAUST LEAK": {
+    "zh": "排气管漏气"
+  },
+  "CATALYTIC CONVERTER CLEANER": {
+    "zh": "三元催化清洗剂"
+  },
+  "PCV VALVE": {
+    "zh": "曲轴箱通风阀"
+  },
+  "BREATHER VALVE": {
+    "zh": "通风阀"
+  },
+  "BREATHER PIPE": {
+    "zh": "通风管"
+  },
+  "BREATHER HOSE": {
+    "zh": "通风软管"
+  },
+  "COOLING SYSTEM": {
+    "zh": "冷却系统"
+  },
+  "RADIATOR": {
+    "zh": "水箱"
+  },
+  "RADIATOR ASSEMBLY": {
+    "zh": "水箱总成"
+  },
+  "RADIATOR CORE": {
+    "zh": "水箱芯"
+  },
+  "RADIATOR CAP": {
+    "zh": "水箱盖"
+  },
+  "RADIATOR PRESSURE CAP": {
+    "zh": "水箱压力盖"
+  },
+  "RADIATOR CAP GASKET": {
+    "zh": "水箱盖垫片"
+  },
+  "RADIATOR HOSE": {
+    "zh": "水箱管"
+  },
+  "RADIATOR HOSE UPPER": {
+    "zh": "水箱上水管"
+  },
+  "RADIATOR HOSE LOWER": {
+    "zh": "水箱下水管"
+  },
+  "RADIATOR MOUNTING": {
+    "zh": "水箱支架"
+  },
+  "RADIATOR BRACKET": {
+    "zh": "水箱支架"
+  },
+  "RADIATOR FAN": {
+    "zh": "散热风扇"
+  },
+  "RADIATOR FAN ASSEMBLY": {
+    "zh": "散热风扇总成"
+  },
+  "RADIATOR FAN MOTOR": {
+    "zh": "散热风扇电机"
+  },
+  "RADIATOR FAN BLADE": {
+    "zh": "散热风扇叶片"
+  },
+  "RADIATOR FAN SHROUD": {
+    "zh": "散热风扇罩"
+  },
+  "RADIATOR FAN SWITCH": {
+    "zh": "散热风扇开关"
+  },
+  "RADIATOR FAN RESISTOR": {
+    "zh": "散热风扇电阻"
+  },
+  "RADIATOR FAN RELAY": {
+    "zh": "散热风扇继电器"
+  },
+  "RADIATOR FAN CONTROL MODULE": {
+    "zh": "散热风扇控制模块"
+  },
+  "AUXILIARY RADIATOR": {
+    "zh": "副水箱"
+  },
+  "RADIATOR OVERFLOW TANK": {
+    "zh": "副水壶"
+  },
+  "EXPANSION TANK": {
+    "zh": "膨胀水箱"
+  },
+  "COOLANT RESERVOIR": {
+    "zh": "冷却液壶"
+  },
+  "COOLANT OVERFLOW TANK": {
+    "zh": "冷却液溢流壶"
+  },
+  "WATER PUMP": {
+    "zh": "水泵"
+  },
+  "WATER PUMP GASKET": {
+    "zh": "水泵垫片"
+  },
+  "WATER PUMP SEAL": {
+    "zh": "水泵密封圈"
+  },
+  "WATER PUMP BELT": {
+    "zh": "水泵皮带"
+  },
+  "WATER PUMP BEARING": {
+    "zh": "水泵轴承"
+  },
+  "WATER PUMP IMPELLER": {
+    "zh": "水泵叶轮"
+  },
+  "WATER PUMP HOUSING": {
+    "zh": "水泵壳体"
+  },
+  "WATER PUMP INLET": {
+    "zh": "水泵进水口"
+  },
+  "WATER PUMP OUTLET": {
+    "zh": "水泵出水口"
+  },
+  "WATER HOSE": {
+    "zh": "水管"
+  },
+  "WATER PIPE": {
+    "zh": "水管"
+  },
+  "WATER OUTLET": {
+    "zh": "出水口"
+  },
+  "WATER INLET": {
+    "zh": "进水口"
+  },
+  "WATER BYPASS HOSE": {
+    "zh": "旁通水管"
+  },
+  "WATER BYPASS PIPE": {
+    "zh": "旁通水管"
+  },
+  "HEATER HOSE": {
+    "zh": "暖风水管"
+  },
+  "HEATER PIPE": {
+    "zh": "暖风管"
+  },
+  "COOLANT HOSE": {
+    "zh": "冷却液软管"
+  },
+  "COOLANT PIPE": {
+    "zh": "冷却液管"
+  },
+  "THERMOSTAT": {
+    "zh": "节温器"
+  },
+  "THERMOSTAT GASKET": {
+    "zh": "节温器垫片"
+  },
+  "THERMOSTAT SEAL": {
+    "zh": "节温器密封圈"
+  },
+  "THERMOSTAT HOUSING": {
+    "zh": "节温器座"
+  },
+  "THERMOSTAT O-RING": {
+    "zh": "节温器O型圈"
+  },
+  "COOLANT TEMPERATURE SENSOR": {
+    "zh": "水温传感器"
+  },
+  "WATER TEMPERATURE SENSOR": {
+    "zh": "水温传感器"
+  },
+  "COOLANT TEMPERATURE GAUGE": {
+    "zh": "水温表"
+  },
+  "TEMPERATURE SENSOR": {
+    "zh": "温度传感器"
+  },
+  "COOLING FAN": {
+    "zh": "冷却风扇"
+  },
+  "AC FAN": {
+    "zh": "空调风扇"
+  },
+  "CONDENSER FAN": {
+    "zh": "冷凝器风扇"
+  },
+  "FAN CLUTCH": {
+    "zh": "风扇离合器"
+  },
+  "FAN BLADE": {
+    "zh": "风扇叶片"
+  },
+  "FAN COUPLING": {
+    "zh": "风扇耦合器"
+  },
+  "ELECTRIC FAN": {
+    "zh": "电子风扇"
+  },
+  "COOLANT": {
+    "zh": "冷却液"
+  },
+  "ANTIFREEZE": {
+    "zh": "防冻液"
+  },
+  "RADIATOR COOLANT": {
+    "zh": "水箱冷却液"
+  },
+  "RADIATOR COOLANT 1 LITRE": {
+    "zh": "水箱冷却液1升"
+  },
+  "RADIATOR COOLANT 4 LITRES": {
+    "zh": "水箱冷却液4升"
+  },
+  "RADIATOR COOLANT 5 LITRES": {
+    "zh": "水箱冷却液5升"
+  },
+  "RADIATOR COOLANT CONCENTRATE": {
+    "zh": "冷却液浓缩液"
+  },
+  "COOLANT FLUSH": {
+    "zh": "冷却液清洗"
+  },
+  "RADIATOR FLUSH": {
+    "zh": "水箱清洗"
+  },
+  "COOLANT LEAK": {
+    "zh": "冷却液泄漏"
+  },
+  "RADIATOR LEAK": {
+    "zh": "水箱漏水"
+  },
+  "RADIATOR STOP LEAK": {
+    "zh": "水箱堵漏剂"
+  },
+  "COOLANT ADDITIVE": {
+    "zh": "冷却液添加剂"
+  },
+  "WATER WETTER": {
+    "zh": "冷却液增效剂"
+  },
+  "ALTERNATOR": {
+    "zh": "发电机"
+  },
+  "ALTERNATOR ASSEMBLY": {
+    "zh": "发电机总成"
+  },
+  "ALTERNATOR BRACKET": {
+    "zh": "发电机支架"
+  },
+  "ALTERNATOR BRUSH": {
+    "zh": "发电机碳刷"
+  },
+  "ALTERNATOR REGULATOR": {
+    "zh": "发电机调节器"
+  },
+  "ALTERNATOR VOLTAGE REGULATOR": {
+    "zh": "发电机电压调节器"
+  },
+  "ALTERNATOR RECTIFIER": {
+    "zh": "发电机整流器"
+  },
+  "ALTERNATOR DIODE": {
+    "zh": "发电机二极管"
+  },
+  "ALTERNATOR BEARING": {
+    "zh": "发电机轴承"
+  },
+  "ALTERNATOR ROTOR": {
+    "zh": "发电机转子"
+  },
+  "ALTERNATOR STATOR": {
+    "zh": "发电机定子"
+  },
+  "ALTERNATOR REPAIR": {
+    "zh": "发电机维修"
+  },
+  "STARTER": {
+    "zh": "启动机"
+  },
+  "STARTER MOTOR": {
+    "zh": "启动马达"
+  },
+  "STARTER ASSEMBLY": {
+    "zh": "启动机总成"
+  },
+  "STARTER BRUSH": {
+    "zh": "启动机碳刷"
+  },
+  "STARTER BRUSH HOLDER": {
+    "zh": "启动机碳刷架"
+  },
+  "STARTER SOLENOID": {
+    "zh": "启动机电磁开关"
+  },
+  "STARTER RELAY": {
+    "zh": "启动继电器"
+  },
+  "STARTER BENDIX": {
+    "zh": "启动机齿轮"
+  },
+  "STARTER DRIVE": {
+    "zh": "启动机驱动齿轮"
+  },
+  "STARTER PINION": {
+    "zh": "启动机小齿轮"
+  },
+  "STARTER CLUTCH": {
+    "zh": "启动机单向离合器"
+  },
+  "STARTER ARMATURE": {
+    "zh": "启动机电枢"
+  },
+  "STARTER FIELD COIL": {
+    "zh": "启动机磁场线圈"
+  },
+  "STARTER BUSHING": {
+    "zh": "启动机轴套"
+  },
+  "STARTER REPAIR": {
+    "zh": "启动机维修"
+  },
+  "BATTERY": {
+    "zh": "电瓶"
+  },
+  "BATTERY TERMINAL": {
+    "zh": "电瓶桩头"
+  },
+  "BATTERY TERMINAL POSITIVE": {
+    "zh": "电瓶正极"
+  },
+  "BATTERY TERMINAL NEGATIVE": {
+    "zh": "电瓶负极"
+  },
+  "BATTERY CLAMP": {
+    "zh": "电瓶夹子"
+  },
+  "BATTERY CABLE POSITIVE": {
+    "zh": "电瓶正极线"
+  },
+  "BATTERY CABLE NEGATIVE": {
+    "zh": "电瓶负极线"
+  },
+  "BATTERY CABLE": {
+    "zh": "电瓶线"
+  },
+  "BATTERY TRAY": {
+    "zh": "电瓶托盘"
+  },
+  "BATTERY HOLD DOWN": {
+    "zh": "电瓶固定架"
+  },
+  "BATTERY WATER": {
+    "zh": "电瓶水"
+  },
+  "BATTERY ACID": {
+    "zh": "电瓶液"
+  },
+  "BATTERY CHARGER": {
+    "zh": "电瓶充电器"
+  },
+  "BATTERY TEST": {
+    "zh": "电瓶检测"
+  },
+  "BATTERY REPLACEMENT": {
+    "zh": "更换电瓶"
+  },
+  "BATTERY JUMP START": {
+    "zh": "电瓶搭电"
+  },
+  "BATTERY N50": {
+    "zh": "电瓶N50"
+  },
+  "BATTERY N70": {
+    "zh": "电瓶N70"
+  },
+  "BATTERY N70L": {
+    "zh": "电瓶N70L"
+  },
+  "BATTERY NS60": {
+    "zh": "电瓶NS60"
+  },
+  "BATTERY NS70": {
+    "zh": "电瓶NS70"
+  },
+  "DRY BATTERY": {
+    "zh": "干电瓶"
+  },
+  "MAINTENANCE FREE BATTERY": {
+    "zh": "免维护电瓶"
+  },
+  "COLD CRANKING AMP": {
+    "zh": "冷启动电流"
+  },
+  "SPARK PLUG": {
+    "zh": "火花塞"
+  },
+  "SPARK PLUG SET": {
+    "zh": "火花塞组"
+  },
+  "SPARK PLUG GAP": {
+    "zh": "火花塞间隙"
+  },
+  "SPARK PLUG WIRE": {
+    "zh": "高压线"
+  },
+  "SPARK PLUG WIRE SET": {
+    "zh": "高压线组"
+  },
+  "SPARK PLUG SOCKET": {
+    "zh": "火花塞套筒"
+  },
+  "SPARK PLUG REPLACEMENT": {
+    "zh": "更换火花塞"
+  },
+  "IRIDIUM SPARK PLUG": {
+    "zh": "铱金火花塞"
+  },
+  "PLATINUM SPARK PLUG": {
+    "zh": "铂金火花塞"
+  },
+  "GLOW PLUG": {
+    "zh": "预热塞"
+  },
+  "GLOW PLUG RELAY": {
+    "zh": "预热塞继电器"
+  },
+  "GLOW PLUG MODULE": {
+    "zh": "预热控制模块"
+  },
+  "IGNITION COIL": {
+    "zh": "点火线圈"
+  },
+  "IGNITION COIL PACK": {
+    "zh": "点火线圈组"
+  },
+  "IGNITION COIL BOOT": {
+    "zh": "点火线圈胶套"
+  },
+  "IGNITION COIL CONNECTOR": {
+    "zh": "点火线圈插头"
+  },
+  "IGNITION COIL MODULE": {
+    "zh": "点火模块"
+  },
+  "IGNITION MODULE": {
+    "zh": "点火模块"
+  },
+  "IGNITION TIMING": {
+    "zh": "点火正时"
+  },
+  "IGNITION WIRE": {
+    "zh": "高压线"
+  },
+  "IGNITION CABLE": {
+    "zh": "高压线"
+  },
+  "IGNITION SWITCH": {
+    "zh": "点火开关"
+  },
+  "IGNITION KEY": {
+    "zh": "点火钥匙"
+  },
+  "IGNITION LOCK": {
+    "zh": "点火锁"
+  },
+  "IGNITION RELAY": {
+    "zh": "点火继电器"
+  },
+  "DISTRIBUTOR": {
+    "zh": "分电器"
+  },
+  "DISTRIBUTOR CAP": {
+    "zh": "分电器盖"
+  },
+  "DISTRIBUTOR ROTOR": {
+    "zh": "分火头"
+  },
+  "DISTRIBUTOR O-RING": {
+    "zh": "分电器O型圈"
+  },
+  "DISTRIBUTOR PICKUP": {
+    "zh": "分电器传感器"
+  },
+  "DISTRIBUTOR POINTS": {
+    "zh": "分电器白金触点"
+  },
+  "DISTRIBUTOR CONDENSER": {
+    "zh": "电容器"
+  },
+  "IGNITION POINTS": {
+    "zh": "点火白金"
+  },
+  "IGNITION CONDENSER": {
+    "zh": "点火电容器"
+  },
+  "COIL WIRE": {
+    "zh": "高压线"
+  },
+  "SENSOR": {
+    "zh": "传感器"
+  },
+  "OXYGEN SENSOR": {
+    "zh": "氧传感器"
+  },
+  "O2 SENSOR": {
+    "zh": "氧传感器"
+  },
+  "FRONT OXYGEN SENSOR": {
+    "zh": "前氧传感器"
+  },
+  "REAR OXYGEN SENSOR": {
+    "zh": "后氧传感器"
+  },
+  "KNOCK SENSOR": {
+    "zh": "爆震传感器"
+  },
+  "VEHICLE SPEED SENSOR": {
+    "zh": "车速传感器"
+  },
+  "SPEED SENSOR": {
+    "zh": "速度传感器"
+  },
+  "ABS SENSOR": {
+    "zh": "ABS传感器"
+  },
+  "WHEEL SPEED SENSOR": {
+    "zh": "轮速传感器"
+  },
+  "TIRE PRESSURE SENSOR": {
+    "zh": "胎压传感器"
+  },
+  "TPMS SENSOR": {
+    "zh": "胎压监测传感器"
+  },
+  "REVERSE SENSOR": {
+    "zh": "倒车雷达传感器"
+  },
+  "PARKING SENSOR": {
+    "zh": "倒车雷达"
+  },
+  "PARKING AID": {
+    "zh": "倒车雷达"
+  },
+  "REVERSE CAMERA": {
+    "zh": "倒车影像"
+  },
+  "BACKUP CAMERA": {
+    "zh": "倒车摄像头"
+  },
+  "BOOST SENSOR": {
+    "zh": "增压传感器"
+  },
+  "AMBIENT TEMPERATURE SENSOR": {
+    "zh": "环境温度传感器"
+  },
+  "RAIN SENSOR": {
+    "zh": "雨量传感器"
+  },
+  "LIGHT SENSOR": {
+    "zh": "光线传感器"
+  },
+  "STEERING ANGLE SENSOR": {
+    "zh": "转向角传感器"
+  },
+  "YAW RATE SENSOR": {
+    "zh": "横摆率传感器"
+  },
+  "ACCELERATION SENSOR": {
+    "zh": "加速度传感器"
+  },
+  "G-FORCE SENSOR": {
+    "zh": "G力传感器"
+  },
+  "PRESSURE SENSOR": {
+    "zh": "压力传感器"
+  },
+  "LEVEL SENSOR": {
+    "zh": "液位传感器"
+  },
+  "POSITION SENSOR": {
+    "zh": "位置传感器"
+  },
+  "TRANSMISSION SPEED SENSOR": {
+    "zh": "变速箱速度传感器"
+  },
+  "TRANSMISSION": {
+    "zh": "变速箱"
+  },
+  "TRANSMISSION ASSEMBLY": {
+    "zh": "变速箱总成"
+  },
+  "TRANSMISSION FLUID": {
+    "zh": "变速箱油"
+  },
+  "TRANSMISSION OIL": {
+    "zh": "变速箱油"
+  },
+  "AUTOMATIC TRANSMISSION FLUID": {
+    "zh": "自动变速箱油"
+  },
+  "ATF FLUID": {
+    "zh": "自动变速箱油"
+  },
+  "MANUAL TRANSMISSION FLUID": {
+    "zh": "手动变速箱油"
+  },
+  "GEAR OIL": {
+    "zh": "齿轮油"
+  },
+  "GEAR BOX OIL": {
+    "zh": "齿轮箱油"
+  },
+  "GEAR BOX OIL 1 LITRE": {
+    "zh": "齿轮油1升"
+  },
+  "GEAR BOX OIL 4 LITRES": {
+    "zh": "齿轮油4升"
+  },
+  "GEAR BOX OIL 5 LITRES": {
+    "zh": "齿轮油5升"
+  },
+  "DIFFERENTIAL OIL": {
+    "zh": "差速器油"
+  },
+  "DIFFERENTIAL FLUID": {
+    "zh": "差速器油"
+  },
+  "TRANSMISSION PAN": {
+    "zh": "变速箱油底壳"
+  },
+  "TRANSMISSION PAN GASKET": {
+    "zh": "变速箱油底壳垫片"
+  },
+  "TRANSMISSION FILTER": {
+    "zh": "变速箱滤清器"
+  },
+  "TRANSMISSION FILTER KIT": {
+    "zh": "变速箱滤清器套装"
+  },
+  "TRANSMISSION COOLER": {
+    "zh": "变速箱冷却器"
+  },
+  "TRANSMISSION COOLER HOSE": {
+    "zh": "变速箱散热管"
+  },
+  "TRANSMISSION OIL COOLER": {
+    "zh": "变速箱油冷器"
+  },
+  "TRANSMISSION MOUNT": {
+    "zh": "变速箱支架"
+  },
+  "TRANSMISSION MOUNTING": {
+    "zh": "变速箱支架"
+  },
+  "TRANSMISSION MOUNT BRACKET": {
+    "zh": "变速箱支架底座"
+  },
+  "TRANSMISSION SEAL": {
+    "zh": "变速箱油封"
+  },
+  "TRANSMISSION INPUT SEAL": {
+    "zh": "变速箱输入轴油封"
+  },
+  "TRANSMISSION OUTPUT SEAL": {
+    "zh": "变速箱输出轴油封"
+  },
+  "TRANSMISSION TAIL SHAFT SEAL": {
+    "zh": "变速箱尾轴油封"
+  },
+  "TRANSMISSION GASKET": {
+    "zh": "变速箱垫片"
+  },
+  "AUTOMATIC TRANSMISSION GASKET KIT": {
+    "zh": "自动变速箱垫片套装"
+  },
+  "TRANSMISSION SOLENOID": {
+    "zh": "变速箱电磁阀"
+  },
+  "TRANSMISSION SOLENOID PACK": {
+    "zh": "变速箱电磁阀组"
+  },
+  "TRANSMISSION VALVE BODY": {
+    "zh": "变速箱阀体"
+  },
+  "TRANSMISSION CONTROL UNIT": {
+    "zh": "变速箱控制单元"
+  },
+  "TRANSMISSION CONTROL MODULE": {
+    "zh": "变速箱控制模块"
+  },
+  "TRANSMISSION SENSOR": {
+    "zh": "变速箱传感器"
+  },
+  "TRANSMISSION RANGE SENSOR": {
+    "zh": "变速箱档位传感器"
+  },
+  "TRANSMISSION NEUTRAL SAFETY SWITCH": {
+    "zh": "空档安全开关"
+  },
+  "TRANSMISSION SHIFT CABLE": {
+    "zh": "变速箱换档拉线"
+  },
+  "TRANSMISSION SHIFT LEVER": {
+    "zh": "换档杆"
+  },
+  "GEAR SELECTOR": {
+    "zh": "换档机构"
+  },
+  "SHIFT LEVER": {
+    "zh": "换档杆"
+  },
+  "SHIFT KNOB": {
+    "zh": "排档头"
+  },
+  "SHIFT BOOT": {
+    "zh": "排档防尘套"
+  },
+  "SHIFT CABLE": {
+    "zh": "换档拉线"
+  },
+  "SHIFT LINKAGE": {
+    "zh": "换档连杆"
+  },
+  "SHIFTER ASSEMBLY": {
+    "zh": "换档总成"
+  },
+  "AUTOMATIC TRANSMISSION": {
+    "zh": "自动变速箱"
+  },
+  "MANUAL TRANSMISSION": {
+    "zh": "手动变速箱"
+  },
+  "CONTINUOUSLY VARIABLE TRANSMISSION": {
+    "zh": "无级变速箱"
+  },
+  "CVT TRANSMISSION": {
+    "zh": "CVT变速箱"
+  },
+  "CVT FLUID": {
+    "zh": "CVT变速箱油"
+  },
+  "CVT BELT": {
+    "zh": "CVT钢带"
+  },
+  "CVT CHAIN": {
+    "zh": "CVT链条"
+  },
+  "DUAL CLUTCH TRANSMISSION": {
+    "zh": "双离合变速箱"
+  },
+  "AUTOMATED MANUAL TRANSMISSION": {
+    "zh": "自动手动变速箱"
+  },
+  "TRANSAXLE": {
+    "zh": "驱动桥变速箱"
+  },
+  "TRANSFER CASE": {
+    "zh": "分动箱"
+  },
+  "TRANSFER CASE OIL": {
+    "zh": "分动箱油"
+  },
+  "TRANSFER CASE SEAL": {
+    "zh": "分动箱油封"
+  },
+  "TRANSFER CASE MOTOR": {
+    "zh": "分动箱电机"
+  },
+  "TRANSFER CASE CHAIN": {
+    "zh": "分动箱链条"
+  },
+  "TRANSMISSION REBUILD": {
+    "zh": "变速箱大修"
+  },
+  "TRANSMISSION OVERHAUL": {
+    "zh": "变速箱大修"
+  },
+  "TRANSMISSION FLUSH": {
+    "zh": "变速箱清洗"
+  },
+  "TRANSMISSION REPAIR": {
+    "zh": "变速箱维修"
+  },
+  "CLUTCH": {
+    "zh": "离合器"
+  },
+  "CLUTCH KIT": {
+    "zh": "离合器套装"
+  },
+  "CLUTCH SET": {
+    "zh": "离合器三件套"
+  },
+  "CLUTCH DISC": {
+    "zh": "离合器片"
+  },
+  "CLUTCH PLATE": {
+    "zh": "离合器片"
+  },
+  "CLUTCH COVER": {
+    "zh": "离合器压盘"
+  },
+  "CLUTCH PRESSURE PLATE": {
+    "zh": "离合器压盘"
+  },
+  "PRESSURE PLATE": {
+    "zh": "压盘"
+  },
+  "CLUTCH RELEASE BEARING": {
+    "zh": "离合器分离轴承"
+  },
+  "RELEASE BEARING": {
+    "zh": "分离轴承"
+  },
+  "CLUTCH BEARING": {
+    "zh": "离合器轴承"
+  },
+  "CLUTCH PILOT BEARING": {
+    "zh": "导向轴承"
+  },
+  "CLUTCH CABLE": {
+    "zh": "离合器拉线"
+  },
+  "CLUTCH HOSE": {
+    "zh": "离合器软管"
+  },
+  "CLUTCH PIPE": {
+    "zh": "离合器管"
+  },
+  "CLUTCH FORK": {
+    "zh": "离合器拨叉"
+  },
+  "CLUTCH PEDAL": {
+    "zh": "离合器踏板"
+  },
+  "CLUTCH MASTER CYLINDER": {
+    "zh": "离合器总泵"
+  },
+  "CLUTCH SLAVE CYLINDER": {
+    "zh": "离合器分泵"
+  },
+  "CLUTCH CYLINDER": {
+    "zh": "离合器分泵"
+  },
+  "CLUTCH SLAVE": {
+    "zh": "离合器分泵"
+  },
+  "CLUTCH FLUID": {
+    "zh": "离合器油"
+  },
+  "CLUTCH RESERVOIR": {
+    "zh": "离合器油壶"
+  },
+  "CLUTCH FLYWHEEL": {
+    "zh": "离合器飞轮"
+  },
+  "CLUTCH ALIGNMENT TOOL": {
+    "zh": "离合器对中工具"
+  },
+  "CLUTCH ADJUSTMENT": {
+    "zh": "离合器调整"
+  },
+  "CLUTCH BLEEDING": {
+    "zh": "离合器排气"
+  },
+  "CLUTCH SLIPPING": {
+    "zh": "离合器打滑"
+  },
+  "DRIVETRAIN": {
+    "zh": "传动系统"
+  },
+  "DRIVE SHAFT": {
+    "zh": "传动轴"
+  },
+  "PROPELLER SHAFT": {
+    "zh": "传动轴"
+  },
+  "TAIL SHAFT": {
+    "zh": "尾轴"
+  },
+  "CENTER BEARING": {
+    "zh": "过桥轴承"
+  },
+  "CENTER SUPPORT BEARING": {
+    "zh": "中间支撑轴承"
+  },
+  "UNIVERSAL JOINT": {
+    "zh": "万向节"
+  },
+  "U-JOINT": {
+    "zh": "十字轴"
+  },
+  "U-JOINT BEARING": {
+    "zh": "十字轴轴承"
+  },
+  "CARDAN SHAFT": {
+    "zh": "传动轴"
+  },
+  "CARDAN JOINT": {
+    "zh": "万向节"
+  },
+  "DRIVE AXLE": {
+    "zh": "驱动桥"
+  },
+  "AXLE": {
+    "zh": "车轴"
+  },
+  "AXLE SHAFT": {
+    "zh": "半轴"
+  },
+  "CV AXLE": {
+    "zh": "球笼半轴"
+  },
+  "CV JOINT": {
+    "zh": "球笼"
+  },
+  "CV BOOT": {
+    "zh": "球笼防尘套"
+  },
+  "CV JOINT KIT": {
+    "zh": "球笼维修包"
+  },
+  "CV JOINT GREASE": {
+    "zh": "球笼润滑脂"
+  },
+  "OUTER CV JOINT": {
+    "zh": "外球笼"
+  },
+  "INNER CV JOINT": {
+    "zh": "内球笼"
+  },
+  "CV JOINT BOOT": {
+    "zh": "球笼套"
+  },
+  "AXLE SEAL": {
+    "zh": "半轴油封"
+  },
+  "AXLE BEARING": {
+    "zh": "半轴轴承"
+  },
+  "AXLE NUT": {
+    "zh": "半轴螺母"
+  },
+  "REAR AXLE": {
+    "zh": "后桥"
+  },
+  "FRONT AXLE": {
+    "zh": "前桥"
+  },
+  "REAR AXLE ASSEMBLY": {
+    "zh": "后桥总成"
+  },
+  "AXLE HOUSING": {
+    "zh": "桥壳"
+  },
+  "AXLE BOOT": {
+    "zh": "半轴防尘套"
+  },
+  "DIFFERENTIAL": {
+    "zh": "差速器"
+  },
+  "DIFFERENTIAL ASSEMBLY": {
+    "zh": "差速器总成"
+  },
+  "DIFFERENTIAL BEARING": {
+    "zh": "差速器轴承"
+  },
+  "DIFFERENTIAL SEAL": {
+    "zh": "差速器油封"
+  },
+  "DIFFERENTIAL GASKET": {
+    "zh": "差速器垫片"
+  },
+  "DIFFERENTIAL COVER": {
+    "zh": "差速器盖"
+  },
+  "DIFFERENTIAL COVER GASKET": {
+    "zh": "差速器盖垫片"
+  },
+  "DIFFERENTIAL PINION": {
+    "zh": "差速器行星齿轮"
+  },
+  "DIFFERENTIAL RING GEAR": {
+    "zh": "差速器盆齿"
+  },
+  "DIFFERENTIAL SIDE GEAR": {
+    "zh": "差速器半轴齿轮"
+  },
+  "DIFFERENTIAL CARRIER": {
+    "zh": "差速器壳体"
+  },
+  "PINION BEARING": {
+    "zh": "小齿轮轴承"
+  },
+  "PINION GEAR": {
+    "zh": "小齿轮"
+  },
+  "RING AND PINION": {
+    "zh": "盆角齿"
+  },
+  "LIMITED SLIP DIFFERENTIAL": {
+    "zh": "限滑差速器"
+  },
+  "LOCKING DIFFERENTIAL": {
+    "zh": "锁止差速器"
+  },
+  "LOCKER DIFFERENTIAL": {
+    "zh": "差速锁"
+  },
+  "DIFFERENTIAL LOCK": {
+    "zh": "差速锁"
+  },
+  "FOUR WHEEL DRIVE": {
+    "zh": "四驱"
+  },
+  "ALL WHEEL DRIVE": {
+    "zh": "全轮驱动"
+  },
+  "FRONT WHEEL DRIVE": {
+    "zh": "前驱"
+  },
+  "REAR WHEEL DRIVE": {
+    "zh": "后驱"
+  },
+  "TWO WHEEL DRIVE": {
+    "zh": "两驱"
+  },
+  "WHEEL HUB": {
+    "zh": "轮毂"
+  },
+  "WHEEL HUB ASSEMBLY": {
+    "zh": "轮毂总成"
+  },
+  "WHEEL HUB BEARING": {
+    "zh": "轮毂轴承"
+  },
+  "WHEEL HUB UNIT": {
+    "zh": "轮毂轴承单元"
+  },
+  "HUB BEARING": {
+    "zh": "轮毂轴承"
+  },
+  "FRONT HUB": {
+    "zh": "前轮毂"
+  },
+  "REAR HUB": {
+    "zh": "后轮毂"
+  },
+  "HUB ASSEMBLY": {
+    "zh": "轮毂总成"
+  },
+  "HUB SEAL": {
+    "zh": "轮毂油封"
+  },
+  "HUB CAP": {
+    "zh": "轮毂盖"
+  },
+  "WHEEL STUD": {
+    "zh": "轮胎螺丝柱"
+  },
+  "WHEEL NUT": {
+    "zh": "轮胎螺母"
+  },
+  "LUG NUT": {
+    "zh": "轮胎螺母"
+  },
+  "WHEEL BOLT": {
+    "zh": "轮胎螺丝"
+  },
+  "WHEEL SPACER": {
+    "zh": "法兰盘"
+  },
+  "WHEEL ADAPTER": {
+    "zh": "轮毂适配器"
+  },
+  "BRAKE SYSTEM": {
+    "zh": "刹车系统"
+  },
+  "BRAKE": {
+    "zh": "刹车"
+  },
+  "BRAKE PEDAL": {
+    "zh": "刹车踏板"
+  },
+  "BRAKE SWITCH": {
+    "zh": "刹车开关"
+  },
+  "BRAKE LIGHT SWITCH": {
+    "zh": "刹车灯开关"
+  },
+  "BRAKE FLUID": {
+    "zh": "刹车油"
+  },
+  "BRAKE FLUID DOT3": {
+    "zh": "刹车油DOT3"
+  },
+  "BRAKE FLUID DOT4": {
+    "zh": "刹车油DOT4"
+  },
+  "BRAKE FLUID DOT5": {
+    "zh": "刹车油DOT5"
+  },
+  "BRAKE FLUID DOT5.1": {
+    "zh": "刹车油DOT5.1"
+  },
+  "BRAKE FLUID RESERVOIR": {
+    "zh": "刹车油壶"
+  },
+  "BRAKE RESERVOIR": {
+    "zh": "刹车油壶"
+  },
+  "BRAKE MASTER CYLINDER": {
+    "zh": "刹车总泵"
+  },
+  "BRAKE MASTER CYLINDER REPAIR KIT": {
+    "zh": "刹车总泵维修包"
+  },
+  "BRAKE BOOSTER": {
+    "zh": "刹车助力器"
+  },
+  "BRAKE VACUUM BOOSTER": {
+    "zh": "刹车真空助力器"
+  },
+  "BRAKE BOOSTER HOSE": {
+    "zh": "刹车助力器真空管"
+  },
+  "BRAKE BOOST VACUUM TUBE": {
+    "zh": "刹车助力真空管"
+  },
+  "BRAKE WHEEL CYLINDER": {
+    "zh": "刹车分泵"
+  },
+  "BRAKE CYLINDER": {
+    "zh": "刹车分泵"
+  },
+  "WHEEL CYLINDER": {
+    "zh": "刹车分泵"
+  },
+  "WHEEL CYLINDER REPAIR KIT": {
+    "zh": "刹车分泵维修包"
+  },
+  "BRAKE CALIPER": {
+    "zh": "刹车分泵"
+  },
+  "BRAKE CALIPER FRONT": {
+    "zh": "前刹车分泵"
+  },
+  "BRAKE CALIPER REAR": {
+    "zh": "后刹车分泵"
+  },
+  "BRAKE CALIPER REPAIR KIT": {
+    "zh": "刹车分泵维修包"
+  },
+  "BRAKE CALIPER SEAL": {
+    "zh": "刹车分泵密封圈"
+  },
+  "BRAKE CALIPER BOOT": {
+    "zh": "刹车分泵防尘套"
+  },
+  "BRAKE CALIPER GUIDE PIN": {
+    "zh": "刹车分泵导向销"
+  },
+  "BRAKE CALIPER BOLT": {
+    "zh": "刹车分泵螺丝"
+  },
+  "BRAKE CALIPER BRACKET": {
+    "zh": "刹车分泵支架"
+  },
+  "BRAKE CALIPER PISTON": {
+    "zh": "刹车分泵活塞"
+  },
+  "DISC BRAKE": {
+    "zh": "盘式刹车"
+  },
+  "BRAKE DISC": {
+    "zh": "刹车盘"
+  },
+  "BRAKE ROTOR": {
+    "zh": "刹车盘"
+  },
+  "BRAKE DISC FRONT": {
+    "zh": "前刹车盘"
+  },
+  "BRAKE DISC REAR": {
+    "zh": "后刹车盘"
+  },
+  "BRAKE DISC SET": {
+    "zh": "刹车盘套件"
+  },
+  "DRUM BRAKE": {
+    "zh": "鼓式刹车"
+  },
+  "BRAKE DRUM": {
+    "zh": "刹车鼓"
+  },
+  "BRAKE DRUM REAR": {
+    "zh": "后刹车鼓"
+  },
+  "BRAKE SHOE": {
+    "zh": "刹车蹄"
+  },
+  "BRAKE LINING SHOE": {
+    "zh": "刹车蹄片"
+  },
+  "BRAKE SHOE REAR": {
+    "zh": "后刹车蹄"
+  },
+  "BRAKE SHOE SET": {
+    "zh": "刹车蹄组"
+  },
+  "BRAKE PAD": {
+    "zh": "刹车片"
+  },
+  "BRAKE PAD FRONT": {
+    "zh": "前刹车片"
+  },
+  "BRAKE PAD REAR": {
+    "zh": "后刹车片"
+  },
+  "BRAKE PAD SET": {
+    "zh": "刹车片套件"
+  },
+  "BRAKE PAD WEAR SENSOR": {
+    "zh": "刹车片磨损传感器"
+  },
+  "BRAKE PAD SHIM": {
+    "zh": "刹车片消音片"
+  },
+  "BRAKE PAD CLIP": {
+    "zh": "刹车片卡簧"
+  },
+  "BRAKE HOSE": {
+    "zh": "刹车软管"
+  },
+  "BRAKE HOSE FRONT": {
+    "zh": "前刹车软管"
+  },
+  "BRAKE HOSE REAR": {
+    "zh": "后刹车软管"
+  },
+  "BRAKE PIPE": {
+    "zh": "刹车硬管"
+  },
+  "BRAKE LINE": {
+    "zh": "刹车油管"
+  },
+  "BRAKE TUBE": {
+    "zh": "刹车管"
+  },
+  "BRAKE PROPORTIONING VALVE": {
+    "zh": "刹车比例阀"
+  },
+  "PROPORTIONAL VALVE": {
+    "zh": "比例阀"
+  },
+  "BRAKE RESIDUAL VALVE": {
+    "zh": "刹车残余阀"
+  },
+  "LOAD SENSING VALVE": {
+    "zh": "感载阀"
+  },
+  "BRAKE CHECK VALVE": {
+    "zh": "刹车单向阀"
+  },
+  "HAND BRAKE": {
+    "zh": "手刹"
+  },
+  "PARKING BRAKE": {
+    "zh": "驻车制动"
+  },
+  "PARKING BRAKE CABLE": {
+    "zh": "手刹拉线"
+  },
+  "HAND BRAKE CABLE": {
+    "zh": "手刹拉线"
+  },
+  "PARKING BRAKE LEVER": {
+    "zh": "手刹拉杆"
+  },
+  "PARKING BRAKE SHOE": {
+    "zh": "手刹刹车蹄"
+  },
+  "PARKING BRAKE PAD": {
+    "zh": "手刹刹车片"
+  },
+  "HAND BRAKE HANDLE": {
+    "zh": "手刹把手"
+  },
+  "HAND BRAKE SWITCH": {
+    "zh": "手刹开关"
+  },
+  "ABS": {
+    "zh": "防抱死刹车系统"
+  },
+  "ABS MODULE": {
+    "zh": "ABS模块"
+  },
+  "ABS PUMP": {
+    "zh": "ABS泵"
+  },
+  "ABS CONTROL MODULE": {
+    "zh": "ABS控制模块"
+  },
+  "ABS RELAY": {
+    "zh": "ABS继电器"
+  },
+  "ABS RING": {
+    "zh": "ABS感应齿圈"
+  },
+  "ABS TONE RING": {
+    "zh": "ABS齿圈"
+  },
+  "ABS HARNESS": {
+    "zh": "ABS线束"
+  },
+  "BRAKE BLEEDING": {
+    "zh": "刹车排气"
+  },
+  "BRAKE FLUSH": {
+    "zh": "刹车油更换"
+  },
+  "BRAKE ADJUSTMENT": {
+    "zh": "刹车调整"
+  },
+  "BRAKE REPAIR": {
+    "zh": "刹车维修"
+  },
+  "BRAKE NOISE": {
+    "zh": "刹车异响"
+  },
+  "BRAKE SQUEAK": {
+    "zh": "刹车尖叫"
+  },
+  "BRAKE VIBRATION": {
+    "zh": "刹车抖动"
+  },
+  "SUSPENSION": {
+    "zh": "悬挂"
+  },
+  "SUSPENSION SYSTEM": {
+    "zh": "悬挂系统"
+  },
+  "SUSPENSION BUSHING": {
+    "zh": "悬挂胶套"
+  },
+  "SUSPENSION ARM": {
+    "zh": "悬挂臂"
+  },
+  "SUSPENSION SPRING": {
+    "zh": "悬挂弹簧"
+  },
+  "SPRING": {
+    "zh": "弹簧"
+  },
+  "COIL SPRING": {
+    "zh": "螺旋弹簧"
+  },
+  "COIL SPRING FRONT": {
+    "zh": "前弹簧"
+  },
+  "COIL SPRING REAR": {
+    "zh": "后弹簧"
+  },
+  "LEAF SPRING": {
+    "zh": "钢板弹簧"
+  },
+  "LEAF SPRING BUSH": {
+    "zh": "钢板弹簧胶套"
+  },
+  "LEAF SPRING BOLT": {
+    "zh": "钢板弹簧螺丝"
+  },
+  "LEAF SPRING SHACKLE": {
+    "zh": "钢板弹簧吊耳"
+  },
+  "LEAF SPRING CENTER BOLT": {
+    "zh": "钢板中心螺丝"
+  },
+  "LEAF SPRING U-BOLT": {
+    "zh": "钢板U型螺栓"
+  },
+  "TORSION BAR": {
+    "zh": "扭力杆"
+  },
+  "TORSION BAR BUSH": {
+    "zh": "扭力杆胶套"
+  },
+  "AIR SPRING": {
+    "zh": "空气弹簧"
+  },
+  "AIR BAG": {
+    "zh": "气囊"
+  },
+  "AIR SUSPENSION": {
+    "zh": "空气悬挂"
+  },
+  "AIR STRUT": {
+    "zh": "空气减震"
+  },
+  "AIR COMPRESSOR SUSPENSION": {
+    "zh": "悬挂气泵"
+  },
+  "SHOCK ABSORBER": {
+    "zh": "减震器"
+  },
+  "SHOCK ABSORBER FRONT": {
+    "zh": "前减震器"
+  },
+  "SHOCK ABSORBER REAR": {
+    "zh": "后减震器"
+  },
+  "STRUT": {
+    "zh": "减震器总成"
+  },
+  "STRUT ASSEMBLY": {
+    "zh": "减震器总成"
+  },
+  "STRUT MOUNT": {
+    "zh": "减震器顶胶"
+  },
+  "SHOCK MOUNTING": {
+    "zh": "减震器顶胶"
+  },
+  "STRUT MOUNT BEARING": {
+    "zh": "塔顶轴承"
+  },
+  "STRUT BOOT": {
+    "zh": "减震器防尘套"
+  },
+  "STRUT BUMPER": {
+    "zh": "减震器缓冲块"
+  },
+  "STRUT BELLOWS": {
+    "zh": "减震器防尘套"
+  },
+  "SHOCK BUSHING": {
+    "zh": "减震器胶套"
+  },
+  "SWAY BAR": {
+    "zh": "平衡杆"
+  },
+  "STABILIZER BAR": {
+    "zh": "平衡杆"
+  },
+  "STABILIZER BUSH": {
+    "zh": "平衡杆胶套"
+  },
+  "STABILIZER LINK": {
+    "zh": "平衡杆小连杆"
+  },
+  "SWAY BAR LINK": {
+    "zh": "平衡杆连杆"
+  },
+  "STABILIZER BAR LINK": {
+    "zh": "平衡杆连杆"
+  },
+  "SWAY BAR BUSH": {
+    "zh": "平衡杆胶套"
+  },
+  "CONTROL ARM": {
+    "zh": "控制臂"
+  },
+  "LOWER ARM": {
+    "zh": "下摆臂"
+  },
+  "LOWER CONTROL ARM": {
+    "zh": "下控制臂"
+  },
+  "UPPER ARM": {
+    "zh": "上摆臂"
+  },
+  "UPPER CONTROL ARM": {
+    "zh": "上控制臂"
+  },
+  "CONTROL ARM BUSH": {
+    "zh": "控制臂胶套"
+  },
+  "LOWER ARM BUSH": {
+    "zh": "下摆臂胶套"
+  },
+  "UPPER ARM BUSH": {
+    "zh": "上摆臂胶套"
+  },
+  "WISHBONE": {
+    "zh": "三角臂"
+  },
+  "WISHBONE BUSH": {
+    "zh": "三角臂胶套"
+  },
+  "TRAILING ARM": {
+    "zh": "纵臂"
+  },
+  "TRAILING ARM BUSH": {
+    "zh": "纵臂胶套"
+  },
+  "RADIUS ARM": {
+    "zh": "半径臂"
+  },
+  "RADIUS ARM BUSH": {
+    "zh": "半径臂胶套"
+  },
+  "PANHARD ROD": {
+    "zh": "止推杆"
+  },
+  "PANHARD ROD BUSH": {
+    "zh": "止推杆胶套"
+  },
+  "CROSS MEMBER": {
+    "zh": "横梁"
+  },
+  "CROSS MEMBER BUSH": {
+    "zh": "横梁胶套"
+  },
+  "SUBFRAME": {
+    "zh": "副车架"
+  },
+  "SUBFRAME BUSH": {
+    "zh": "副车架胶套"
+  },
+  "ENGINE CRADLE": {
+    "zh": "发动机托架"
+  },
+  "BALL JOINT": {
+    "zh": "球头"
+  },
+  "BALL JOINT FRONT": {
+    "zh": "前球头"
+  },
+  "BALL JOINT REAR": {
+    "zh": "后球头"
+  },
+  "LOWER BALL JOINT": {
+    "zh": "下球头"
+  },
+  "UPPER BALL JOINT": {
+    "zh": "上球头"
+  },
+  "BALL JOINT BOOT": {
+    "zh": "球头防尘套"
+  },
+  "BALL JOINT PRESS": {
+    "zh": "压球头工具"
+  },
+  "SPINDLE": {
+    "zh": "转向节"
+  },
+  "KNUCKLE": {
+    "zh": "转向节"
+  },
+  "STEERING KNUCKLE": {
+    "zh": "转向节"
+  },
+  "KNUCKLE ARM": {
+    "zh": "转向节臂"
+  },
+  "WHEEL ALIGNMENT": {
+    "zh": "四轮定位"
+  },
+  "WHEEL BALANCE": {
+    "zh": "轮胎平衡"
+  },
+  "CAMBER": {
+    "zh": "外倾角"
+  },
+  "CASTER": {
+    "zh": "主销后倾"
+  },
+  "TOE": {
+    "zh": "前束"
+  },
+  "ALIGNMENT SHIM": {
+    "zh": "定位垫片"
+  },
+  "STEERING SYSTEM": {
+    "zh": "转向系统"
+  },
+  "STEERING": {
+    "zh": "转向"
+  },
+  "STEERING WHEEL": {
+    "zh": "方向盘"
+  },
+  "STEERING COLUMN": {
+    "zh": "方向管柱"
+  },
+  "STEERING COLUMN COVER": {
+    "zh": "方向管柱罩"
+  },
+  "STEERING COLUMN BEARING": {
+    "zh": "方向管柱轴承"
+  },
+  "STEERING COLUMN SWITCH": {
+    "zh": "组合开关"
+  },
+  "STEERING SHAFT": {
+    "zh": "转向轴"
+  },
+  "STEERING COUPLING": {
+    "zh": "转向联轴器"
+  },
+  "STEERING RACK": {
+    "zh": "方向机"
+  },
+  "STEERING GEAR": {
+    "zh": "方向机"
+  },
+  "STEERING BOX": {
+    "zh": "方向机"
+  },
+  "STEERING GEAR BOX": {
+    "zh": "方向机总成"
+  },
+  "RACK AND PINION": {
+    "zh": "齿轮齿条方向机"
+  },
+  "POWER STEERING": {
+    "zh": "助力转向"
+  },
+  "POWER STEERING PUMP": {
+    "zh": "助力泵"
+  },
+  "POWER STEERING HOSE": {
+    "zh": "助力泵高压管"
+  },
+  "POWER STEERING HIGH PRESSURE HOSE": {
+    "zh": "助力泵高压管"
+  },
+  "POWER STEERING RETURN HOSE": {
+    "zh": "助力泵回油管"
+  },
+  "POWER STEERING PIPE": {
+    "zh": "助力泵油管"
+  },
+  "POWER STEERING COOLER": {
+    "zh": "助力油冷却器"
+  },
+  "POWER STEERING FLUID": {
+    "zh": "方向机油"
+  },
+  "POWER STEERING OIL": {
+    "zh": "助力泵油"
+  },
+  "POWER STEERING RESERVOIR": {
+    "zh": "助力油壶"
+  },
+  "POWER STEERING CAP": {
+    "zh": "助力油盖"
+  },
+  "STEERING LINKAGE": {
+    "zh": "转向连杆"
+  },
+  "TIE ROD": {
+    "zh": "方向机拉杆"
+  },
+  "TIE ROD END": {
+    "zh": "方向机拉杆球头"
+  },
+  "INNER TIE ROD": {
+    "zh": "方向机内拉杆"
+  },
+  "OUTER TIE ROD": {
+    "zh": "方向机外拉杆"
+  },
+  "RACK END": {
+    "zh": "方向机拉杆球头"
+  },
+  "TIE ROD BOOT": {
+    "zh": "方向机防尘套"
+  },
+  "TIE ROD ADJUSTER": {
+    "zh": "方向机拉杆调节器"
+  },
+  "DRAG LINK": {
+    "zh": "直拉杆"
+  },
+  "PITMAN ARM": {
+    "zh": "转向摇臂"
+  },
+  "DROP ARM": {
+    "zh": "转向垂臂"
+  },
+  "KING PIN": {
+    "zh": "主销"
+  },
+  "KING PIN KIT": {
+    "zh": "主销套装"
+  },
+  "KING PIN BEARING": {
+    "zh": "主销轴承"
+  },
+  "KING PIN BUSH": {
+    "zh": "主销胶套"
+  },
+  "STEERING DAMPER": {
+    "zh": "方向减震器"
+  },
+  "STEERING STABILIZER": {
+    "zh": "方向稳定器"
+  },
+  "WHEEL": {
+    "zh": "车轮"
+  },
+  "TIRE": {
+    "zh": "轮胎"
+  },
+  "TYRE": {
+    "zh": "轮胎"
+  },
+  "TIRE PRESSURE": {
+    "zh": "轮胎气压"
+  },
+  "TIRE VALVE": {
+    "zh": "气门嘴"
+  },
+  "TIRE VALVE CAP": {
+    "zh": "气门嘴帽"
+  },
+  "TIRE VALVE STEM": {
+    "zh": "气门芯"
+  },
+  "TIRE VALVE CORE": {
+    "zh": "气门芯"
+  },
+  "TIRE PUNCTURE": {
+    "zh": "轮胎扎破"
+  },
+  "TIRE REPAIR": {
+    "zh": "补胎"
+  },
+  "TIRE PLUG": {
+    "zh": "轮胎补胎条"
+  },
+  "TIRE PATCH": {
+    "zh": "轮胎补片"
+  },
+  "TIRE PRESSURE MONITOR": {
+    "zh": "胎压监测"
+  },
+  "TIRE BALANCE": {
+    "zh": "轮胎动平衡"
+  },
+  "TIRE ROTATION": {
+    "zh": "轮胎换位"
+  },
+  "TIRE WEAR": {
+    "zh": "轮胎磨损"
+  },
+  "TIRE TREAD": {
+    "zh": "轮胎花纹"
+  },
+  "SPARE TIRE": {
+    "zh": "备胎"
+  },
+  "SPARE WHEEL": {
+    "zh": "备胎"
+  },
+  "TIRE IRON": {
+    "zh": "轮胎撬棍"
+  },
+  "WHEEL WEIGHT": {
+    "zh": "平衡块"
+  },
+  "WHEEL BALANCE WEIGHT": {
+    "zh": "轮胎平衡块"
+  },
+  "TIRE GAUGE": {
+    "zh": "胎压表"
+  },
+  "TIRE INFLATOR": {
+    "zh": "轮胎充气泵"
+  },
+  "TIRE CHANGER": {
+    "zh": "拆胎机"
+  },
+  "WHEEL ALIGNMENT MACHINE": {
+    "zh": "四轮定位仪"
+  },
+  "WHEEL BALANCER": {
+    "zh": "轮胎平衡机"
+  },
+  "TIRE SHINE": {
+    "zh": "轮胎上光剂"
+  },
+  "TIRE CLEANER": {
+    "zh": "轮胎清洗剂"
+  },
+  "WHEEL CLEANER": {
+    "zh": "轮毂清洗剂"
+  },
+  "WHEEL LOCK": {
+    "zh": "防盗螺丝"
+  },
+  "WHEEL COVER": {
+    "zh": "轮毂盖"
+  },
+  "WHEEL RIM": {
+    "zh": "轮辋"
+  },
+  "ALLOY WHEEL": {
+    "zh": "铝合金轮毂"
+  },
+  "STEEL WHEEL": {
+    "zh": "钢轮毂"
+  },
+  "INNER TUBE": {
+    "zh": "内胎"
+  },
+  "FLAP": {
+    "zh": "衬带"
+  },
+  "AC SYSTEM": {
+    "zh": "空调系统"
+  },
+  "AIR CONDITIONING": {
+    "zh": "空调"
+  },
+  "AC COMPRESSOR": {
+    "zh": "空调压缩机"
+  },
+  "COMPRESSOR": {
+    "zh": "压缩机"
+  },
+  "AC COMPRESSOR CLUTCH": {
+    "zh": "空调压缩机离合器"
+  },
+  "AC COMPRESSOR OIL": {
+    "zh": "压缩机油"
+  },
+  "COMPRESSOR OIL": {
+    "zh": "压缩机油"
+  },
+  "AC COMPRESSOR SEAL": {
+    "zh": "压缩机密封圈"
+  },
+  "AC COMPRESSOR BEARING": {
+    "zh": "压缩机轴承"
+  },
+  "AC COMPRESSOR PULLEY": {
+    "zh": "压缩机皮带轮"
+  },
+  "AC COMPRESSOR BRACKET": {
+    "zh": "压缩机支架"
+  },
+  "AC COMPRESSOR RELAY": {
+    "zh": "压缩机继电器"
+  },
+  "AC CONDENSER": {
+    "zh": "空调冷凝器"
+  },
+  "CONDENSER": {
+    "zh": "冷凝器"
+  },
+  "AC CONDENSER FAN": {
+    "zh": "冷凝器风扇"
+  },
+  "AC EVAPORATOR": {
+    "zh": "空调蒸发器"
+  },
+  "EVAPORATOR": {
+    "zh": "蒸发器"
+  },
+  "AC EVAPORATOR COIL": {
+    "zh": "蒸发器芯"
+  },
+  "AC DRIER": {
+    "zh": "空调干燥瓶"
+  },
+  "RECEIVER DRIER": {
+    "zh": "干燥瓶"
+  },
+  "AC RECEIVER": {
+    "zh": "空调储液罐"
+  },
+  "AC FILTER": {
+    "zh": "空调过滤器"
+  },
+  "CABIN FILTER": {
+    "zh": "空调滤清器"
+  },
+  "CABIN AIR FILTER": {
+    "zh": "空调滤芯"
+  },
+  "POLLEN FILTER": {
+    "zh": "花粉过滤器"
+  },
+  "AC EXPANSION VALVE": {
+    "zh": "空调膨胀阀"
+  },
+  "EXPANSION VALVE": {
+    "zh": "膨胀阀"
+  },
+  "AC PIPE": {
+    "zh": "空调管"
+  },
+  "AC HOSE": {
+    "zh": "空调软管"
+  },
+  "AC HOSE HIGH PRESSURE": {
+    "zh": "空调高压管"
+  },
+  "AC HOSE LOW PRESSURE": {
+    "zh": "空调低压管"
+  },
+  "AC DUCT": {
+    "zh": "空调风道"
+  },
+  "AC VENT": {
+    "zh": "空调出风口"
+  },
+  "AC GAS": {
+    "zh": "空调冷媒"
+  },
+  "AC REFRIGERANT": {
+    "zh": "空调制冷剂"
+  },
+  "R134A": {
+    "zh": "R134a制冷剂"
+  },
+  "R1234YF": {
+    "zh": "R1234yf制冷剂"
+  },
+  "AC RECHARGE": {
+    "zh": "空调加氟"
+  },
+  "AC SERVICE": {
+    "zh": "空调保养"
+  },
+  "AC REPAIR": {
+    "zh": "空调维修"
+  },
+  "AC LEAK": {
+    "zh": "空调泄漏"
+  },
+  "AC LEAK DETECTOR": {
+    "zh": "空调检漏仪"
+  },
+  "AC PRESSURE SWITCH": {
+    "zh": "空调压力开关"
+  },
+  "AC PRESSURE SENSOR": {
+    "zh": "空调压力传感器"
+  },
+  "AC HIGH PRESSURE SWITCH": {
+    "zh": "空调高压开关"
+  },
+  "AC LOW PRESSURE SWITCH": {
+    "zh": "空调低压开关"
+  },
+  "AC CONTROL PANEL": {
+    "zh": "空调控制面板"
+  },
+  "AC CONTROL MODULE": {
+    "zh": "空调控制模块"
+  },
+  "AC BLOWER": {
+    "zh": "空调鼓风机"
+  },
+  "BLOWER MOTOR": {
+    "zh": "鼓风机马达"
+  },
+  "BLOWER RESISTOR": {
+    "zh": "鼓风机电阻"
+  },
+  "BLOWER SWITCH": {
+    "zh": "鼓风机开关"
+  },
+  "HEATER": {
+    "zh": "暖风"
+  },
+  "HEATER CORE": {
+    "zh": "暖风水箱"
+  },
+  "HEATER ASSEMBLY": {
+    "zh": "暖风总成"
+  },
+  "HEATER VALVE": {
+    "zh": "暖风阀"
+  },
+  "HEATER CONTROL": {
+    "zh": "暖风控制"
+  },
+  "HEATER RESISTOR": {
+    "zh": "暖风电阻"
+  },
+  "HEATER FAN": {
+    "zh": "暖风风扇"
+  },
+  "HEATER BLOWER": {
+    "zh": "暖风鼓风机"
+  },
+  "CLIMATE CONTROL": {
+    "zh": "自动空调"
+  },
+  "AUTO AC": {
+    "zh": "自动空调"
+  },
+  "DUAL ZONE AC": {
+    "zh": "双区空调"
+  },
+  "AC THERMOSTAT": {
+    "zh": "空调温控器"
+  },
+  "AC AMBIENT TEMPERATURE SENSOR": {
+    "zh": "环境温度传感器"
+  },
+  "AC EVAPORATOR TEMPERATURE SENSOR": {
+    "zh": "蒸发器温度传感器"
+  },
+  "AC ACTUATOR": {
+    "zh": "空调执行器"
+  },
+  "AIR DISTRIBUTION": {
+    "zh": "空气分配"
+  },
+  "AIR PURIFIER": {
+    "zh": "空气净化器"
+  },
+  "AC INSULATION": {
+    "zh": "空调保温棉"
+  },
+  "OXYGEN SENSOR UPSTREAM": {
+    "zh": "前氧传感器"
+  },
+  "OXYGEN SENSOR DOWNSTREAM": {
+    "zh": "后氧传感器"
+  },
+  "AIR FUEL RATIO SENSOR": {
+    "zh": "空燃比传感器"
+  },
+  "EXHAUST GAS RECIRCULATION": {
+    "zh": "废气再循环"
+  },
+  "EVAP SYSTEM": {
+    "zh": "燃油蒸发系统"
+  },
+  "EVAP CANISTER": {
+    "zh": "碳罐"
+  },
+  "EVAP PURGE VALVE": {
+    "zh": "碳罐电磁阀"
+  },
+  "EVAP VENT VALVE": {
+    "zh": "碳罐通风阀"
+  },
+  "EVAP SOLENOID": {
+    "zh": "蒸发电磁阀"
+  },
+  "EVAP HOSE": {
+    "zh": "燃油蒸发管"
+  },
+  "CHARCOAL CANISTER": {
+    "zh": "活性碳罐"
+  },
+  "SECONDARY AIR PUMP": {
+    "zh": "二次空气泵"
+  },
+  "SECONDARY AIR VALVE": {
+    "zh": "二次空气阀"
+  },
+  "FUEL VAPOR VALVE": {
+    "zh": "燃油蒸汽阀"
+  },
+  "EMISSION CONTROL": {
+    "zh": "排放控制"
+  },
+  "SMOG PUMP": {
+    "zh": "排气泵"
+  },
+  "ALTERNATOR BRUSH SET": {
+    "zh": "发电机碳刷组"
+  },
+  "STARTER BRUSH SET": {
+    "zh": "启动机碳刷组"
+  },
+  "VOLTAGE REGULATOR": {
+    "zh": "电压调节器"
+  },
+  "RECTIFIER": {
+    "zh": "整流器"
+  },
+  "DIODE": {
+    "zh": "二极管"
+  },
+  "DIODE PACK": {
+    "zh": "二极管组"
+  },
+  "FUSE": {
+    "zh": "保险丝"
+  },
+  "FUSE BOX": {
+    "zh": "保险丝盒"
+  },
+  "FUSE BOX COVER": {
+    "zh": "保险丝盒盖"
+  },
+  "FUSE HOLDER": {
+    "zh": "保险丝座"
+  },
+  "FUSE PULLER": {
+    "zh": "保险丝拔取器"
+  },
+  "FUSE KIT": {
+    "zh": "保险丝套装"
+  },
+  "BLADE FUSE": {
+    "zh": "片式保险丝"
+  },
+  "MINI FUSE": {
+    "zh": "迷你保险丝"
+  },
+  "MAXI FUSE": {
+    "zh": "大型保险丝"
+  },
+  "FUSIBLE LINK": {
+    "zh": "保险丝连接线"
+  },
+  "CIRCUIT BREAKER": {
+    "zh": "断路器"
+  },
+  "RELAY": {
+    "zh": "继电器"
+  },
+  "RELAY BOX": {
+    "zh": "继电器盒"
+  },
+  "HORN RELAY": {
+    "zh": "喇叭继电器"
+  },
+  "WIPER RELAY": {
+    "zh": "雨刮继电器"
+  },
+  "HEADLIGHT RELAY": {
+    "zh": "大灯继电器"
+  },
+  "FOG LIGHT RELAY": {
+    "zh": "雾灯继电器"
+  },
+  "AC RELAY": {
+    "zh": "空调继电器"
+  },
+  "BLOWER RELAY": {
+    "zh": "鼓风机继电器"
+  },
+  "FLASHER RELAY": {
+    "zh": "闪光继电器"
+  },
+  "TURN SIGNAL RELAY": {
+    "zh": "转向灯继电器"
+  },
+  "RELAY TESTER": {
+    "zh": "继电器测试仪"
+  },
+  "WIRING HARNESS": {
+    "zh": "线束"
+  },
+  "WIRE HARNESS": {
+    "zh": "线束"
+  },
+  "ENGINE WIRING HARNESS": {
+    "zh": "发动机线束"
+  },
+  "BODY WIRING HARNESS": {
+    "zh": "车身线束"
+  },
+  "HEADLIGHT HARNESS": {
+    "zh": "大灯线束"
+  },
+  "TAILLIGHT HARNESS": {
+    "zh": "尾灯线束"
+  },
+  "WIRE": {
+    "zh": "电线"
+  },
+  "CABLE": {
+    "zh": "电缆"
+  },
+  "WIRE LOOM": {
+    "zh": "线束套管"
+  },
+  "CABLE TIE": {
+    "zh": "扎带"
+  },
+  "WIRE CONNECTOR": {
+    "zh": "电线接头"
+  },
+  "ELECTRICAL CONNECTOR": {
+    "zh": "电器插头"
+  },
+  "CONNECTOR": {
+    "zh": "插头"
+  },
+  "CONNECTOR CLIP": {
+    "zh": "插头卡扣"
+  },
+  "TERMINAL": {
+    "zh": "端子"
+  },
+  "WIRE TERMINAL": {
+    "zh": "电线端子"
+  },
+  "BULLET CONNECTOR": {
+    "zh": "子弹头端子"
+  },
+  "SPADE CONNECTOR": {
+    "zh": "扁平端子"
+  },
+  "RING TERMINAL": {
+    "zh": "环形端子"
+  },
+  "BUTT CONNECTOR": {
+    "zh": "对接端子"
+  },
+  "HEAT SHRINK TUBING": {
+    "zh": "热缩管"
+  },
+  "INSULATION TAPE": {
+    "zh": "绝缘胶带"
+  },
+  "ELECTRICAL TAPE": {
+    "zh": "电工胶带"
+  },
+  "SOLDER": {
+    "zh": "焊锡"
+  },
+  "SOLDERING IRON": {
+    "zh": "电烙铁"
+  },
+  "MULTIMETER": {
+    "zh": "万用表"
+  },
+  "CIRCUIT TESTER": {
+    "zh": "电路测试笔"
+  },
+  "POWER PROBE": {
+    "zh": "电源探针"
+  },
+  "BATTERY TESTER": {
+    "zh": "电瓶检测仪"
+  },
+  "ALTERNATOR TESTER": {
+    "zh": "发电机检测仪"
+  },
+  "OBD SCANNER": {
+    "zh": "OBD诊断仪"
+  },
+  "DIAGNOSTIC SCANNER": {
+    "zh": "诊断仪"
+  },
+  "DIAGNOSTIC TOOL": {
+    "zh": "诊断工具"
+  },
+  "JUMPER CABLE": {
+    "zh": "过江龙"
+  },
+  "JUMP LEAD": {
+    "zh": "搭电线"
+  },
+  "JUMP START": {
+    "zh": "搭电启动"
+  },
+  "BOOSTER CABLE": {
+    "zh": "启动搭电线"
+  },
+  "TOW ROPE": {
+    "zh": "拖车绳"
+  },
+  "TOW STRAP": {
+    "zh": "拖车带"
+  },
+  "TOW HITCH": {
+    "zh": "拖车钩"
+  },
+  "RECOVERY STRAP": {
+    "zh": "救援带"
+  },
+  "WINCH": {
+    "zh": "绞盘"
+  },
+  "JACK": {
+    "zh": "千斤顶"
+  },
+  "JACK STAND": {
+    "zh": "千斤顶支架"
+  },
+  "HYDRAULIC JACK": {
+    "zh": "液压千斤顶"
+  },
+  "SCISSOR JACK": {
+    "zh": "剪式千斤顶"
+  },
+  "FLOOR JACK": {
+    "zh": "卧式千斤顶"
+  },
+  "BOTTLE JACK": {
+    "zh": "瓶式千斤顶"
+  },
+  "WHEEL CHOCK": {
+    "zh": "车轮挡块"
+  },
+  "WHEEL WRENCH": {
+    "zh": "轮胎扳手"
+  },
+  "LUG WRENCH": {
+    "zh": "轮胎套筒"
+  },
+  "TORQUE WRENCH": {
+    "zh": "扭力扳手"
+  },
+  "IMPACT WRENCH": {
+    "zh": "风炮"
+  },
+  "SOCKET SET": {
+    "zh": "套筒组"
+  },
+  "SOCKET": {
+    "zh": "套筒"
+  },
+  "RATCHET": {
+    "zh": "棘轮扳手"
+  },
+  "RATCHET SET": {
+    "zh": "棘轮扳手套装"
+  },
+  "SPANNER": {
+    "zh": "扳手"
+  },
+  "COMBINATION SPANNER": {
+    "zh": "梅花扳手"
+  },
+  "OPEN SPANNER": {
+    "zh": "开口扳手"
+  },
+  "RING SPANNER": {
+    "zh": "梅花扳手"
+  },
+  "ADJUSTABLE SPANNER": {
+    "zh": "活动扳手"
+  },
+  "PIPE WRENCH": {
+    "zh": "管钳"
+  },
+  "ALLEN KEY": {
+    "zh": "内六角扳手"
+  },
+  "HEX KEY": {
+    "zh": "内六角扳手"
+  },
+  "SCREWDRIVER": {
+    "zh": "螺丝刀"
+  },
+  "FLAT SCREWDRIVER": {
+    "zh": "一字螺丝刀"
+  },
+  "PHILLIPS SCREWDRIVER": {
+    "zh": "十字螺丝刀"
+  },
+  "PLIERS": {
+    "zh": "钳子"
+  },
+  "NEEDLE NOSE PLIERS": {
+    "zh": "尖嘴钳"
+  },
+  "COMBINATION PLIERS": {
+    "zh": "钢丝钳"
+  },
+  "LOCKING PLIERS": {
+    "zh": "大力钳"
+  },
+  "CIRCLIP PLIERS": {
+    "zh": "卡环钳"
+  },
+  "WIRE STRIPPER": {
+    "zh": "剥线钳"
+  },
+  "WIRE CRIMPER": {
+    "zh": "压线钳"
+  },
+  "HAMMER": {
+    "zh": "锤子"
+  },
+  "RUBBER MALLET": {
+    "zh": "橡胶锤"
+  },
+  "BALL PEEN HAMMER": {
+    "zh": "圆头锤"
+  },
+  "PUNCH": {
+    "zh": "冲子"
+  },
+  "CHISEL": {
+    "zh": "凿子"
+  },
+  "FILE": {
+    "zh": "锉刀"
+  },
+  "HACKSAW": {
+    "zh": "钢锯"
+  },
+  "DRILL": {
+    "zh": "电钻"
+  },
+  "DRILL BIT": {
+    "zh": "钻头"
+  },
+  "ANGLE GRINDER": {
+    "zh": "角磨机"
+  },
+  "BENCH GRINDER": {
+    "zh": "砂轮机"
+  },
+  "IMPACT DRIVER": {
+    "zh": "冲击螺丝刀"
+  },
+  "AIR COMPRESSOR": {
+    "zh": "空气压缩机"
+  },
+  "AIR HOSE": {
+    "zh": "气动软管"
+  },
+  "AIR TOOL": {
+    "zh": "气动工具"
+  },
+  "GREASE GUN": {
+    "zh": "黄油枪"
+  },
+  "OIL CAN": {
+    "zh": "机油壶"
+  },
+  "FUNNEL": {
+    "zh": "漏斗"
+  },
+  "DRAIN PAN": {
+    "zh": "接油盘"
+  },
+  "PARTS WASHER": {
+    "zh": "零件清洗机"
+  },
+  "WORKSHOP MANUAL": {
+    "zh": "维修手册"
+  },
+  "WORK LIGHT": {
+    "zh": "工作灯"
+  },
+  "DROPLIGHT": {
+    "zh": "吊灯"
+  },
+  "HEADLAMP WORK LIGHT": {
+    "zh": "头灯"
+  },
+  "CREEPER": {
+    "zh": "躺板"
+  },
+  "MECHANIC SEAT": {
+    "zh": "修车凳"
+  },
+  "TOOL BOX": {
+    "zh": "工具箱"
+  },
+  "TOOL CHEST": {
+    "zh": "工具柜"
+  },
+  "TOOL TROLLEY": {
+    "zh": "工具推车"
+  },
+  "GLOVES": {
+    "zh": "手套"
+  },
+  "WORK GLOVES": {
+    "zh": "工作手套"
+  },
+  "RUBBER GLOVES": {
+    "zh": "橡胶手套"
+  },
+  "SAFETY GOGGLES": {
+    "zh": "护目镜"
+  },
+  "SAFETY GLASSES": {
+    "zh": "安全眼镜"
+  },
+  "FACE MASK": {
+    "zh": "口罩"
+  },
+  "EAR PLUG": {
+    "zh": "耳塞"
+  },
+  "HEADLIGHT": {
+    "zh": "大灯"
+  },
+  "HEADLIGHT ASSEMBLY": {
+    "zh": "大灯总成"
+  },
+  "HEADLIGHT BULB": {
+    "zh": "大灯灯泡"
+  },
+  "HEADLIGHT LENS": {
+    "zh": "大灯面罩"
+  },
+  "HEADLIGHT SWITCH": {
+    "zh": "大灯开关"
+  },
+  "HEADLIGHT SOCKET": {
+    "zh": "大灯插座"
+  },
+  "HEADLIGHT CONNECTOR": {
+    "zh": "大灯插头"
+  },
+  "HEADLIGHT ADJUSTER": {
+    "zh": "大灯调节器"
+  },
+  "HEADLIGHT BRACKET": {
+    "zh": "大灯支架"
+  },
+  "H4 BULB": {
+    "zh": "H4灯泡"
+  },
+  "H1 BULB": {
+    "zh": "H1灯泡"
+  },
+  "H7 BULB": {
+    "zh": "H7灯泡"
+  },
+  "H11 BULB": {
+    "zh": "H11灯泡"
+  },
+  "HID BULB": {
+    "zh": "氙气灯泡"
+  },
+  "HID KIT": {
+    "zh": "氙气灯套装"
+  },
+  "HID BALLAST": {
+    "zh": "氙气灯镇流器"
+  },
+  "LED HEADLIGHT": {
+    "zh": "LED大灯"
+  },
+  "LED BULB": {
+    "zh": "LED灯泡"
+  },
+  "LED KIT": {
+    "zh": "LED套装"
+  },
+  "XENON BULB": {
+    "zh": "氙气灯泡"
+  },
+  "FOG LIGHT": {
+    "zh": "雾灯"
+  },
+  "FOG LIGHT BULB": {
+    "zh": "雾灯灯泡"
+  },
+  "FOG LIGHT COVER": {
+    "zh": "雾灯罩"
+  },
+  "FOG LIGHT BRACKET": {
+    "zh": "雾灯支架"
+  },
+  "TAILLIGHT": {
+    "zh": "尾灯"
+  },
+  "TAIL LIGHT": {
+    "zh": "尾灯"
+  },
+  "TAILLIGHT BULB": {
+    "zh": "尾灯灯泡"
+  },
+  "TAILLIGHT ASSEMBLY": {
+    "zh": "尾灯总成"
+  },
+  "BRAKE LIGHT": {
+    "zh": "刹车灯"
+  },
+  "BRAKE LIGHT BULB": {
+    "zh": "刹车灯灯泡"
+  },
+  "REVERSE LIGHT": {
+    "zh": "倒车灯"
+  },
+  "REVERSE LIGHT BULB": {
+    "zh": "倒车灯灯泡"
+  },
+  "TURN SIGNAL": {
+    "zh": "转向灯"
+  },
+  "TURN SIGNAL BULB": {
+    "zh": "转向灯灯泡"
+  },
+  "TURN SIGNAL SWITCH": {
+    "zh": "转向灯开关"
+  },
+  "SIDE MARKER": {
+    "zh": "侧灯"
+  },
+  "SIDE MARKER BULB": {
+    "zh": "侧灯灯泡"
+  },
+  "PARKING LIGHT": {
+    "zh": "示宽灯"
+  },
+  "DAYTIME RUNNING LIGHT": {
+    "zh": "日行灯"
+  },
+  "DRL LIGHT": {
+    "zh": "日间行车灯"
+  },
+  "LICENSE PLATE LIGHT": {
+    "zh": "牌照灯"
+  },
+  "INTERIOR LIGHT": {
+    "zh": "室内灯"
+  },
+  "DOME LIGHT": {
+    "zh": "顶灯"
+  },
+  "MAP LIGHT": {
+    "zh": "阅读灯"
+  },
+  "VANITY LIGHT": {
+    "zh": "化妆镜灯"
+  },
+  "DOOR LIGHT": {
+    "zh": "门灯"
+  },
+  "COURTESY LIGHT": {
+    "zh": "迎宾灯"
+  },
+  "TRUNK LIGHT": {
+    "zh": "后备箱灯"
+  },
+  "GLOVE BOX LIGHT": {
+    "zh": "手套箱灯"
+  },
+  "AMBENT LIGHT": {
+    "zh": "氛围灯"
+  },
+  "LIGHT BULB": {
+    "zh": "灯泡"
+  },
+  "BULB": {
+    "zh": "灯泡"
+  },
+  "HALOGEN BULB": {
+    "zh": "卤素灯泡"
+  },
+  "LED BULB WHITE": {
+    "zh": "白光LED灯泡"
+  },
+  "LED BULB YELLOW": {
+    "zh": "黄光LED灯泡"
+  },
+  "HEADLIGHT POLISH": {
+    "zh": "大灯翻新"
+  },
+  "HEADLIGHT RESTORATION": {
+    "zh": "大灯修复"
+  },
+  "BODY": {
+    "zh": "车身"
+  },
+  "CAR BODY": {
+    "zh": "车身"
+  },
+  "CHASSIS": {
+    "zh": "底盘"
+  },
+  "FRAME": {
+    "zh": "车架"
+  },
+  "BODY PANEL": {
+    "zh": "车身面板"
+  },
+  "FENDER": {
+    "zh": "翼子板"
+  },
+  "FRONT FENDER": {
+    "zh": "前翼子板"
+  },
+  "REAR FENDER": {
+    "zh": "后翼子板"
+  },
+  "FENDER LINER": {
+    "zh": "翼子板内衬"
+  },
+  "HOOD": {
+    "zh": "引擎盖"
+  },
+  "BONNET": {
+    "zh": "引擎盖"
+  },
+  "HOOD HINGE": {
+    "zh": "引擎盖铰链"
+  },
+  "HOOD LATCH": {
+    "zh": "引擎盖锁扣"
+  },
+  "HOOD STRUT": {
+    "zh": "引擎盖撑杆"
+  },
+  "HOOD INSULATION": {
+    "zh": "引擎盖隔热棉"
+  },
+  "TRUNK": {
+    "zh": "后备箱"
+  },
+  "BOOT": {
+    "zh": "后备箱"
+  },
+  "TRUNK LID": {
+    "zh": "后备箱盖"
+  },
+  "TRUNK HINGE": {
+    "zh": "后备箱铰链"
+  },
+  "TRUNK STRUT": {
+    "zh": "后备箱撑杆"
+  },
+  "TRUNK LOCK": {
+    "zh": "后备箱锁"
+  },
+  "DOOR": {
+    "zh": "车门"
+  },
+  "FRONT DOOR": {
+    "zh": "前门"
+  },
+  "REAR DOOR": {
+    "zh": "后门"
+  },
+  "SLIDING DOOR": {
+    "zh": "滑门"
+  },
+  "DOOR PANEL": {
+    "zh": "门板"
+  },
+  "DOOR HANDLE": {
+    "zh": "门把手"
+  },
+  "DOOR HANDLE OUTER": {
+    "zh": "外门把手"
+  },
+  "DOOR HANDLE INNER": {
+    "zh": "内门把手"
+  },
+  "DOOR LOCK": {
+    "zh": "门锁"
+  },
+  "DOOR LOCK ACTUATOR": {
+    "zh": "门锁电机"
+  },
+  "DOOR LATCH": {
+    "zh": "门锁扣"
+  },
+  "DOOR HINGE": {
+    "zh": "车门铰链"
+  },
+  "DOOR CHECK": {
+    "zh": "车门限位器"
+  },
+  "DOOR SEAL": {
+    "zh": "车门密封条"
+  },
+  "DOOR WEATHERSTRIP": {
+    "zh": "车门防水条"
+  },
+  "WEATHERSTRIP": {
+    "zh": "密封条"
+  },
+  "WINDOW": {
+    "zh": "车窗"
+  },
+  "WINDOW GLASS": {
+    "zh": "车窗玻璃"
+  },
+  "DOOR GLASS": {
+    "zh": "车门玻璃"
+  },
+  "QUARTER GLASS": {
+    "zh": "三角窗玻璃"
+  },
+  "WINDOW REGULATOR": {
+    "zh": "玻璃升降器"
+  },
+  "WINDOW LIFTER": {
+    "zh": "玻璃升降架"
+  },
+  "POWER WINDOW MOTOR": {
+    "zh": "玻璃升降电机"
+  },
+  "POWER WINDOW SWITCH": {
+    "zh": "玻璃升降开关"
+  },
+  "POWER WINDOW RELAY": {
+    "zh": "玻璃升降继电器"
+  },
+  "WINDSHIELD": {
+    "zh": "挡风玻璃"
+  },
+  "WINDSHIELD GLASS": {
+    "zh": "前挡风玻璃"
+  },
+  "WINDSHIELD MOLDING": {
+    "zh": "挡风玻璃饰条"
+  },
+  "WINDSHIELD SEAL": {
+    "zh": "挡风玻璃密封条"
+  },
+  "REAR WINDSHIELD": {
+    "zh": "后挡风玻璃"
+  },
+  "SUNROOF": {
+    "zh": "天窗"
+  },
+  "MOONROOF": {
+    "zh": "天窗"
+  },
+  "SUNROOF GLASS": {
+    "zh": "天窗玻璃"
+  },
+  "SUNROOF MOTOR": {
+    "zh": "天窗电机"
+  },
+  "SUNROOF SEAL": {
+    "zh": "天窗密封条"
+  },
+  "SUN VISOR": {
+    "zh": "遮阳板"
+  },
+  "MIRROR": {
+    "zh": "后视镜"
+  },
+  "SIDE MIRROR": {
+    "zh": "侧后视镜"
+  },
+  "DOOR MIRROR": {
+    "zh": "车门后视镜"
+  },
+  "REAR VIEW MIRROR": {
+    "zh": "后视镜"
+  },
+  "ROOM MIRROR": {
+    "zh": "室内后视镜"
+  },
+  "MIRROR GLASS": {
+    "zh": "后视镜片"
+  },
+  "MIRROR MOTOR": {
+    "zh": "后视镜电机"
+  },
+  "MIRROR COVER": {
+    "zh": "后视镜壳"
+  },
+  "MIRROR SWITCH": {
+    "zh": "后视镜开关"
+  },
+  "BUMPER": {
+    "zh": "保险杠"
+  },
+  "FRONT BUMPER": {
+    "zh": "前保险杠"
+  },
+  "REAR BUMPER": {
+    "zh": "后保险杠"
+  },
+  "BUMPER COVER": {
+    "zh": "保险杠外皮"
+  },
+  "BUMPER BRACKET": {
+    "zh": "保险杠支架"
+  },
+  "BUMPER CLIP": {
+    "zh": "保险杠卡扣"
+  },
+  "BUMPER PAD": {
+    "zh": "保险杠缓冲块"
+  },
+  "BUMPER REINFORCEMENT": {
+    "zh": "保险杠加强件"
+  },
+  "BUMPER MOUNT": {
+    "zh": "保险杠固定座"
+  },
+  "GRILLE": {
+    "zh": "中网"
+  },
+  "FRONT GRILLE": {
+    "zh": "前中网"
+  },
+  "RADIATOR GRILLE": {
+    "zh": "水箱中网"
+  },
+  "GRILLE CHROME": {
+    "zh": "镀铬中网"
+  },
+  "FENDER TRIM": {
+    "zh": "翼子板饰条"
+  },
+  "SIDE PROTECTOR": {
+    "zh": "侧护板"
+  },
+  "MOULDING": {
+    "zh": "饰条"
+  },
+  "DOOR MOULDING": {
+    "zh": "门饰条"
+  },
+  "SIDE MOULDING": {
+    "zh": "侧饰条"
+  },
+  "WINDOW MOULDING": {
+    "zh": "窗饰条"
+  },
+  "ROOF": {
+    "zh": "车顶"
+  },
+  "ROOF RACK": {
+    "zh": "行李架"
+  },
+  "ROOF RAIL": {
+    "zh": "行李架导轨"
+  },
+  "ROOF LINING": {
+    "zh": "车顶内衬"
+  },
+  "HEADLINING": {
+    "zh": "车顶棚"
+  },
+  "ANTENNA": {
+    "zh": "天线"
+  },
+  "ANTENNA MAST": {
+    "zh": "天线杆"
+  },
+  "ANTENNA BASE": {
+    "zh": "天线底座"
+  },
+  "SHARK FIN ANTENNA": {
+    "zh": "鲨鱼鳍天线"
+  },
+  "SPOILER": {
+    "zh": "尾翼"
+  },
+  "REAR SPOILER": {
+    "zh": "后尾翼"
+  },
+  "LIP SPOILER": {
+    "zh": "唇式尾翼"
+  },
+  "FRONT LIP": {
+    "zh": "前唇"
+  },
+  "SIDE SKIRT": {
+    "zh": "侧裙"
+  },
+  "REAR DIFFUSER": {
+    "zh": "后扩散器"
+  },
+  "FENDER FLARE": {
+    "zh": "轮眉"
+  },
+  "MUD FLAP": {
+    "zh": "挡泥板"
+  },
+  "MUD GUARD": {
+    "zh": "挡泥板"
+  },
+  "SIDE STEP": {
+    "zh": "侧踏板"
+  },
+  "RUNNING BOARD": {
+    "zh": "脚踏板"
+  },
+  "TOW HITCH COVER": {
+    "zh": "拖车钩盖"
+  },
+  "WHEEL ARCH": {
+    "zh": "轮拱"
+  },
+  "INTERIOR": {
+    "zh": "内饰"
+  },
+  "DASHBOARD": {
+    "zh": "仪表台"
+  },
+  "INSTRUMENT PANEL": {
+    "zh": "仪表板"
+  },
+  "INSTRUMENT CLUSTER": {
+    "zh": "仪表盘"
+  },
+  "SPEEDOMETER": {
+    "zh": "车速表"
+  },
+  "TACHOMETER": {
+    "zh": "转速表"
+  },
+  "TEMPERATURE GAUGE": {
+    "zh": "水温表"
+  },
+  "ODOMETER": {
+    "zh": "里程表"
+  },
+  "TRIP METER": {
+    "zh": "里程小计"
+  },
+  "CENTER CONSOLE": {
+    "zh": "中央扶手箱"
+  },
+  "GLOVE BOX": {
+    "zh": "手套箱"
+  },
+  "GLOVE COMPARTMENT": {
+    "zh": "手套箱"
+  },
+  "ARMREST": {
+    "zh": "扶手"
+  },
+  "CUP HOLDER": {
+    "zh": "杯架"
+  },
+  "SEAT": {
+    "zh": "座椅"
+  },
+  "FRONT SEAT": {
+    "zh": "前座椅"
+  },
+  "REAR SEAT": {
+    "zh": "后座椅"
+  },
+  "DRIVER SEAT": {
+    "zh": "驾驶座"
+  },
+  "PASSENGER SEAT": {
+    "zh": "副驾驶座"
+  },
+  "BENCH SEAT": {
+    "zh": "长条座椅"
+  },
+  "BUCKET SEAT": {
+    "zh": "桶形座椅"
+  },
+  "POWER SEAT": {
+    "zh": "电动座椅"
+  },
+  "HEATED SEAT": {
+    "zh": "加热座椅"
+  },
+  "SEAT COVER": {
+    "zh": "座套"
+  },
+  "SEAT BELT": {
+    "zh": "安全带"
+  },
+  "SEAT BELT BUCKLE": {
+    "zh": "安全带卡扣"
+  },
+  "SEAT BELT RETRACTOR": {
+    "zh": "安全带卷收器"
+  },
+  "SEAT BELT PRETENSIONER": {
+    "zh": "安全带预紧器"
+  },
+  "SEAT FRAME": {
+    "zh": "座椅骨架"
+  },
+  "SEAT RAIL": {
+    "zh": "座椅滑轨"
+  },
+  "SEAT MOTOR": {
+    "zh": "座椅电机"
+  },
+  "SEAT SWITCH": {
+    "zh": "座椅开关"
+  },
+  "SEAT HEATER": {
+    "zh": "座椅加热器"
+  },
+  "HEADREST": {
+    "zh": "头枕"
+  },
+  "CARPET": {
+    "zh": "地毯"
+  },
+  "FLOOR MAT": {
+    "zh": "脚垫"
+  },
+  "RUBBER FLOOR MAT": {
+    "zh": "橡胶脚垫"
+  },
+  "CARGO MAT": {
+    "zh": "后备箱垫"
+  },
+  "PEDAL": {
+    "zh": "踏板"
+  },
+  "PEDAL COVER": {
+    "zh": "踏板套"
+  },
+  "STEERING WHEEL COVER": {
+    "zh": "方向盘套"
+  },
+  "SHIFT KNOB COVER": {
+    "zh": "排档套"
+  },
+  "STEERING WHEEL LEATHER": {
+    "zh": "真皮方向盘"
+  },
+  "GEAR SHIFT BOOT": {
+    "zh": "排档防尘套"
+  },
+  "CIGARETTE LIGHTER": {
+    "zh": "点烟器"
+  },
+  "ASH TRAY": {
+    "zh": "烟灰缸"
+  },
+  "USB SOCKET": {
+    "zh": "USB插座"
+  },
+  "POWER OUTLET": {
+    "zh": "电源插座"
+  },
+  "CIGAR LIGHTER SOCKET": {
+    "zh": "点烟器插座"
+  },
+  "PETROL": {
+    "zh": "汽油"
+  },
+  "DIESEL": {
+    "zh": "柴油"
+  },
+  "PREMIUM PETROL": {
+    "zh": "高级汽油"
+  },
+  "REGULAR PETROL": {
+    "zh": "普通汽油"
+  },
+  "KEROSENE": {
+    "zh": "煤油"
+  },
+  "WATER": {
+    "zh": "水"
+  },
+  "DRINKING WATER": {
+    "zh": "饮用水"
+  },
+  "DISTILLED WATER": {
+    "zh": "蒸馏水"
+  },
+  "DEMINERALIZED WATER": {
+    "zh": "去离子水"
+  },
+  "WINDSHIELD WASHER FLUID": {
+    "zh": "玻璃水"
+  },
+  "WASHER FLUID": {
+    "zh": "玻璃水"
+  },
+  "BRAKE CLEANER": {
+    "zh": "刹车清洗剂"
+  },
+  "CARB CLEANER": {
+    "zh": "化油器清洗剂"
+  },
+  "THROTTLE CLEANER": {
+    "zh": "节气门清洗剂"
+  },
+  "INTAKE CLEANER": {
+    "zh": "进气道清洗剂"
+  },
+  "ENGINE CLEANER": {
+    "zh": "发动机清洗剂"
+  },
+  "ENGINE DEGREASER": {
+    "zh": "发动机去油剂"
+  },
+  "PARTS CLEANER": {
+    "zh": "零件清洗剂"
+  },
+  "HYDRAULIC OIL": {
+    "zh": "液压油"
+  },
+  "HYDRAULIC FLUID": {
+    "zh": "液压油"
+  },
+  "ATF": {
+    "zh": "自动变速箱油"
+  },
+  "LIMITED SLIP ADDITIVE": {
+    "zh": "限滑差速器添加剂"
+  },
+  "OIL STABILIZER": {
+    "zh": "机油稳定剂"
+  },
+  "FUEL SYSTEM CLEANER": {
+    "zh": "燃油系统清洗剂"
+  },
+  "INJECTOR CLEANER": {
+    "zh": "喷油嘴清洗剂"
+  },
+  "DIESEL INJECTOR CLEANER": {
+    "zh": "柴油喷油嘴清洗剂"
+  },
+  "CATALYTIC CLEANER": {
+    "zh": "三元催化清洗剂"
+  },
+  "DPF CLEANER": {
+    "zh": "DPF清洗剂"
+  },
+  "EGR CLEANER": {
+    "zh": "EGR清洗剂"
+  },
+  "OCTANE BOOSTER": {
+    "zh": "辛烷值提升剂"
+  },
+  "CETANE BOOSTER": {
+    "zh": "十六烷值提升剂"
+  },
+  "FUEL STABILIZER": {
+    "zh": "燃油稳定剂"
+  },
+  "WATER REMOVER": {
+    "zh": "燃油除水剂"
+  },
+  "HEAD GASKET REPAIR": {
+    "zh": "缸垫修复剂"
+  },
+  "ENGINE STOP LEAK": {
+    "zh": "发动机堵漏剂"
+  },
+  "OIL STOP LEAK": {
+    "zh": "机油堵漏剂"
+  },
+  "POWER STEERING STOP LEAK": {
+    "zh": "方向机堵漏剂"
+  },
+  "TRANSMISSION STOP LEAK": {
+    "zh": "变速箱堵漏剂"
+  },
+  "WD-40": {
+    "zh": "除锈润滑剂"
+  },
+  "PENETRATING OIL": {
+    "zh": "渗透润滑剂"
+  },
+  "LUBRICANT": {
+    "zh": "润滑剂"
+  },
+  "GREASE": {
+    "zh": "黄油"
+  },
+  "WHITE GREASE": {
+    "zh": "白黄油"
+  },
+  "LITHIUM GREASE": {
+    "zh": "锂基黄油"
+  },
+  "SILICONE GREASE": {
+    "zh": "硅脂"
+  },
+  "COPPER GREASE": {
+    "zh": "铜基黄油"
+  },
+  "MOLY GREASE": {
+    "zh": "二硫化钼黄油"
+  },
+  "WHEEL BEARING GREASE": {
+    "zh": "轮毂轴承黄油"
+  },
+  "BRAKE GREASE": {
+    "zh": "刹车润滑脂"
+  },
+  "DIELECTRIC GREASE": {
+    "zh": "绝缘硅脂"
+  },
+  "ANTI-SEIZE": {
+    "zh": "防卡剂"
+  },
+  "THREAD LOCKER": {
+    "zh": "螺纹锁固胶"
+  },
+  "LOCTITE": {
+    "zh": "螺纹胶"
+  },
+  "GASKET MAKER": {
+    "zh": "密封胶"
+  },
+  "SILICONE": {
+    "zh": "硅胶"
+  },
+  "RTV SILICONE": {
+    "zh": "RTV硅胶"
+  },
+  "ARALDITE": {
+    "zh": "环氧树脂胶"
+  },
+  "EPOXY GLUE": {
+    "zh": "环氧胶"
+  },
+  "SUPER GLUE": {
+    "zh": "强力胶"
+  },
+  "INSTANT GLUE": {
+    "zh": "瞬间胶"
+  },
+  "GLUE": {
+    "zh": "胶水"
+  },
+  "CONTACT ADHESIVE": {
+    "zh": "万能胶"
+  },
+  "WINDOW SEALANT": {
+    "zh": "玻璃胶"
+  },
+  "BODY SEALANT": {
+    "zh": "车身密封胶"
+  },
+  "UNDERBODY COATING": {
+    "zh": "底盘装甲"
+  },
+  "RUBBERIZED UNDERCOATING": {
+    "zh": "底盘防锈胶"
+  },
+  "RUST CONVERTER": {
+    "zh": "铁锈转换剂"
+  },
+  "RUST REMOVER": {
+    "zh": "除锈剂"
+  },
+  "PAINT": {
+    "zh": "油漆"
+  },
+  "SPRAY PAINT": {
+    "zh": "喷漆"
+  },
+  "TOUCH UP PAINT": {
+    "zh": "补漆笔"
+  },
+  "CLEAR COAT": {
+    "zh": "清漆"
+  },
+  "PRIMER": {
+    "zh": "底漆"
+  },
+  "PAINT THINNER": {
+    "zh": "稀释剂"
+  },
+  "BODY FILLER": {
+    "zh": "原子灰"
+  },
+  "PUTTY": {
+    "zh": "腻子"
+  },
+  "SAND PAPER": {
+    "zh": "砂纸"
+  },
+  "WET SAND PAPER": {
+    "zh": "水砂纸"
+  },
+  "MASKING TAPE": {
+    "zh": "美纹纸胶带"
+  },
+  "POLISH": {
+    "zh": "抛光剂"
+  },
+  "WAX": {
+    "zh": "车蜡"
+  },
+  "COMPOUND": {
+    "zh": "研磨剂"
+  },
+  "CUTTING COMPOUND": {
+    "zh": "粗蜡"
+  },
+  "POLISHING COMPOUND": {
+    "zh": "抛光蜡"
+  },
+  "CAR SHAMPOO": {
+    "zh": "洗车液"
+  },
+  "CAR WAX": {
+    "zh": "车蜡"
+  },
+  "INTERIOR CLEANER": {
+    "zh": "内饰清洗剂"
+  },
+  "UPHOLSTERY CLEANER": {
+    "zh": "座椅清洗剂"
+  },
+  "GLASS CLEANER": {
+    "zh": "玻璃清洗剂"
+  },
+  "CHROME POLISH": {
+    "zh": "镀铬抛光剂"
+  },
+  "METAL POLISH": {
+    "zh": "金属抛光剂"
+  },
+  "SOAP": {
+    "zh": "肥皂"
+  },
+  "HAND CLEANER": {
+    "zh": "洗手液"
+  },
+  "HAND SOAP": {
+    "zh": "洗手液"
+  },
+  "TISSUE": {
+    "zh": "纸巾"
+  },
+  "PAPER TOWEL": {
+    "zh": "纸巾"
+  },
+  "RAG": {
+    "zh": "抹布"
+  },
+  "COTTON WASTE": {
+    "zh": "废棉纱"
+  },
+  "WORKSHOP TOWEL": {
+    "zh": "车间毛巾"
+  },
+  "BROOM": {
+    "zh": "扫把"
+  },
+  "MOP": {
+    "zh": "拖把"
+  },
+  "DUST BIN": {
+    "zh": "垃圾桶"
+  },
+  "TRASH BAG": {
+    "zh": "垃圾袋"
+  },
+  "TOILET CLEANER": {
+    "zh": "洁厕液"
+  },
+  "DISINFECTANT": {
+    "zh": "消毒水"
+  },
+  "AIR FRESHENER": {
+    "zh": "空气清新剂"
+  },
+  "INSECT SPRAY": {
+    "zh": "杀虫剂"
+  },
+  "BATTERY TERMINAL CLEANER": {
+    "zh": "电瓶桩头清洗剂"
+  },
+  "BATTERY TERMINAL PROTECTOR": {
+    "zh": "电瓶桩头保护剂"
+  },
+  "ELECTRICAL CONTACT CLEANER": {
+    "zh": "电器接点清洗剂"
+  },
+  "MASS AIR FLOW CLEANER": {
+    "zh": "空气流量计清洗剂"
+  },
+  "SERVICE": {
+    "zh": "保养"
+  },
+  "FULL SERVICE": {
+    "zh": "大保养"
+  },
+  "MINOR SERVICE": {
+    "zh": "小保养"
+  },
+  "MAJOR SERVICE": {
+    "zh": "大保养"
+  },
+  "OIL FILTER CHANGE": {
+    "zh": "换机油滤清器"
+  },
+  "AIR FILTER CHANGE": {
+    "zh": "换空气滤清器"
+  },
+  "FUEL FILTER CHANGE": {
+    "zh": "换燃油滤清器"
+  },
+  "CABIN FILTER CHANGE": {
+    "zh": "换空调滤清器"
+  },
+  "SPARK PLUG CHANGE": {
+    "zh": "换火花塞"
+  },
+  "TIRE CHANGE": {
+    "zh": "换轮胎"
+  },
+  "BRAKE PAD CHANGE": {
+    "zh": "换刹车片"
+  },
+  "BRAKE DISC CHANGE": {
+    "zh": "换刹车盘"
+  },
+  "TIMING BELT CHANGE": {
+    "zh": "换正时皮带"
+  },
+  "TIMING CHAIN CHANGE": {
+    "zh": "换正时链条"
+  },
+  "CLUTCH CHANGE": {
+    "zh": "换离合器"
+  },
+  "WATER PUMP CHANGE": {
+    "zh": "换水泵"
+  },
+  "RADIATOR CHANGE": {
+    "zh": "换水箱"
+  },
+  "SHOCK CHANGE": {
+    "zh": "换减震器"
+  },
+  "SPRING CHANGE": {
+    "zh": "换弹簧"
+  },
+  "BATTERY CHANGE": {
+    "zh": "换电瓶"
+  },
+  "ALTERNATOR CHANGE": {
+    "zh": "换发电机"
+  },
+  "STARTER CHANGE": {
+    "zh": "换启动机"
+  },
+  "BELT CHANGE": {
+    "zh": "换皮带"
+  },
+  "HOSE CHANGE": {
+    "zh": "换软管"
+  },
+  "FILTER CHANGE": {
+    "zh": "换滤清器"
+  },
+  "FLUID CHANGE": {
+    "zh": "换油液"
+  },
+  "FUNDI": {
+    "zh": "人工费"
+  },
+  "MECHANIC": {
+    "zh": "修理工"
+  },
+  "LABOR": {
+    "zh": "人工"
+  },
+  "LABOUR": {
+    "zh": "人工费"
+  },
+  "OVERHAUL": {
+    "zh": "大修"
+  },
+  "GEARBOX OVERHAUL": {
+    "zh": "变速箱大修"
+  },
+  "DIFFERENTIAL OVERHAUL": {
+    "zh": "差速器大修"
+  },
+  "REBUILD": {
+    "zh": "翻新"
+  },
+  "REPAIR": {
+    "zh": "维修"
+  },
+  "REPLACEMENT": {
+    "zh": "更换"
+  },
+  "INSTALLATION": {
+    "zh": "安装"
+  },
+  "REMOVAL": {
+    "zh": "拆卸"
+  },
+  "DIAGNOSIS": {
+    "zh": "诊断"
+  },
+  "INSPECTION": {
+    "zh": "检查"
+  },
+  "CHECK": {
+    "zh": "检查"
+  },
+  "ADJUSTMENT": {
+    "zh": "调整"
+  },
+  "TUNING": {
+    "zh": "调校"
+  },
+  "TUNE-UP": {
+    "zh": "调校"
+  },
+  "CLEANING": {
+    "zh": "清洗"
+  },
+  "WASHING": {
+    "zh": "洗涤"
+  },
+  "CAR WASH": {
+    "zh": "洗车"
+  },
+  "ENGINE WASH": {
+    "zh": "洗发动机"
+  },
+  "CHASSIS WASH": {
+    "zh": "洗底盘"
+  },
+  "POLISHING": {
+    "zh": "抛光"
+  },
+  "PAINTING": {
+    "zh": "喷漆"
+  },
+  "WELDING": {
+    "zh": "焊接"
+  },
+  "EXHAUST WELDING": {
+    "zh": "排气管焊接"
+  },
+  "BODY REPAIR": {
+    "zh": "车身维修"
+  },
+  "PANEL BEATING": {
+    "zh": "钣金"
+  },
+  "DENT REMOVAL": {
+    "zh": "凹陷修复"
+  },
+  "PAINTLESS DENT REPAIR": {
+    "zh": "无痕凹陷修复"
+  },
+  "SCRATCH REPAIR": {
+    "zh": "划痕修复"
+  },
+  "BUMPER REPAIR": {
+    "zh": "保险杠修复"
+  },
+  "WINDSHIELD REPAIR": {
+    "zh": "挡风玻璃修复"
+  },
+  "WHEEL BALANCING": {
+    "zh": "轮胎动平衡"
+  },
+  "POWER STEERING FLUSH": {
+    "zh": "方向机油更换"
+  },
+  "FUEL SYSTEM CLEANING": {
+    "zh": "燃油系统清洗"
+  },
+  "INTAKE CLEANING": {
+    "zh": "进气道清洗"
+  },
+  "THROTTLE CLEANING": {
+    "zh": "节气门清洗"
+  },
+  "INJECTOR CLEANING": {
+    "zh": "喷油嘴清洗"
+  },
+  "EGR CLEANING": {
+    "zh": "EGR清洗"
+  },
+  "OBD DIAGNOSIS": {
+    "zh": "OBD诊断"
+  },
+  "COMPUTER DIAGNOSIS": {
+    "zh": "电脑诊断"
+  },
+  "ELECTRICAL DIAGNOSIS": {
+    "zh": "电路诊断"
+  },
+  "TRANSPORT": {
+    "zh": "运输费"
+  },
+  "DELIVERY": {
+    "zh": "送货费"
+  },
+  "TOWING": {
+    "zh": "拖车费"
+  },
+  "RECOVERY": {
+    "zh": "救援费"
+  },
+  "DRIVER": {
+    "zh": "司机费"
+  },
+  "BODA FARE": {
+    "zh": "摩托车费"
+  },
+  "MOTORCYCLE PETROL": {
+    "zh": "摩托车汽油"
+  },
+  "OVERTIME": {
+    "zh": "加班费"
+  },
+  "BONUS": {
+    "zh": "奖金"
+  },
+  "TIP": {
+    "zh": "小费"
+  },
+  "OSHA": {
+    "zh": "安全费"
+  },
+  "PERMIT": {
+    "zh": "许可证费"
+  },
+  "PARKING": {
+    "zh": "停车费"
+  },
+  "TOLL": {
+    "zh": "过路费"
+  },
+  "FUEL": {
+    "zh": "燃油费"
+  }
 }
