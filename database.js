@@ -221,7 +221,7 @@ const invoice = {
         qty: item.qty || '',
         cost: item.cost || '',
         labor: item.labor || '',
-        amount: item.amount || (Number(item.qty || 0) * Number(item.cost || 0) + Number(item.labor || 0)).toString(),
+        amount: item.amount || ((Number(item.qty)||0) * (Number(item.cost)||0) + (Number(item.labor)||0)).toString(),
         remark: item.remark || ''
       })),
       created_by: d.created_by || '',
@@ -246,7 +246,7 @@ const invoice = {
         qty: item.qty || '',
         cost: item.cost || '',
         labor: item.labor || '',
-        amount: item.amount || (Number(item.qty || 0) * Number(item.cost || 0) + Number(item.labor || 0)).toString(),
+        amount: item.amount || ((Number(item.qty)||0) * (Number(item.cost)||0) + (Number(item.labor)||0)).toString(),
         remark: item.remark || ''
       }));
     }

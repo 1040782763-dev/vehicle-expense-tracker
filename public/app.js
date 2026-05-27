@@ -764,7 +764,7 @@ function calcInvTotals() {
     const cost = parseFloat(document.querySelector('[data-invrow="'+i+'"][data-invfield="cost"]').value) || 0;
     const labor = parseFloat(document.querySelector('[data-invrow="'+i+'"][data-invfield="labor"]').value) || 0;
     const amt = qty * cost + labor;
-    document.querySelector('[data-invrow="'+i+'"][data-invfield="amount"]').value = amt > 0 ? amt.toLocaleString('en-US') : '';
+    document.querySelector('[data-invrow="'+i+'"][data-invfield="amount"]').value = amt > 0 ? amt : '';
     nonVatTotal += amt;
   }
 
@@ -774,7 +774,7 @@ function calcInvTotals() {
     document.querySelector('[data-invrow="'+vatRow+'"][data-invfield="qty"]').value = '0.18';
     document.querySelector('[data-invrow="'+vatRow+'"][data-invfield="cost"]').value = nonVatTotal;
     const vatAmt = Math.round(0.18 * nonVatTotal);
-    document.querySelector('[data-invrow="'+vatRow+'"][data-invfield="amount"]').value = vatAmt > 0 ? vatAmt.toLocaleString('en-US') : '';
+    document.querySelector('[data-invrow="'+vatRow+'"][data-invfield="amount"]').value = vatAmt > 0 ? vatAmt : '';
     total = nonVatTotal + vatAmt;
   }
 
@@ -1006,7 +1006,7 @@ function buildInvPrintView() {
     const item = items[i] || {};
     const c = item.cost ? Number(item.cost).toLocaleString('en-US') : '';
     const l = item.labor ? Number(item.labor).toLocaleString('en-US') : '';
-    const amt = Number(item.amount) || Number(item.qty||0)*Number(item.cost||0)+Number(item.labor||0) || 0;
+    const amt = (Number(item.qty)||0) * (Number(item.cost)||0) + (Number(item.labor)||0);
     total += amt;
     const a = amt > 0 ? amt.toLocaleString('en-US') : '';
     tbody.innerHTML += `<tr>
@@ -1031,7 +1031,7 @@ function printInvoice() {
     const item = items[i] || {};
     const c = item.cost ? Number(item.cost).toLocaleString('en-US') : '';
     const l = item.labor ? Number(item.labor).toLocaleString('en-US') : '';
-    const amt = Number(item.amount) || Number(item.qty||0)*Number(item.cost||0)+Number(item.labor||0) || 0;
+    const amt = (Number(item.qty)||0) * (Number(item.cost)||0) + (Number(item.labor)||0);
     total += amt;
     const a = amt > 0 ? amt.toLocaleString('en-US') : '';
     rowsHtml += `<tr>
