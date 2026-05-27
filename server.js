@@ -232,14 +232,14 @@ app.get('/api/payments', authRequired, (req, res) => {
   res.json(payment.list(req.query));
 });
 
-// Sync: auto-create payment entries grouped by plate + date from recent 3 days
+// Sync: auto-create payment entries grouped by plate + date from recent 30 days
 app.post('/api/payments/sync', authRequired, (req, res) => {
   const today = new Date().toISOString().slice(0, 10);
-  const d3 = new Date();
-  d3.setDate(d3.getDate() - 3);
-  const threeDaysAgo = d3.toISOString().slice(0, 10);
+  const d30 = new Date();
+  d30.setDate(d30.getDate() - 30);
+  const thirtyDaysAgo = d30.toISOString().slice(0, 10);
 
-  const recentRecords = record.list({ date_from: threeDaysAgo, date_to: today });
+  const recentRecords = record.list({ date_from: thirtyDaysAgo, date_to: today });
 
   // Group by (plate_number, date) — each unique pair = one potential payment
   const groups = new Map();
