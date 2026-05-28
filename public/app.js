@@ -7,6 +7,7 @@ let currentUser = null;
 let lang = localStorage.getItem('vet_lang') || 'en';
 let editingRecordId = null;
 let editingPaymentId = null;
+let plateCustomersMap = null; // {plate: {customer, model, tel}} loaded from API
 
 const MONTHS = ['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC'];
 
@@ -173,6 +174,7 @@ function doLogout() {
 // ─── Init ─────────────────────────────────────────────────────
 function initApp() {
   applyLang();
+  loadAutocomplete();
   loadRecords();
   loadDeposit();
   loadPartsMaster();
@@ -783,12 +785,63 @@ async function refreshOrderNo() {
   } catch(e) { /* ignore */ }
 }
 
+// ─── Invoice Draft Auto-Save (localStorage) ──────────────────
+let invDraftTimer = null;
+const INV_DRAFT_KEY = 'invDraft';
+
+function scheduleInvDraftSave() {
+  if (invDraftTimer) clearTimeout(invDraftTimer);
+  invDraftTimer = setTimeout(saveInvDraft, 1500);
+}
+
+function saveInvDraft() {
+  const data = getInvFormData();
+  if (!data.plate && !data.customer && !data.items.length && !data.remark) {
+    return;
+  }
+  data._savedAt = new Date().toISOString();
+  try { localStorage.setItem(INV_DRAFT_KEY, JSON.stringify(data)); } catch(e) { /* quota exceeded */ }
+  const indicator = document.getElementById('invDraftIndicator');
+  if (indicator) { indicator.style.display = ''; indicator.textContent = 'Draft saved ' + new Date().toLocaleTimeString(); }
+}
+
+function loadInvDraft() {
+  try {
+    const raw = localStorage.getItem(INV_DRAFT_KEY);
+    if (!raw) return null;
+    const data = JSON.parse(raw);
+    if (!data || (!data.plate && !data.customer && !(data.items||[]).length)) return null;
+    return data;
+  } catch { return null; }
+}
+
+function clearInvDraft() {
+  localStorage.removeItem(INV_DRAFT_KEY);
+  const indicator = document.getElementById('invDraftIndicator');
+  if (indicator) indicator.style.display = 'none';
+}
+
 async function initInvoice() {
   if (!invInited) {
     document.getElementById('invDate').value = new Date().toISOString().slice(0, 10);
     await refreshOrderNo();
-    loadInvAutocomplete();
+    await loadInvAutocomplete();
     buildInvTable();
+
+    // Check for saved draft
+    const draft = loadInvDraft();
+    if (draft && (draft.plate || draft.customer || (draft.items || []).length)) {
+      const savedTime = draft._savedAt ? new Date(draft._savedAt).toLocaleString() : '';
+      const msg = savedTime
+        ? (lang === 'en' ? 'Found unsaved draft from ' + savedTime + '. Restore?' : '发现未保存的草稿（' + savedTime + '），恢复吗？')
+        : (lang === 'en' ? 'Found unsaved draft. Restore?' : '发现未保存的草稿，恢复吗？');
+      if (confirm(msg)) {
+        setInvFormData(draft);
+      } else {
+        clearInvDraft();
+      }
+    }
+
     invInited = true;
   }
   calcInvTotals();
@@ -801,6 +854,8 @@ async function loadInvAutocomplete() {
       api('/api/autocomplete'),
       api('/api/invoices')
     ]);
+    // Store plate→customer mapping for auto-fill
+    plateCustomersMap = autoData.plate_customers || {};
     const fillDl = (id, items) => {
       const dl = document.getElementById(id);
       if (!dl || dl.children.length > 0) return;
@@ -808,8 +863,9 @@ async function loadInvAutocomplete() {
     };
     fillDl('dlInvPlate', autoData.plate_numbers || []);
     fillDl('dlInvPart', autoData.spare_parts || []);
-    // Client names from invoice history
-    const customers = [...new Set(invoices.map(inv => inv.customer).filter(Boolean))].sort();
+    const invCustomers = invoices.map(inv => inv.customer).filter(Boolean);
+    const importCustomers = autoData.customers || [];
+    const customers = [...new Set([...importCustomers, ...invCustomers])].sort();
     fillDl('dlInvCustomer', customers);
   } catch(e) { /* ignore */ }
 }
@@ -820,13 +876,13 @@ function buildInvTable() {
   for (let i = 1; i <= INV_TOTAL_ROWS; i++) {
     html += `<tr>
       <td class="inv-row-num">${i}</td>
-      <td><input class="inv-inp-name" data-invrow="${i}" data-invfield="name" placeholder="" list="dlInvPart" autocomplete="off" oninput="onInvNameChange(${i})"></td>
-      <td><input class="inv-inp-unit" data-invrow="${i}" data-invfield="unit" placeholder=""></td>
-      <td><input class="inv-inp-qty" data-invrow="${i}" data-invfield="qty" type="number" step="1" value="1" oninput="calcInvRow(${i});calcInvTotals()"></td>
-      <td><input class="inv-inp-cost" data-invrow="${i}" data-invfield="cost" type="number" step="0.01" placeholder="0" oninput="calcInvRow(${i});calcInvTotals()"></td>
+      <td><input class="inv-inp-name" data-invrow="${i}" data-invfield="name" placeholder="" list="dlInvPart" autocomplete="off" oninput="onInvNameChange(${i});scheduleInvDraftSave()"></td>
+      <td><input class="inv-inp-unit" data-invrow="${i}" data-invfield="unit" placeholder="" oninput="scheduleInvDraftSave()"></td>
+      <td><input class="inv-inp-qty" data-invrow="${i}" data-invfield="qty" type="number" step="1" value="1" oninput="calcInvRow(${i});calcInvTotals();scheduleInvDraftSave()"></td>
+      <td><input class="inv-inp-cost" data-invrow="${i}" data-invfield="cost" type="number" step="0.01" placeholder="0" oninput="calcInvRow(${i});calcInvTotals();scheduleInvDraftSave()"></td>
       <td><input class="inv-inp-amount" data-invrow="${i}" data-invfield="amount" type="text" placeholder="0" readonly></td>
-      <td><input class="inv-inp-costprice" data-invrow="${i}" data-invfield="cost_price" type="number" step="0.01" placeholder="" oninput="calcInvTotals()"></td>
-      <td><input class="inv-inp-remark" data-invrow="${i}" data-invfield="remark" placeholder=""></td>
+      <td><input class="inv-inp-costprice" data-invrow="${i}" data-invfield="cost_price" type="number" step="0.01" placeholder="" oninput="calcInvTotals();scheduleInvDraftSave()"></td>
+      <td><input class="inv-inp-remark" data-invrow="${i}" data-invfield="remark" placeholder="" oninput="scheduleInvDraftSave()"></td>
     </tr>`;
   }
   tbody.innerHTML = html;
@@ -937,83 +993,111 @@ function setInvFormData(data) {
   calcInvTotals();
 }
 
+function lookupPlateCustomer(plate) {
+  if (!plateCustomersMap) return null;
+  const key = plate.toUpperCase().replace(/\s+/g, ' ').trim();
+  const keyCompact = key.replace(/\s/g, '');
+  if (plateCustomersMap[key]) return plateCustomersMap[key];
+  if (plateCustomersMap[keyCompact]) return plateCustomersMap[keyCompact];
+  for (const [k, v] of Object.entries(plateCustomersMap)) {
+    if (k.replace(/\s/g, '') === keyCompact) return v;
+  }
+  return null;
+}
+
+let autoFillTimer = null;
+function autoFillInvoiceDebounced() {
+  if (autoFillTimer) clearTimeout(autoFillTimer);
+  autoFillTimer = setTimeout(autoFillInvoice, 300);
+}
+
 async function autoFillInvoice() {
   const plate = document.getElementById('invPlate').value.trim();
 
-  // Clear items when plate is cleared
-  if (!plate) {
+  const clearItems = () => {
     for (let i = 1; i <= INV_TOTAL_ROWS; i++) {
       ['name','unit','cost','amount','cost_price','remark'].forEach(f => {
         document.querySelector('[data-invrow="'+i+'"][data-invfield="'+f+'"]').value = '';
       });
       document.querySelector('[data-invrow="'+i+'"][data-invfield="qty"]').value = '1';
     }
+  };
+
+  if (!plate) {
+    clearItems();
+    document.getElementById('invCustomer').value = '';
     document.getElementById('invRemark').value = '';
     calcInvTotals();
     return;
   }
 
+  // Reset customer & remark — will refill below
+  document.getElementById('invCustomer').value = '';
+  document.getElementById('invRemark').value = '';
+
+  // Ensure plate data is loaded from API
+  if (!plateCustomersMap) {
+    try {
+      const ad = await api('/api/autocomplete');
+      plateCustomersMap = ad.plate_customers || {};
+    } catch(e) { plateCustomersMap = {}; }
+  }
+
+  // ── Step 1: Direct plate → customer mapping ──
+  const custInfo = lookupPlateCustomer(plate);
+  if (custInfo) {
+    if (custInfo.customer) document.getElementById('invCustomer').value = custInfo.customer;
+    if (custInfo.model) document.getElementById('invRemark').value = custInfo.model;
+  }
+
   try {
-    // Fetch records for this plate AND invoice history for client name
     const [records, invoices] = await Promise.all([
       api('/api/records?plate=' + encodeURIComponent(plate)),
       api('/api/invoices')
     ]);
 
-    // --- Auto-fill client name from invoice history ---
-    const prevInvoices = invoices.filter(inv => inv.plate && inv.plate.toUpperCase() === plate.toUpperCase());
-    if (prevInvoices.length > 0 && !document.getElementById('invCustomer').value) {
-      // Use most recent invoice's customer name
-      const latestInv = prevInvoices[0];
-      if (latestInv.customer) {
-        document.getElementById('invCustomer').value = latestInv.customer;
+    // ── Step 2: Customer fallback from invoice history ──
+    if (!document.getElementById('invCustomer').value) {
+      const prevInvoices = invoices.filter(inv => inv.plate && inv.plate.toUpperCase() === plate.toUpperCase());
+      if (prevInvoices.length > 0 && prevInvoices[0].customer) {
+        document.getElementById('invCustomer').value = prevInvoices[0].customer;
       }
     }
 
-    if (!records.length) return;
-
-    // Clear existing items before auto-filling for the new plate
-    for (let i = 1; i <= INV_TOTAL_ROWS; i++) {
-      ['name','unit','cost','amount','cost_price','remark'].forEach(f => {
-        document.querySelector('[data-invrow="'+i+'"][data-invfield="'+f+'"]').value = '';
-      });
-      document.querySelector('[data-invrow="'+i+'"][data-invfield="qty"]').value = '1';
-    }
-
-    const latest = records[0];
-
-    // Auto-fill remark with car type, from records
-    if (!document.getElementById('invRemark').value) {
+    // ── Step 3: Remark fallback from expense records ──
+    if (!document.getElementById('invRemark').value && records.length > 0) {
       const types = [...new Set(records.map(r => r.car_type).filter(Boolean))];
-      const topType = types.sort((a,b) =>
+      const topType = types.sort((a, b) =>
         records.filter(r => r.car_type === b).length - records.filter(r => r.car_type === a).length
       )[0] || '';
-      document.getElementById('invRemark').value = topType;
+      if (topType) document.getElementById('invRemark').value = topType;
     }
 
-    // Get unique descriptions with bilingual names and fill rows
-    // Build a cost lookup map from expense records: description → latest amount
-    const costMap = {};
-    records.forEach(r => {
-      if (r.description && r.amount) {
-        const desc = r.description.toUpperCase().trim();
-        if (!costMap[desc]) costMap[desc] = r.amount; // first=latest (records are date-sorted desc)
-      }
-    });
-
-    const parts = [...new Set(records.map(r => r.description).filter(Boolean))];
-    const topParts = parts.slice(0, INV_TOTAL_ROWS);
-    for (let idx = 0; idx < topParts.length; idx++) {
-      const p = topParts[idx];
-      const i = idx + 1;
-      document.querySelector('[data-invrow="'+i+'"][data-invfield="name"]').value = await translatePart(p);
-      // Auto-fill cost_price from expense records
-      const cp = costMap[p.toUpperCase().trim()];
-      if (cp) {
-        document.querySelector('[data-invrow="'+i+'"][data-invfield="cost_price"]').value = cp;
+    // ── Step 4: Auto-fill items from expense records ──
+    if (records.length > 0) {
+      clearItems();
+      const costMap = {};
+      records.forEach(r => {
+        if (r.description && r.amount) {
+          const desc = r.description.toUpperCase().trim();
+          if (!costMap[desc]) costMap[desc] = r.amount;
+        }
+      });
+      const parts = [...new Set(records.map(r => r.description).filter(Boolean))];
+      const topParts = parts.slice(0, INV_TOTAL_ROWS);
+      for (let idx = 0; idx < topParts.length; idx++) {
+        const p = topParts[idx];
+        const i = idx + 1;
+        document.querySelector('[data-invrow="'+i+'"][data-invfield="name"]').value = await translatePart(p);
+        const cp = costMap[p.toUpperCase().trim()];
+        if (cp) {
+          document.querySelector('[data-invrow="'+i+'"][data-invfield="cost_price"]').value = cp;
+        }
       }
     }
+
     calcInvTotals();
+    scheduleInvDraftSave();
   } catch(e) { /* ignore */ }
 }
 
@@ -1034,6 +1118,7 @@ async function saveInvoice() {
     }
     invCurrentId = result.id;
     document.getElementById('invOrderNo').value = result.orderNo;
+    clearInvDraft();
     renderInvSavedList();
     alert((lang === 'en' ? 'Saved! Order No: ' : '已保存！单号：') + result.orderNo);
   } catch(e) { alert('Save failed / 保存失败: ' + e.message); }
@@ -1098,6 +1183,7 @@ function newInvoice() {
     if (!confirm(lang === 'en' ? 'Start new? Unsaved data will be lost.' : '确定新建？未保存的内容将丢失。')) return;
   }
   invCurrentId = null;
+  clearInvDraft();
   invInited = true; // keep table, just clear inputs
   for (let i = 1; i <= INV_TOTAL_ROWS; i++) {
     ['name','unit','cost','amount','cost_price','remark'].forEach(f => {

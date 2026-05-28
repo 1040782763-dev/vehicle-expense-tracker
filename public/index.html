@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Vehicle Expense Tracker / 车辆费用记录</title>
-<link rel="stylesheet" href="/style.css?v=14">
+<link rel="stylesheet" href="/style.css?v=20">
 </head>
 <body>
 
@@ -151,25 +151,25 @@
       <div class="inv-form-grid">
         <div class="inv-field">
           <label data-en="Order No (Auto)" data-zh="单号（自动生成）">Order No (Auto)</label>
-          <input type="text" id="invOrderNo" class="auto-gen" readonly>
+          <input type="text" id="invOrderNo" class="auto-gen" readonly oninput="scheduleInvDraftSave()">
         </div>
         <div class="inv-field">
           <label data-en="Plate Number" data-zh="车牌号">Plate Number</label>
-          <input type="text" id="invPlate" placeholder="T 788 DUT" list="dlInvPlate" autocomplete="off" onchange="autoFillInvoice()">
+          <input type="text" id="invPlate" placeholder="T 788 DUT" list="dlInvPlate" autocomplete="off" oninput="autoFillInvoiceDebounced(); scheduleInvDraftSave()">
           <datalist id="dlInvPlate"></datalist>
         </div>
         <div class="inv-field">
           <label data-en="Client Name" data-zh="客户名称">Client Name</label>
-          <input type="text" id="invCustomer" placeholder="" list="dlInvCustomer" autocomplete="off">
+          <input type="text" id="invCustomer" placeholder="" list="dlInvCustomer" autocomplete="off" oninput="scheduleInvDraftSave()">
           <datalist id="dlInvCustomer"></datalist>
         </div>
         <div class="inv-field">
           <label data-en="Date" data-zh="日期">Date</label>
-          <input type="date" id="invDate" onchange="onInvDateChange()">
+          <input type="date" id="invDate" onchange="onInvDateChange()" oninput="scheduleInvDraftSave()">
         </div>
         <div class="inv-field inv-field-full">
           <label data-en="Remark (Car Type, Engine No.)" data-zh="备注（车型、发动机号等）">Remark (Car Type, Engine No.)</label>
-          <input type="text" id="invRemark" placeholder="">
+          <input type="text" id="invRemark" placeholder="" oninput="scheduleInvDraftSave()">
         </div>
       </div>
     </div>
@@ -210,6 +210,7 @@
     </div>
 
     <!-- Action Buttons -->
+    <div style="text-align:right;font-size:11px;color:#52c41a;min-height:18px;margin-bottom:2px" id="invDraftIndicator" style="display:none"></div>
     <div class="inv-btn-row">
       <button class="inv-btn inv-btn-save" onclick="saveInvoice()">💾 <span data-en="SAVE" data-zh="保存">SAVE</span></button>
       <button class="inv-btn inv-btn-print" onclick="printInvoice()">🖨️ <span data-en="PRINT" data-zh="打印">PRINT</span></button>
@@ -402,6 +403,6 @@
   </div>
 </div>
 
-<script src="/app.js?v=14"></script>
+<script src="/app.js?v=23"></script>
 </body>
 </html>

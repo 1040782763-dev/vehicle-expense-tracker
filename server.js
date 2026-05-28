@@ -9,6 +9,12 @@ const XLSX = require('xlsx');
 const PARTS_MASTER = JSON.parse(require('fs').readFileSync(path.join(__dirname, 'parts_master.json'), 'utf-8'));
 const MASTER_PART_NAMES = Object.keys(PARTS_MASTER).sort();
 
+// Load plate-to-customer mapping (from qwcar database)
+let PLATE_CUSTOMERS = {};
+try {
+  PLATE_CUSTOMERS = JSON.parse(require('fs').readFileSync(path.join(__dirname, 'plate_customers.json'), 'utf-8'));
+} catch(e) { /* file may not exist */ }
+
 const app = express();
 const PORT = process.env.PORT || 3000;
 const JWT_SECRET = process.env.JWT_SECRET || 'vts-jwt-secret-change-in-production';
@@ -102,7 +108,20 @@ app.get('/api/autocomplete', authRequired, (req, res) => {
   const usedBy = [...new Set(allRecords.map(r => r.used_by).filter(Boolean))].sort();
   const spareParts = descriptions; // same source, used for invoicing autocomplete
 
-  res.json({ car_types: carTypes, plate_numbers: plateNumbers, descriptions, spare_parts: spareParts, used_by: usedBy });
+  // Merge plates from records and imported plate_customers.json
+  const importPlates = Object.keys(PLATE_CUSTOMERS).sort();
+  const allPlates = [...new Set([...importPlates, ...plateNumbers])].sort();
+  const importCustomers = [...new Set(Object.values(PLATE_CUSTOMERS).map(c => c.customer).filter(Boolean))].sort();
+
+  res.json({
+    car_types: carTypes,
+    plate_numbers: allPlates,
+    descriptions,
+    spare_parts: spareParts,
+    used_by: usedBy,
+    plate_customers: PLATE_CUSTOMERS,
+    customers: importCustomers
+  });
 });
 
 // Master parts dictionary (EN → ZH) for frontend translation
