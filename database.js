@@ -444,17 +444,8 @@ const report = {
       revenueMap[key] = (revenueMap[key] || 0) + (Number(p.amount) || 0);
     }
 
-    // Cost from expense records
+    // Cost from invoice items only (cost_price per item)
     const costMap = {};
-    for (const r of data.records) {
-      const key = groupBy === 'monthly' ? r.date.slice(0, 7)
-                : groupBy === 'plate' ? (r.plate_number || 'Unknown')
-                : 'all';
-      if (!key || key === 'Unknown') continue;
-      costMap[key] = (costMap[key] || 0) + (r.amount || 0);
-    }
-
-    // Cost from invoice items (cost_price per item)
     for (const inv of data.invoices) {
       for (const item of (inv.items || [])) {
         if (!item.cost_price) continue;
