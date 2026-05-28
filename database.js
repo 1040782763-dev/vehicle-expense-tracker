@@ -145,6 +145,22 @@ const record = {
     return false;
   },
 
+  deduplicate() {
+    const seen = new Set();
+    const removed = [];
+    data.records = data.records.filter(r => {
+      const key = (r.date||'') + '|' + (r.description||'').toUpperCase() + '|' + (r.amount||0) + '|' + (r.plate_number||'');
+      if (seen.has(key)) { removed.push(r.id); return false; }
+      seen.add(key);
+      return true;
+    });
+    if (removed.length > 0) {
+      data.records.forEach((r, i) => { r.seq = i + 1; });
+      save();
+    }
+    return removed;
+  },
+
   getById(id) {
     return data.records.find(x => x.id === Number(id)) || null;
   }

@@ -195,6 +195,13 @@ app.delete('/api/records/:id', authRequired, (req, res) => {
   res.json({ ok: true });
 });
 
+// Deduplicate records by date+description+amount+plate_number
+app.post('/api/deduplicate', authRequired, (req, res) => {
+  const removed = record.deduplicate();
+  broadcastSSE('record_deleted', {});
+  res.json({ removed });
+});
+
 // ─── Import XLSX ──────────────────────────────────────────────
 app.post('/api/import', authRequired, (req, res) => {
   try {

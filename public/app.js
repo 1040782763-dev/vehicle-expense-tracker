@@ -1654,6 +1654,15 @@ async function loadSampleData() {
   } catch(e) { alert(e.message); }
 }
 
+async function deduplicateRecords() {
+  if (!confirm(lang === 'en' ? 'Remove duplicate records (same date+desc+amount+plate)?' : '删除重复记录（同日期+描述+金额+车牌）？')) return;
+  try {
+    const resp = await api('/api/deduplicate', { method: 'POST' });
+    alert((lang === 'en' ? 'Removed ' : '已删除 ') + resp.removed.length + (lang === 'en' ? ' duplicate records' : ' 条重复记录'));
+    loadRecords();
+  } catch(e) { alert(e.message); }
+}
+
 // ─── Clear All ────────────────────────────────────────────────
 async function clearAll() {
   if (!confirm(t('clearConfirm'))) return;
