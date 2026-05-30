@@ -181,7 +181,8 @@ const payment = {
     const p = { id: nextId(), plate_number: d.plate_number || '', status: d.status || 'unpaid',
                 amount: Number(d.amount) || 0, payment_date: d.payment_date || '',
                 in_date: d.in_date || '', out_date: d.out_date || '',
-                notes: d.notes || '', created_by: d.created_by || '',
+                order_no: d.order_no || '', notes: d.notes || '', customer: d.customer || '',
+                created_by: d.created_by || '',
                 created_at: new Date().toISOString(), updated_at: new Date().toISOString() };
     data.payments.push(p);
     save();
@@ -191,7 +192,7 @@ const payment = {
   update(id, d) {
     const p = data.payments.find(x => x.id === Number(id));
     if (!p) return null;
-    const fields = ['plate_number','status','amount','payment_date','in_date','out_date','notes'];
+    const fields = ['plate_number','status','amount','payment_date','in_date','out_date','order_no','customer','notes'];
     for (const f of fields) if (d[f] !== undefined) p[f] = d[f];
     p.updated_at = new Date().toISOString();
     save();

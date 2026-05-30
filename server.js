@@ -360,9 +360,40 @@ app.get('/api/invoices/next-order-no', authRequired, (req, res) => {
   res.json({ orderNo: invoice.nextOrderNo(date) });
 });
 
+// Helper: sync payment from invoice
+function syncPaymentFromInvoice(inv, username) {
+  const total = (inv.items || []).reduce((sum, item) => {
+    const qty = parseFloat(String(item.qty || '').replace(/,/g, '')) || 0;
+    const cost = parseFloat(String(item.cost || '').replace(/,/g, '')) || 0;
+    return sum + qty * cost;
+  }, 0);
+  // Find existing payment by order_no
+  const existing = payment.list({}).find(p => p.order_no === inv.orderNo);
+  if (existing) {
+    payment.update(existing.id, {
+      plate_number: inv.plate,
+      amount: total,
+      customer: inv.customer,
+      payment_date: inv.date,
+      status: existing.status // keep existing status
+    });
+  } else {
+    payment.create({
+      plate_number: inv.plate,
+      amount: total,
+      customer: inv.customer,
+      payment_date: inv.date,
+      order_no: inv.orderNo,
+      status: 'unpaid',
+      created_by: username
+    });
+  }
+}
+
 app.post('/api/invoices', authRequired, (req, res) => {
   const data = { ...req.body, created_by: req.user.username };
   const newInvoice = invoice.create(data);
+  syncPaymentFromInvoice(newInvoice, req.user.username);
   broadcastSSE('invoice_updated', {});
   res.status(201).json(newInvoice);
 });
@@ -376,6 +407,7 @@ app.get('/api/invoices/:id', authRequired, (req, res) => {
 app.put('/api/invoices/:id', authRequired, (req, res) => {
   invoice.update(req.params.id, req.body);
   const updated = invoice.getById(req.params.id);
+  syncPaymentFromInvoice(updated, req.user.username);
   broadcastSSE('invoice_updated', {});
   res.json(updated);
 });

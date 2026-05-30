@@ -1630,7 +1630,14 @@ async function handleRestoreFile(event) {
 
 // ─── Sample Data ──────────────────────────────────────────────
 async function loadSampleData() {
-  // Load sample data via the server
+  // Guard: only allow if < 5 records exist
+  try {
+    const existing = await api('/api/records?limit=5');
+    if (existing.length >= 5) {
+      alert(lang === 'en' ? 'Data already exists. Clear all first if you want to reload sample.' : '已有数据，若要重新加载示例请先清空。');
+      return;
+    }
+  } catch(e) { return; }
   const sample = [
     { date:'2026-05-26', description:'LED BULB AND TRANSPORT', qty:'', car_type:'VANGUARD', plate_number:'T951EAU', amount:90000, used_by:'' },
     { date:'2026-05-26', description:'CAR WASH', qty:'', car_type:'HILUX', plate_number:'T818DCU', amount:10000, used_by:'HAMIS' },

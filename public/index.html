@@ -80,7 +80,6 @@
       <button class="btn btn-success" onclick="showRecordModal()">+ <span data-en="New" data-zh="新增">New</span></button>
       <button class="btn btn-outline" onclick="importXLSX()" data-en="Import XLSX" data-zh="导入Excel">Import XLSX</button>
       <button class="btn btn-outline btn-sm" onclick="deduplicateRecords()" data-en="Dedup" data-zh="去重" style="color:var(--danger)">Dedup</button>
-      <button class="btn btn-outline" onclick="loadSampleData()" data-en="Load Sample" data-zh="加载示例">Load Sample</button>
       <button class="btn btn-outline" onclick="exportCSV()">CSV</button>
       <input type="file" id="xlsxFileInput" accept=".xlsx,.xls" style="display:none" onchange="handleXLSXFile(event)">
       <input type="file" id="restoreFileInput" accept=".json" style="display:none" onchange="handleRestoreFile(event)">
@@ -405,6 +404,6 @@
   </div>
 </div>
 
-<script src="/app.js?v=25"></script>
+<script src="/app.js?v=26"></script>
 </body>
 </html>
