@@ -122,6 +122,7 @@ const record = {
                 description: d.description || '', qty: d.qty || '',
                 car_type: d.car_type || '', plate_number: d.plate_number || '',
                 amount: Number(d.amount) || 0, used_by: d.used_by || '',
+                use_existing: !!d.use_existing,
                 created_by: d.created_by || '',
                 created_at: new Date().toISOString(), updated_at: new Date().toISOString() };
     data.records.push(r);
@@ -132,7 +133,7 @@ const record = {
   update(id, d) {
     const r = data.records.find(x => x.id === Number(id));
     if (!r) return null;
-    const fields = ['date','category','description','qty','car_type','plate_number','amount','used_by'];
+    const fields = ['date','category','description','qty','car_type','plate_number','amount','used_by','use_existing'];
     for (const f of fields) if (d[f] !== undefined) r[f] = d[f];
     r.updated_at = new Date().toISOString();
     save();
@@ -314,7 +315,7 @@ function dayBefore(d) {
 
 function dayExpense(d) {
   return data.records
-    .filter(r => r.date === d)
+    .filter(r => r.date === d && !r.use_existing)
     .reduce((s, r) => s + (r.amount || 0), 0);
 }
 

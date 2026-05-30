@@ -367,7 +367,7 @@ function renderRecordsData(data) {
       <td class="w-qty text-center">${esc(r.qty)}</td>
       <td class="w-type">${esc(r.car_type)}</td>
       <td class="w-plate">${esc(r.plate_number)}</td>
-      <td class="w-amt text-right">${formatNum(r.amount)}</td>
+      <td class="w-amt text-right">${r.use_existing ? '<span style="color:#999;font-size:10px" title="Existing inventory / 已有库存">📦 </span>' : ''}${formatNum(r.amount)}</td>
       <td class="w-guy">${esc(r.used_by)}</td>
       <td class="w-act text-center">
         <button class="btn-xs btn-edit" onclick="editRecord(${r.id})">${lang==='en'?'Edit':'编辑'}</button>
@@ -402,6 +402,7 @@ function showRecordModal() {
   document.getElementById('mPlate').value = '';
   document.getElementById('mAmount').value = '';
   document.getElementById('mGuy').value = '';
+  document.getElementById('mUseExisting').checked = false;
   document.getElementById('recordModal').classList.add('active');
   loadAutocomplete();
 }
@@ -452,6 +453,7 @@ async function editRecord(id) {
     document.getElementById('mPlate').value = r.plate_number;
     document.getElementById('mAmount').value = r.amount;
     document.getElementById('mGuy').value = r.used_by;
+    document.getElementById('mUseExisting').checked = !!r.use_existing;
     document.getElementById('recordModal').classList.add('active');
   } catch(e) { alert(e.message); }
 }
@@ -486,7 +488,8 @@ async function saveRecord() {
     if (!confirm(msg)) return;
   }
 
-  const body = { date, category, description: desc, qty, car_type: carType, plate_number: plate, amount, used_by: guy };
+  const useExisting = document.getElementById('mUseExisting').checked;
+  const body = { date, category, description: desc, qty, car_type: carType, plate_number: plate, amount, used_by: guy, use_existing: useExisting };
 
   try {
     if (editingRecordId) {
