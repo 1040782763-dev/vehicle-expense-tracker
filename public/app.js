@@ -179,6 +179,23 @@ function initApp() {
   loadDeposit();
   loadPartsMaster();
   connectSSE();
+
+  // Event delegation for inline row editing
+  document.getElementById('recordsBody').addEventListener('click', function(e) {
+    const tr = e.target.closest('.editable-row');
+    if (!tr) return;
+    if (e.target.closest('button')) return; // don't trigger on button clicks
+    const id = parseInt(tr.dataset.id);
+    if (id) inlineEditRecord(tr, id, e);
+  });
+  document.getElementById('paymentsBody').addEventListener('click', function(e) {
+    const tr = e.target.closest('.payment-row');
+    if (!tr) return;
+    if (e.target.closest('button')) return;
+    const id = parseInt(tr.dataset.id);
+    if (id) inlineEditPayment(tr, id, e);
+  });
+
   document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
   document.querySelector('.tab[data-tab="expenses"]').classList.add('active');
   document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
@@ -360,7 +377,7 @@ function renderRecordsData(data) {
       : (lang === 'en' ? 'Auto' : '汽车配件');
     const catClass = cat === 'office_supplies' ? 'cat-badge-office' : 'cat-badge-auto';
     return `
-    <tr data-id="${r.id}" onclick="inlineEditRecord(this, ${r.id}, event)" style="cursor:pointer">
+    <tr data-id="${r.id}" class="editable-row" style="cursor:pointer">
       <td class="w-seq text-center">${r.seq || ''}</td>
       <td class="w-date">${formatDate(r.date)}</td>
       <td class="w-cat text-center"><span class="cat-badge ${catClass}">${catLabel}</span></td>
@@ -609,19 +626,21 @@ async function renderPayments() {
   const data = await loadPayments();
   const tbody = document.getElementById('paymentsBody');
   const isAdmin = currentUser && currentUser.role === 'admin';
-  const colSpan = isAdmin ? 9 : 7;
+  const colSpan = isAdmin ? 10 : 7;
 
   const amtHeader = document.getElementById('payAmtHeader');
   const costHeader = document.getElementById('payCostHeader');
+  const vatHeader = document.getElementById('payVatHeader');
   if (amtHeader) amtHeader.style.display = isAdmin ? '' : 'none';
   if (costHeader) costHeader.style.display = isAdmin ? '' : 'none';
+  if (vatHeader) vatHeader.style.display = isAdmin ? '' : 'none';
 
   if (!data.length) {
     tbody.innerHTML = '<tr><td colspan="'+colSpan+'" class="no-data">' + t('noPayments') + '</td></tr>';
     return;
   }
   tbody.innerHTML = data.map(p => `
-    <tr data-id="${p.id}" onclick="inlineEditPayment(this, ${p.id}, event)" style="cursor:pointer">
+    <tr data-id="${p.id}" class="editable-row payment-row" style="cursor:pointer">
       <td class="w-plate">${esc(p.plate_number)}</td>
       <td class="w-status">
         <span class="badge ${p.status === 'paid' ? 'badge-paid' : 'badge-unpaid'}">${t(p.status)}</span>
@@ -631,6 +650,7 @@ async function renderPayments() {
       <td class="w-date">${p.payment_date ? formatDate(p.payment_date) : '-'}</td>
       ${isAdmin ? `<td class="w-amt text-right">${p.amount ? formatNum(p.amount) : '-'}</td>` : ''}
       ${isAdmin ? `<td class="w-amt text-right">${p.cost ? formatNum(p.cost) : '-'}</td>` : ''}
+      ${isAdmin ? `<td class="w-amt text-right">${p.vat_amount !== undefined && p.vat_amount !== null ? formatNum(p.vat_amount) : '-'}</td>` : ''}
       <td class="w-desc">${esc(p.notes)}</td>
       <td class="w-act text-center">
         <button class="btn-xs btn-del" onclick="event.stopPropagation();deletePayment(${p.id})">${lang==='en'?'Del':'删除'}</button>
@@ -672,8 +692,10 @@ async function inlineEditPayment(tr, id, evt) {
   // Col 6: cost (admin only)
   if (isAdmin) {
     cells[ci].innerHTML = `<input type="number" value="${p.cost||0}" style="width:85px">`; ci++;
+    // Col 7: vat_amount (admin only)
+    cells[ci].innerHTML = `<input type="number" value="${p.vat_amount||0}" style="width:80px">`; ci++;
   }
-  // Col 7: notes
+  // Col 7/8: notes
   cells[ci].innerHTML = `<input type="text" value="${escAttr(p.notes||'')}" style="width:100px">`; ci++;
   // Col 8: actions
   cells[ci].innerHTML = `
@@ -697,15 +719,16 @@ async function saveInlinePayment(id) {
   const in_date = cells[ci].querySelector('input').value; ci++;
   const out_date = cells[ci].querySelector('input').value; ci++;
   const payment_date = cells[ci].querySelector('input').value; ci++;
-  let amount, cost;
+  let amount, cost, vat_amount;
   if (isAdmin) {
     amount = parseInt(cells[ci].querySelector('input').value) || 0; ci++;
     cost = parseInt(cells[ci].querySelector('input').value) || 0; ci++;
+    vat_amount = parseInt(cells[ci].querySelector('input').value) || 0; ci++;
   }
   const notes = cells[ci].querySelector('input').value.trim();
   try {
     const body = { plate_number, status, in_date, out_date, payment_date, notes };
-    if (isAdmin) { body.amount = amount; body.cost = cost; }
+    if (isAdmin) { body.amount = amount; body.cost = cost; body.vat_amount = vat_amount; }
     await api('/api/payments/' + id, { method: 'PUT', body: JSON.stringify(body) });
     inlineEditingId = null;
     renderPayments();

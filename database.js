@@ -453,6 +453,12 @@ const report = {
   // Profit margin analysis: revenue (paid payments) vs cost (expenses)
   // VAT (18%) is included in payment revenue; net revenue = revenue / 1.18
   profit(groupBy = 'monthly') {
+    // Build order_no → invoice lookup for VAT reference
+    const invByOrderNo = {};
+    for (const inv of data.invoices) {
+      if (inv.orderNo) invByOrderNo[inv.orderNo] = inv;
+    }
+
     // Revenue from paid payments
     const revenueMap = {};
     const vatMap = {}; // VAT amount per key
@@ -464,10 +470,15 @@ const report = {
       if (!key || key === 'Unknown') continue;
       const amt = Number(p.amount) || 0;
       revenueMap[key] = (revenueMap[key] || 0) + amt;
-      // Use explicit vat_amount if set, otherwise calculate 18/118 (backward compat)
-      const vat = (p.vat_amount !== undefined && p.vat_amount !== null)
-        ? (Number(p.vat_amount) || 0)
-        : Math.round(amt * 18 / 118);
+      // Determine VAT: explicit vat_amount > linked invoice > fallback 18/118
+      let vat;
+      if (p.vat_amount !== undefined && p.vat_amount !== null) {
+        vat = Number(p.vat_amount) || 0;
+      } else if (p.order_no && invByOrderNo[p.order_no] && invByOrderNo[p.order_no].vat_amount !== undefined) {
+        vat = Number(invByOrderNo[p.order_no].vat_amount) || 0;
+      } else {
+        vat = Math.round(amt * 18 / 118);
+      }
       vatMap[key] = (vatMap[key] || 0) + vat;
     }
 
