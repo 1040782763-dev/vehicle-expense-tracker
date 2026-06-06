@@ -455,15 +455,20 @@ const report = {
   profit(groupBy = 'monthly') {
     // Revenue from paid payments
     const revenueMap = {};
-    const vatMap = {}; // actual VAT amount from payment
+    const vatMap = {}; // VAT amount per key
     for (const p of data.payments) {
       if (p.status !== 'paid' || !p.amount) continue;
       const key = groupBy === 'monthly' ? (p.payment_date || p.in_date || '').slice(0, 7)
                 : groupBy === 'plate' ? (p.plate_number || 'Unknown')
                 : 'all';
       if (!key || key === 'Unknown') continue;
-      revenueMap[key] = (revenueMap[key] || 0) + (Number(p.amount) || 0);
-      vatMap[key] = (vatMap[key] || 0) + (Number(p.vat_amount) || 0);
+      const amt = Number(p.amount) || 0;
+      revenueMap[key] = (revenueMap[key] || 0) + amt;
+      // Use explicit vat_amount if set, otherwise calculate 18/118 (backward compat)
+      const vat = (p.vat_amount !== undefined && p.vat_amount !== null)
+        ? (Number(p.vat_amount) || 0)
+        : Math.round(amt * 18 / 118);
+      vatMap[key] = (vatMap[key] || 0) + vat;
     }
 
     // Cost from invoice items (cost_price) + payment cost
