@@ -375,7 +375,7 @@ function syncPaymentFromInvoice(inv, username) {
       amount: total,
       customer: inv.customer,
       payment_date: inv.date,
-      vat_included: inv.vat_included,
+      vat_amount: inv.vat_amount || 0,
       status: existing.status
     });
   } else {
@@ -384,7 +384,7 @@ function syncPaymentFromInvoice(inv, username) {
       amount: total,
       customer: inv.customer,
       payment_date: inv.date,
-      vat_included: inv.vat_included,
+      vat_amount: inv.vat_amount || 0,
       order_no: inv.orderNo,
       status: 'unpaid',
       created_by: username

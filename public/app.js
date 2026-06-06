@@ -1105,6 +1105,11 @@ function calcInvTotals() {
 
   document.getElementById('invTotalAll').textContent = total.toLocaleString('en-US');
   document.getElementById('invEngAmount').textContent = numToEnglish(total);
+  // Auto-calc VAT amount: 18/118 of total (user can override)
+  const vatEl = document.getElementById('invVatAmount');
+  if (vatEl && vatEl.dataset.auto !== 'false') {
+    vatEl.value = Math.round(total * 18 / 118);
+  }
 }
 
 function getInvFormData() {
@@ -1125,7 +1130,7 @@ function getInvFormData() {
     customer: document.getElementById('invCustomer').value.trim(),
     date: document.getElementById('invDate').value,
     remark: document.getElementById('invRemark').value.trim(),
-    vat_included: document.getElementById('invVatIncluded').checked,
+    vat_amount: parseInt(document.getElementById('invVatAmount').value) || 0,
     items
   };
 }
@@ -1136,7 +1141,8 @@ function setInvFormData(data) {
   document.getElementById('invCustomer').value = data.customer || '';
   document.getElementById('invDate').value = data.date || '';
   document.getElementById('invRemark').value = data.remark || '';
-  document.getElementById('invVatIncluded').checked = data.vat_included !== false; // default true
+  document.getElementById('invVatAmount').value = data.vat_amount || 0;
+  document.getElementById('invVatAmount').dataset.auto = 'false'; // don't auto-override loaded value
   // Expand rows if invoice has more items than current
   if (data.items && data.items.length > INV_TOTAL_ROWS) {
     INV_TOTAL_ROWS = data.items.length;
@@ -1356,7 +1362,8 @@ function newInvoice() {
   invInited = true;
   document.getElementById('invRemark').value = '';
   document.getElementById('invDate').value = new Date().toISOString().split('T')[0];
-  document.getElementById('invVatIncluded').checked = true;
+  document.getElementById('invVatAmount').value = '0';
+  document.getElementById('invVatAmount').dataset.auto = 'true';
   refreshOrderNo();
   calcInvTotals();
   window.scrollTo(0, 0);

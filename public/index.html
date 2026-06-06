@@ -169,11 +169,8 @@
           <input type="date" id="invDate" onchange="onInvDateChange()" oninput="scheduleInvDraftSave()">
         </div>
         <div class="inv-field">
-          <label></label>
-          <label style="font-size:12px;font-weight:400;cursor:pointer;display:flex;align-items:center;gap:6px">
-            <input type="checkbox" id="invVatIncluded" checked onchange="scheduleInvDraftSave()" style="width:auto">
-            <span data-en="Includes 18% VAT" data-zh="含18%增值税">Includes 18% VAT</span>
-          </label>
+          <label data-en="VAT (TZS)" data-zh="增值税（坦先令）">VAT (TZS)</label>
+          <input type="number" id="invVatAmount" value="0" placeholder="0" oninput="this.dataset.auto='false';scheduleInvDraftSave()" style="flex:1">
         </div>
         <div class="inv-field inv-field-full">
           <label data-en="Remark (Car Type, Engine No.)" data-zh="备注（车型、发动机号等）">Remark (Car Type, Engine No.)</label>
@@ -413,6 +410,6 @@
   </div>
 </div>
 
-<script src="/app.js?v=29"></script>
+<script src="/app.js?v=30"></script>
 </body>
 </html>
