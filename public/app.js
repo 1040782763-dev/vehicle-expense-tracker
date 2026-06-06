@@ -734,7 +734,7 @@ async function translatePart(name, lang) {
 }
 
 // ─── Invoice ───────────────────────────────────────────────────
-const INV_TOTAL_ROWS = 14;
+let INV_TOTAL_ROWS = 14;
 let invCurrentId = null;
 let invInited = false;
 
@@ -889,6 +889,29 @@ function buildInvTable() {
     </tr>`;
   }
   tbody.innerHTML = html;
+  // Update add-row button visibility
+  document.getElementById('addRowBtn').style.display = '';
+}
+
+function addInvRows(n) {
+  n = n || 5;
+  const oldRows = INV_TOTAL_ROWS;
+  INV_TOTAL_ROWS += n;
+  const tbody = document.getElementById('invPartsTable');
+  let html = '';
+  for (let i = oldRows + 1; i <= INV_TOTAL_ROWS; i++) {
+    html += `<tr>
+      <td class="inv-row-num">${i}</td>
+      <td><input class="inv-inp-name" data-invrow="${i}" data-invfield="name" placeholder="" list="dlInvPart" autocomplete="off" oninput="onInvNameChange(${i});scheduleInvDraftSave()"></td>
+      <td><input class="inv-inp-unit" data-invrow="${i}" data-invfield="unit" placeholder="" oninput="scheduleInvDraftSave()"></td>
+      <td><input class="inv-inp-qty" data-invrow="${i}" data-invfield="qty" type="number" step="1" value="1" oninput="calcInvRow(${i});calcInvTotals();scheduleInvDraftSave()"></td>
+      <td><input class="inv-inp-cost" data-invrow="${i}" data-invfield="cost" type="number" step="0.01" placeholder="0" oninput="calcInvRow(${i});calcInvTotals();scheduleInvDraftSave()"></td>
+      <td><input class="inv-inp-amount" data-invrow="${i}" data-invfield="amount" type="text" placeholder="0" readonly></td>
+      <td><input class="inv-inp-costprice" data-invrow="${i}" data-invfield="cost_price" type="number" step="0.01" placeholder="" oninput="calcInvTotals();scheduleInvDraftSave()"></td>
+      <td><input class="inv-inp-remark" data-invrow="${i}" data-invfield="remark" placeholder="" oninput="scheduleInvDraftSave()"></td>
+    </tr>`;
+  }
+  tbody.insertAdjacentHTML('beforeend', html);
 }
 
 function onInvNameChange(row) {
@@ -972,6 +995,11 @@ function setInvFormData(data) {
   document.getElementById('invCustomer').value = data.customer || '';
   document.getElementById('invDate').value = data.date || '';
   document.getElementById('invRemark').value = data.remark || '';
+  // Expand rows if invoice has more items than current
+  if (data.items && data.items.length > INV_TOTAL_ROWS) {
+    INV_TOTAL_ROWS = data.items.length;
+    buildInvTable();
+  }
   // Clear all rows
   for (let i = 1; i <= INV_TOTAL_ROWS; i++) {
     ['name','unit','qty','cost','amount','cost_price','remark'].forEach(f => {
@@ -1006,12 +1034,6 @@ function lookupPlateCustomer(plate) {
     if (k.replace(/\s/g, '') === keyCompact) return v;
   }
   return null;
-}
-
-let autoFillTimer = null;
-function autoFillInvoiceDebounced() {
-  if (autoFillTimer) clearTimeout(autoFillTimer);
-  autoFillTimer = setTimeout(autoFillInvoice, 300);
 }
 
 async function autoFillInvoice() {
@@ -1187,15 +1209,9 @@ function newInvoice() {
   }
   invCurrentId = null;
   clearInvDraft();
-  invInited = true; // keep table, just clear inputs
-  for (let i = 1; i <= INV_TOTAL_ROWS; i++) {
-    ['name','unit','cost','amount','cost_price','remark'].forEach(f => {
-      document.querySelector('[data-invrow="'+i+'"][data-invfield="'+f+'"]').value = '';
-    });
-    document.querySelector('[data-invrow="'+i+'"][data-invfield="qty"]').value = '1';
-  }
-  document.getElementById('invPlate').value = '';
-  document.getElementById('invCustomer').value = '';
+  INV_TOTAL_ROWS = 14;
+  buildInvTable();
+  invInited = true;
   document.getElementById('invRemark').value = '';
   document.getElementById('invDate').value = new Date().toISOString().split('T')[0];
   refreshOrderNo();

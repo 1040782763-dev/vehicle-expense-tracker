@@ -171,4 +171,18 @@ td.w-amt{font-weight:600;font-variant-numeric:tabular-nums}
   .table-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
   th,td{font-size:11px;padding:6px 4px}
   .w-qty,.w-type,.w-guy{display:none}
+
+  /* Invoice mobile */
+  .inv-form-grid{grid-template-columns:1fr}
+  .inv-btn-row{grid-template-columns:1fr}
+  .inv-btn{padding:16px;font-size:16px}
+  .inv-total-value{font-size:18px}
+  .inv-form-grid .inv-field input,.inv-form-grid .inv-field textarea{font-size:16px;padding:12px 10px}
+  /* Hide less critical columns on mobile */
+  .inv-col-unit,.inv-col-costprice,.inv-col-remark{display:none}
+  .inv-table td:nth-child(3),.inv-table td:nth-child(7),.inv-table td:nth-child(8){display:none}
+  .inv-table{min-width:auto}
+  .inv-table td input{font-size:14px;padding:8px 2px}
+  .modal{padding:16px;max-width:98vw}
+  .form-row label{width:70px;font-size:12px}
 }

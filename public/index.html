@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Vehicle Expense Tracker / 车辆费用记录</title>
-<link rel="stylesheet" href="/style.css?v=20">
+<link rel="stylesheet" href="/style.css?v=21">
 </head>
 <body>
 
@@ -155,7 +155,7 @@
         </div>
         <div class="inv-field">
           <label data-en="Plate Number" data-zh="车牌号">Plate Number</label>
-          <input type="text" id="invPlate" placeholder="T 788 DUT" list="dlInvPlate" autocomplete="off" oninput="autoFillInvoiceDebounced(); scheduleInvDraftSave()">
+          <input type="text" id="invPlate" placeholder="T 788 DUT" list="dlInvPlate" autocomplete="off" onchange="autoFillInvoice()" oninput="scheduleInvDraftSave()">
           <datalist id="dlInvPlate"></datalist>
         </div>
         <div class="inv-field">
@@ -195,6 +195,7 @@
         </table>
       </div>
       <datalist id="dlInvPart"></datalist>
+      <div style="text-align:center;padding:8px 0" id="addRowBtn" hidden><button class="btn btn-outline btn-sm" onclick="addInvRows(5)" data-en="+ Add 5 Rows" data-zh="+ 添加5行">+ Add 5 Rows</button></div>
 
       <!-- Totals -->
       <div class="inv-totals">
@@ -404,6 +405,6 @@
   </div>
 </div>
 
-<script src="/app.js?v=26"></script>
+<script src="/app.js?v=27"></script>
 </body>
 </html>
