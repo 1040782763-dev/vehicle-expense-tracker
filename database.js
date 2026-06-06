@@ -179,7 +179,7 @@ const payment = {
 
   create(d) {
     const p = { id: nextId(), plate_number: d.plate_number || '', status: d.status || 'unpaid',
-                amount: Number(d.amount) || 0, payment_date: d.payment_date || '',
+                amount: Number(d.amount) || 0, cost: Number(d.cost) || 0, payment_date: d.payment_date || '',
                 in_date: d.in_date || '', out_date: d.out_date || '',
                 order_no: d.order_no || '', notes: d.notes || '', customer: d.customer || '',
                 created_by: d.created_by || '',
@@ -192,7 +192,7 @@ const payment = {
   update(id, d) {
     const p = data.payments.find(x => x.id === Number(id));
     if (!p) return null;
-    const fields = ['plate_number','status','amount','payment_date','in_date','out_date','order_no','customer','notes'];
+    const fields = ['plate_number','status','amount','cost','payment_date','in_date','out_date','order_no','customer','notes'];
     for (const f of fields) if (d[f] !== undefined) p[f] = d[f];
     p.updated_at = new Date().toISOString();
     save();
@@ -462,7 +462,7 @@ const report = {
       revenueMap[key] = (revenueMap[key] || 0) + (Number(p.amount) || 0);
     }
 
-    // Cost from invoice items only (cost_price per item)
+    // Cost from invoice items (cost_price) + payment cost
     const costMap = {};
     for (const inv of data.invoices) {
       for (const item of (inv.items || [])) {
@@ -475,6 +475,15 @@ const report = {
         if (!key || key === 'Unknown') continue;
         costMap[key] = (costMap[key] || 0) + cp;
       }
+    }
+    // Also include payment cost
+    for (const p of data.payments) {
+      if (!p.cost) continue;
+      const key = groupBy === 'monthly' ? (p.payment_date || p.in_date || '').slice(0, 7)
+                : groupBy === 'plate' ? (p.plate_number || 'Unknown')
+                : 'all';
+      if (!key || key === 'Unknown') continue;
+      costMap[key] = (costMap[key] || 0) + (Number(p.cost) || 0);
     }
 
     // Merge and calculate profit (with VAT deduction)
