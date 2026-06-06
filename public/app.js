@@ -1057,8 +1057,13 @@ function addInvRows(n) {
 function onInvNameChange(row) {
   const nameEl = document.querySelector('[data-invrow="'+row+'"][data-invfield="name"]');
   const name = (nameEl.value || '').toUpperCase().trim();
-  // VAT detection: auto-set QTY to 0.18
-  if (name === 'VAT') {
+  if (!name) {
+    // If item name is empty, clear all other fields in this row
+    ['unit','qty','cost','amount','cost_price','remark'].forEach(f => {
+      const el = document.querySelector('[data-invrow="'+row+'"][data-invfield="'+f+'"]');
+      if (el) el.value = f === 'qty' ? '1' : '';
+    });
+  } else if (name === 'VAT') {
     document.querySelector('[data-invrow="'+row+'"][data-invfield="qty"]').value = '0.18';
   }
   calcInvTotals();
