@@ -346,7 +346,6 @@ async function loadRecords() {
 function renderRecords() { loadRecords(); }
 
 function renderRecordsData(data) {
-  recordsCache = data;
   const tbody = document.getElementById('recordsBody');
   document.getElementById('recordCount').textContent = (lang === 'en' ? 'Records: ' : '记录数: ') + data.length;
   if (!data.length) {
@@ -360,7 +359,7 @@ function renderRecordsData(data) {
       : (lang === 'en' ? 'Auto' : '汽车配件');
     const catClass = cat === 'office_supplies' ? 'cat-badge-office' : 'cat-badge-auto';
     return `
-    <tr data-id="${r.id}" class="editable-row" style="cursor:pointer" onclick="inlineEditRecord(this,${r.id})">
+    <tr>
       <td class="w-seq text-center">${r.seq || ''}</td>
       <td class="w-date">${formatDate(r.date)}</td>
       <td class="w-cat text-center"><span class="cat-badge ${catClass}">${catLabel}</span></td>
@@ -371,84 +370,11 @@ function renderRecordsData(data) {
       <td class="w-amt text-right">${r.use_existing ? '<span style="color:#999;font-size:10px" title="Existing inventory / 已有库存">📦 </span>' : ''}${formatNum(r.amount)}</td>
       <td class="w-guy">${esc(r.used_by)}</td>
       <td class="w-act text-center">
-        <button class="btn-xs btn-del" onclick="event.stopPropagation();deleteRecord(${r.id})">${lang==='en'?'Del':'删除'}</button>
+        <button class="btn-xs btn-edit" onclick="editRecord(${r.id})">${lang==='en'?'Edit':'编辑'}</button>
+        <button class="btn-xs btn-del" onclick="deleteRecord(${r.id})">${lang==='en'?'Del':'删除'}</button>
       </td>
     </tr>
   `}).join('');
-}
-
-// Inline edit for records
-let inlineEditingId = null;
-let recordsCache = []; // for inline edit lookup
-async function inlineEditRecord(tr, id, evt) {
-  if (evt) evt.stopPropagation();
-  if (inlineEditingId === id) return;
-  if (inlineEditingId) cancelInlineEdit();
-  inlineEditingId = id;
-
-  // Get record data from cache or API
-  let r = getRecordById(id);
-  if (!r) {
-    try {
-      const data = await api('/api/records?limit=500');
-      recordsCache = data;
-      r = data.find(x => x.id === id);
-    } catch(e) { /* fall through */ }
-  }
-  if (!r) { cancelInlineEdit(); return; }
-
-  // Col 1 (date): date input
-  cells[1].innerHTML = `<input type="date" value="${r.date}" style="width:90px">`;
-  // Col 2 (category): select
-  const catVal = r.category || 'auto_parts';
-  cells[2].innerHTML = `<select style="width:80px;font-size:12px">
-    <option value="auto_parts" ${catVal==='auto_parts'?'selected':''}>Auto Parts</option>
-    <option value="office_supplies" ${catVal==='office_supplies'?'selected':''}>Office</option>
-  </select>`;
-  // Col 3 (description): text
-  cells[3].innerHTML = `<input type="text" value="${escAttr(r.description)}" style="width:120px">`;
-  // Col 4 (qty): text
-  cells[4].innerHTML = `<input type="text" value="${escAttr(r.qty||'')}" style="width:50px">`;
-  // Col 5 (car_type): text
-  cells[5].innerHTML = `<input type="text" value="${escAttr(r.car_type)}" style="width:90px">`;
-  // Col 6 (plate): text
-  cells[6].innerHTML = `<input type="text" value="${escAttr(r.plate_number)}" style="width:100px">`;
-  // Col 7 (amount): number
-  cells[7].innerHTML = `<input type="number" value="${r.amount||0}" style="width:85px">`;
-  // Col 8 (used_by): text
-  cells[8].innerHTML = `<input type="text" value="${escAttr(r.used_by)}" style="width:70px">`;
-  // Col 9 (actions): save/cancel
-  cells[9].innerHTML = `
-    <button class="btn-xs" style="background:var(--success);color:#fff" onclick="saveInlineRecord(${id})">✓</button>
-    <button class="btn-xs" style="background:var(--danger);color:#fff" onclick="event.stopPropagation();cancelInlineEdit()">✕</button>`;
-}
-
-function getRecordById(id) {
-  return recordsCache.find(r => r.id === id) || null;
-}
-
-function cancelInlineEdit() {
-  inlineEditingId = null;
-  loadRecords();
-}
-
-async function saveInlineRecord(id) {
-  const tr = document.querySelector('#recordsBody tr[data-id="'+id+'"]');
-  if (!tr) return;
-  const cells = tr.children;
-  const date = cells[1].querySelector('input').value;
-  const category = cells[2].querySelector('select').value;
-  const description = cells[3].querySelector('input').value.trim();
-  const qty = cells[4].querySelector('input').value.trim();
-  const car_type = cells[5].querySelector('input').value.trim();
-  const plate_number = cells[6].querySelector('input').value.trim();
-  const amount = parseInt(cells[7].querySelector('input').value) || 0;
-  const used_by = cells[8].querySelector('input').value.trim();
-  try {
-    await api('/api/records/' + id, { method: 'PUT', body: JSON.stringify({ date, category, description, qty, car_type, plate_number, amount, used_by }) });
-    inlineEditingId = null;
-    loadRecords();
-  } catch(e) { alert(e.message); }
 }
 
 function onCategoryChange() {
@@ -629,7 +555,7 @@ async function renderPayments() {
     return;
   }
   tbody.innerHTML = data.map(p => `
-    <tr data-id="${p.id}" class="editable-row payment-row" style="cursor:pointer" onclick="inlineEditPayment(this,${p.id})">
+    <tr>
       <td class="w-plate">${esc(p.plate_number)}</td>
       <td class="w-status">
         <span class="badge ${p.status === 'paid' ? 'badge-paid' : 'badge-unpaid'}">${t(p.status)}</span>
@@ -642,86 +568,11 @@ async function renderPayments() {
       ${isAdmin ? `<td class="w-amt text-right">${p.vat_amount !== undefined && p.vat_amount !== null ? formatNum(p.vat_amount) : '-'}</td>` : ''}
       <td class="w-desc">${esc(p.notes)}</td>
       <td class="w-act text-center">
-        <button class="btn-xs btn-del" onclick="event.stopPropagation();deletePayment(${p.id})">${lang==='en'?'Del':'删除'}</button>
+        <button class="btn-xs btn-edit" onclick="editPayment(${p.id})">${lang==='en'?'Edit':'编辑'}</button>
+        <button class="btn-xs btn-del" onclick="deletePayment(${p.id})">${lang==='en'?'Del':'删除'}</button>
       </td>
     </tr>
   `).join('');
-}
-
-// Inline edit for payments
-async function inlineEditPayment(tr, id) {
-  if (window.event) window.event.stopPropagation();
-  if (inlineEditingId === id) return;
-  if (inlineEditingId) cancelInlineEdit();
-  inlineEditingId = id;
-
-  const isAdmin = currentUser && currentUser.role === 'admin';
-  // Re-fetch payment data
-  const data = await loadPayments();
-  const p = data.find(x => x.id === id);
-  if (!p) { renderPayments(); return; }
-
-  const cells = tr.children;
-  let ci = 0; // cell index
-  // Col 0: plate
-  cells[ci].innerHTML = `<input type="text" value="${escAttr(p.plate_number)}" style="width:100px">`; ci++;
-  // Col 1: status
-  cells[ci].innerHTML = `<select style="width:70px;font-size:12px">
-    <option value="paid" ${p.status==='paid'?'selected':''}>Paid</option>
-    <option value="unpaid" ${p.status==='unpaid'?'selected':''}>Unpaid</option>
-  </select>`; ci++;
-  // Col 2-4: dates
-  ['in_date','out_date','payment_date'].forEach(f => {
-    cells[ci].innerHTML = `<input type="date" value="${p[f]||''}" style="width:90px">`; ci++;
-  });
-  // Col 5: amount (admin only)
-  if (isAdmin) {
-    cells[ci].innerHTML = `<input type="number" value="${p.amount||0}" style="width:85px">`; ci++;
-  }
-  // Col 6: cost (admin only)
-  if (isAdmin) {
-    cells[ci].innerHTML = `<input type="number" value="${p.cost||0}" style="width:85px">`; ci++;
-    // Col 7: vat_amount (admin only)
-    cells[ci].innerHTML = `<input type="number" value="${p.vat_amount||0}" style="width:80px">`; ci++;
-  }
-  // Col 7/8: notes
-  cells[ci].innerHTML = `<input type="text" value="${escAttr(p.notes||'')}" style="width:100px">`; ci++;
-  // Col 8: actions
-  cells[ci].innerHTML = `
-    <button class="btn-xs" style="background:var(--success);color:#fff" onclick="saveInlinePayment(${id})">✓</button>
-    <button class="btn-xs" style="background:var(--danger);color:#fff" onclick="event.stopPropagation();cancelInlineEditPayment()">✕</button>`;
-}
-
-function cancelInlineEditPayment() {
-  inlineEditingId = null;
-  renderPayments();
-}
-
-async function saveInlinePayment(id) {
-  const tr = document.querySelector('#paymentsBody tr[data-id="'+id+'"]');
-  if (!tr) return;
-  const isAdmin = currentUser && currentUser.role === 'admin';
-  const cells = tr.children;
-  let ci = 0;
-  const plate_number = cells[ci].querySelector('input').value.trim(); ci++;
-  const status = cells[ci].querySelector('select').value; ci++;
-  const in_date = cells[ci].querySelector('input').value; ci++;
-  const out_date = cells[ci].querySelector('input').value; ci++;
-  const payment_date = cells[ci].querySelector('input').value; ci++;
-  let amount, cost, vat_amount;
-  if (isAdmin) {
-    amount = parseInt(cells[ci].querySelector('input').value) || 0; ci++;
-    cost = parseInt(cells[ci].querySelector('input').value) || 0; ci++;
-    vat_amount = parseInt(cells[ci].querySelector('input').value) || 0; ci++;
-  }
-  const notes = cells[ci].querySelector('input').value.trim();
-  try {
-    const body = { plate_number, status, in_date, out_date, payment_date, notes };
-    if (isAdmin) { body.amount = amount; body.cost = cost; body.vat_amount = vat_amount; }
-    await api('/api/payments/' + id, { method: 'PUT', body: JSON.stringify(body) });
-    inlineEditingId = null;
-    renderPayments();
-  } catch(e) { alert(e.message); }
 }
 
 async function syncPayments() {
