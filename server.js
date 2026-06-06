@@ -375,7 +375,8 @@ function syncPaymentFromInvoice(inv, username) {
       amount: total,
       customer: inv.customer,
       payment_date: inv.date,
-      status: existing.status // keep existing status
+      vat_included: inv.vat_included,
+      status: existing.status
     });
   } else {
     payment.create({
@@ -383,6 +384,7 @@ function syncPaymentFromInvoice(inv, username) {
       amount: total,
       customer: inv.customer,
       payment_date: inv.date,
+      vat_included: inv.vat_included,
       order_no: inv.orderNo,
       status: 'unpaid',
       created_by: username

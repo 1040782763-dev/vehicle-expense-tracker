@@ -181,6 +181,7 @@ const payment = {
     const p = { id: nextId(), plate_number: d.plate_number || '', status: d.status || 'unpaid',
                 amount: Number(d.amount) || 0, cost: Number(d.cost) || 0, payment_date: d.payment_date || '',
                 in_date: d.in_date || '', out_date: d.out_date || '',
+                vat_included: d.vat_included !== false,
                 order_no: d.order_no || '', notes: d.notes || '', customer: d.customer || '',
                 created_by: d.created_by || '',
                 created_at: new Date().toISOString(), updated_at: new Date().toISOString() };
@@ -192,7 +193,7 @@ const payment = {
   update(id, d) {
     const p = data.payments.find(x => x.id === Number(id));
     if (!p) return null;
-    const fields = ['plate_number','status','amount','cost','payment_date','in_date','out_date','order_no','customer','notes'];
+    const fields = ['plate_number','status','amount','cost','payment_date','in_date','out_date','vat_included','order_no','customer','notes'];
     for (const f of fields) if (d[f] !== undefined) p[f] = d[f];
     p.updated_at = new Date().toISOString();
     save();
@@ -253,6 +254,7 @@ const invoice = {
       customer: d.customer || '',
       date: d.date || '',
       remark: d.remark || '',
+      vat_included: d.vat_included !== false,
       items: (d.items || []).map((item, i) => ({
         seq: i + 1,
         name: item.name || '',
@@ -275,7 +277,7 @@ const invoice = {
   update(id, d) {
     const inv = data.invoices.find(x => x.id === Number(id));
     if (!inv) return null;
-    const fields = ['plate', 'customer', 'date', 'remark'];
+    const fields = ['plate', 'customer', 'date', 'remark', 'vat_included'];
     for (const f of fields) if (d[f] !== undefined) inv[f] = d[f];
     if (d.items) {
       inv.items = d.items.map((item, i) => ({
@@ -451,8 +453,9 @@ const report = {
   // Profit margin analysis: revenue (paid payments) vs cost (expenses)
   // VAT (18%) is included in payment revenue; net revenue = revenue / 1.18
   profit(groupBy = 'monthly') {
-    // Revenue from paid payments (gross, includes 18% VAT)
-    const revenueMap = {};
+    // Revenue from paid payments — track gross + VAT-included amount separately
+    const revenueMap = {};    // {key: grossAmount}
+    const vatIncludedMap = {}; // {key: amount that includes VAT}
     for (const p of data.payments) {
       if (p.status !== 'paid' || !p.amount) continue;
       const key = groupBy === 'monthly' ? (p.payment_date || p.in_date || '').slice(0, 7)
@@ -460,6 +463,9 @@ const report = {
                 : 'all';
       if (!key || key === 'Unknown') continue;
       revenueMap[key] = (revenueMap[key] || 0) + (Number(p.amount) || 0);
+      if (p.vat_included !== false) {
+        vatIncludedMap[key] = (vatIncludedMap[key] || 0) + (Number(p.amount) || 0);
+      }
     }
 
     // Cost from invoice items (cost_price) + payment cost
@@ -476,7 +482,6 @@ const report = {
         costMap[key] = (costMap[key] || 0) + cp;
       }
     }
-    // Also include payment cost
     for (const p of data.payments) {
       if (!p.cost) continue;
       const key = groupBy === 'monthly' ? (p.payment_date || p.in_date || '').slice(0, 7)
@@ -486,12 +491,13 @@ const report = {
       costMap[key] = (costMap[key] || 0) + (Number(p.cost) || 0);
     }
 
-    // Merge and calculate profit (with VAT deduction)
+    // Merge and calculate profit (VAT only for vat_included payments)
     const allKeys = [...new Set([...Object.keys(revenueMap), ...Object.keys(costMap)])].sort();
     const result = allKeys.map(key => {
       const grossRevenue = revenueMap[key] || 0;
       const cost = costMap[key] || 0;
-      const vat = Math.round(grossRevenue * 18 / 118); // 18% VAT included in gross
+      const vatAmount = vatIncludedMap[key] || 0;
+      const vat = Math.round(vatAmount * 18 / 118); // 18% VAT only on vat_included portion
       const netRevenue = grossRevenue - vat;
       const profit = netRevenue - cost;
       const margin = netRevenue > 0 ? ((profit / netRevenue) * 100).toFixed(1) : '0.0';

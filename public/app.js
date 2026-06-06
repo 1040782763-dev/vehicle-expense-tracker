@@ -1125,6 +1125,7 @@ function getInvFormData() {
     customer: document.getElementById('invCustomer').value.trim(),
     date: document.getElementById('invDate').value,
     remark: document.getElementById('invRemark').value.trim(),
+    vat_included: document.getElementById('invVatIncluded').checked,
     items
   };
 }
@@ -1135,6 +1136,7 @@ function setInvFormData(data) {
   document.getElementById('invCustomer').value = data.customer || '';
   document.getElementById('invDate').value = data.date || '';
   document.getElementById('invRemark').value = data.remark || '';
+  document.getElementById('invVatIncluded').checked = data.vat_included !== false; // default true
   // Expand rows if invoice has more items than current
   if (data.items && data.items.length > INV_TOTAL_ROWS) {
     INV_TOTAL_ROWS = data.items.length;
@@ -1354,6 +1356,7 @@ function newInvoice() {
   invInited = true;
   document.getElementById('invRemark').value = '';
   document.getElementById('invDate').value = new Date().toISOString().split('T')[0];
+  document.getElementById('invVatIncluded').checked = true;
   refreshOrderNo();
   calcInvTotals();
   window.scrollTo(0, 0);
