@@ -179,23 +179,6 @@ function initApp() {
   loadDeposit();
   loadPartsMaster();
   connectSSE();
-
-  // Event delegation for inline row editing
-  document.getElementById('recordsBody').addEventListener('click', function(e) {
-    const tr = e.target.closest('.editable-row');
-    if (!tr) return;
-    if (e.target.closest('button')) return; // don't trigger on button clicks
-    const id = parseInt(tr.dataset.id);
-    if (id) inlineEditRecord(tr, id, e);
-  });
-  document.getElementById('paymentsBody').addEventListener('click', function(e) {
-    const tr = e.target.closest('.payment-row');
-    if (!tr) return;
-    if (e.target.closest('button')) return;
-    const id = parseInt(tr.dataset.id);
-    if (id) inlineEditPayment(tr, id, e);
-  });
-
   document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
   document.querySelector('.tab[data-tab="expenses"]').classList.add('active');
   document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
@@ -377,7 +360,7 @@ function renderRecordsData(data) {
       : (lang === 'en' ? 'Auto' : '汽车配件');
     const catClass = cat === 'office_supplies' ? 'cat-badge-office' : 'cat-badge-auto';
     return `
-    <tr data-id="${r.id}" class="editable-row" style="cursor:pointer">
+    <tr data-id="${r.id}" class="editable-row" style="cursor:pointer" onclick="inlineEditRecord(this,${r.id})">
       <td class="w-seq text-center">${r.seq || ''}</td>
       <td class="w-date">${formatDate(r.date)}</td>
       <td class="w-cat text-center"><span class="cat-badge ${catClass}">${catLabel}</span></td>
@@ -397,16 +380,22 @@ function renderRecordsData(data) {
 // Inline edit for records
 let inlineEditingId = null;
 let recordsCache = []; // for inline edit lookup
-function inlineEditRecord(tr, id, evt) {
+async function inlineEditRecord(tr, id, evt) {
   if (evt) evt.stopPropagation();
-  if (inlineEditingId === id) return; // already editing
-  // Save any current inline edit first
+  if (inlineEditingId === id) return;
   if (inlineEditingId) cancelInlineEdit();
   inlineEditingId = id;
 
-  const cells = tr.children;
-  const r = getRecordById(id); // sync helper
-  if (!r) { loadRecords(); return; }
+  // Get record data from cache or API
+  let r = getRecordById(id);
+  if (!r) {
+    try {
+      const data = await api('/api/records?limit=500');
+      recordsCache = data;
+      r = data.find(x => x.id === id);
+    } catch(e) { /* fall through */ }
+  }
+  if (!r) { cancelInlineEdit(); return; }
 
   // Col 1 (date): date input
   cells[1].innerHTML = `<input type="date" value="${r.date}" style="width:90px">`;
@@ -640,7 +629,7 @@ async function renderPayments() {
     return;
   }
   tbody.innerHTML = data.map(p => `
-    <tr data-id="${p.id}" class="editable-row payment-row" style="cursor:pointer">
+    <tr data-id="${p.id}" class="editable-row payment-row" style="cursor:pointer" onclick="inlineEditPayment(this,${p.id})">
       <td class="w-plate">${esc(p.plate_number)}</td>
       <td class="w-status">
         <span class="badge ${p.status === 'paid' ? 'badge-paid' : 'badge-unpaid'}">${t(p.status)}</span>
@@ -660,8 +649,8 @@ async function renderPayments() {
 }
 
 // Inline edit for payments
-async function inlineEditPayment(tr, id, evt) {
-  if (evt) evt.stopPropagation();
+async function inlineEditPayment(tr, id) {
+  if (window.event) window.event.stopPropagation();
   if (inlineEditingId === id) return;
   if (inlineEditingId) cancelInlineEdit();
   inlineEditingId = id;
