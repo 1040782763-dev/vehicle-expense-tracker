@@ -737,7 +737,7 @@ async function translatePart(name, lang) {
 }
 
 // ─── Invoice ───────────────────────────────────────────────────
-let INV_TOTAL_ROWS = 14;
+let INV_TOTAL_ROWS = 25;
 let invCurrentId = null;
 let invInited = false;
 
@@ -892,8 +892,6 @@ function buildInvTable() {
     </tr>`;
   }
   tbody.innerHTML = html;
-  // Update add-row button visibility
-  document.getElementById('addRowBtn').style.display = '';
 }
 
 function addInvRows(n) {
@@ -1225,7 +1223,7 @@ function newInvoice() {
   }
   invCurrentId = null;
   clearInvDraft();
-  INV_TOTAL_ROWS = 14;
+  INV_TOTAL_ROWS = 25;
   buildInvTable();
   invInited = true;
   document.getElementById('invRemark').value = '';
