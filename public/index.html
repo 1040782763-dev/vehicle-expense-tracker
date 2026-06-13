@@ -201,7 +201,10 @@
         </table>
       </div>
       <datalist id="dlInvPart"></datalist>
-      <div style="text-align:center;padding:8px 0" id="addRowBtn"><button class="btn btn-outline btn-sm" onclick="addInvRows(5)" data-en="+ Add 5 Rows" data-zh="+ 添加5行">+ Add 5 Rows</button></div>
+      <div style="text-align:center;padding:8px 0;display:flex;gap:8px;justify-content:center" id="addRowBtn">
+    <button class="btn btn-outline btn-sm" onclick="addInvRows(5)" data-en="+ Add 5 Rows" data-zh="+ 添加5行">+ Add 5 Rows</button>
+    <button class="btn btn-outline btn-sm" onclick="clearAllInvItems()" style="color:var(--danger)" data-en="Clear All Items" data-zh="清空所有项目">Clear All Items</button>
+  </div>
 
       <!-- Totals -->
       <div class="inv-totals">
@@ -411,6 +414,6 @@
   </div>
 </div>
 
-<script src="/app.js?v=32"></script>
+<script src="/app.js?v=33"></script>
 </body>
 </html>

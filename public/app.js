@@ -915,6 +915,18 @@ function addInvRows(n) {
   tbody.insertAdjacentHTML('beforeend', html);
 }
 
+function clearAllInvItems() {
+  if (!confirm(lang === 'en' ? 'Clear all items?' : '确定清空所有维修项目？')) return;
+  for (let i = 1; i <= INV_TOTAL_ROWS; i++) {
+    ['name','unit','qty','cost','amount','cost_price','remark'].forEach(f => {
+      const el = document.querySelector('[data-invrow="'+i+'"][data-invfield="'+f+'"]');
+      if (el) el.value = f === 'qty' ? '1' : '';
+    });
+  }
+  calcInvTotals();
+  scheduleInvDraftSave();
+}
+
 function onInvNameChange(row) {
   const nameEl = document.querySelector('[data-invrow="'+row+'"][data-invfield="name"]');
   const name = (nameEl.value || '').toUpperCase().trim();
