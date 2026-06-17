@@ -280,15 +280,21 @@ function esc(v) { if (!v && v !== 0) return ''; return String(v).replace(/&/g,'&
 // ─── Deposit ──────────────────────────────────────────────────
 async function loadDeposit() {
   try {
-    const fDateTo = document.getElementById('fDateTo').value;
-    const fDateFrom = document.getElementById('fDateFrom').value;
-    const date = fDateTo || fDateFrom || new Date().toISOString().slice(0,10);
+    const sd = document.getElementById('summaryDate');
+    if (sd && !sd.value) sd.value = new Date().toISOString().slice(0,10);
+    const date = sd ? sd.value : new Date().toISOString().slice(0,10);
     const data = await api('/api/deposit?date=' + date);
     document.getElementById('sumDeposit').textContent = formatNum(data.amount);
     document.getElementById('sumExpense').textContent = formatNum(data.expense);
     document.getElementById('sumBalance').textContent = formatNum(data.balance);
     const balEl = document.getElementById('sumBalance');
     balEl.style.color = data.balance >= 0 ? 'var(--blue)' : 'var(--danger)';
+    // Also show date in card labels
+    const dObj = new Date(date + 'T00:00:00');
+    const dateStr = dObj.getDate() + '/' + (dObj.getMonth()+1);
+    document.querySelector('.card-green .card-label').textContent = (lang==='en'?'Deposit ':'预存款 ') + dateStr;
+    document.querySelector('.card-orange .card-label').textContent = (lang==='en'?'Expense ':'支出 ') + dateStr;
+    document.querySelector('.card-blue .card-label').textContent = (lang==='en'?'Balance ':'余额 ') + dateStr;
   } catch(e) { /* ignore */ }
 }
 
@@ -296,9 +302,8 @@ function showDepositModal() {
   document.getElementById('dCurrent').value = formatNum(document.getElementById('sumDeposit').textContent.replace(/,/g,''));
   document.getElementById('dOp').value = 'set';
   document.getElementById('dAmount').value = '';
-  const fDateTo = document.getElementById('fDateTo').value;
-  const fDateFrom = document.getElementById('fDateFrom').value;
-  document.getElementById('dDate').value = fDateTo || fDateFrom || new Date().toISOString().slice(0,10);
+  const sd = document.getElementById('summaryDate');
+  document.getElementById('dDate').value = (sd && sd.value) ? sd.value : new Date().toISOString().slice(0,10);
   document.getElementById('depositModal').classList.add('active');
   applyLang();
 }
