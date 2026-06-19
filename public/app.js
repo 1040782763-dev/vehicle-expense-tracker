@@ -573,6 +573,14 @@ async function renderPayments() {
     return;
   }
 
+  // Ensure plateCustomersMap is loaded
+  if (!plateCustomersMap) {
+    try {
+      const autoData = await api('/api/autocomplete');
+      plateCustomersMap = autoData.plate_customers || {};
+    } catch(e) { plateCustomersMap = {}; }
+  }
+
   // Build plate → car_type from expense records (most recent per plate)
   const carTypeMap = {};
   // Build plate → customer from invoices (most recent per plate)
@@ -596,8 +604,10 @@ async function renderPayments() {
 
   tbody.innerHTML = data.map(p => {
     const plateKey = (p.plate_number || '').toUpperCase().replace(/\s/g,'');
-    const carType = p.car_type || carTypeMap[plateKey] || '';
-    const customer = p.customer || invCustomerMap[plateKey] || '';
+    // Fallback: stored → records → plate DB model → ''
+    const dbInfo = plateCustomersMap ? (plateCustomersMap[plateKey] || null) : null;
+    const carType = p.car_type || carTypeMap[plateKey] || (dbInfo ? dbInfo.model : '') || '';
+    const customer = p.customer || invCustomerMap[plateKey] || (dbInfo ? dbInfo.customer : '') || '';
     return `
     <tr>
       <td class="w-plate" style="color:var(--primary);cursor:pointer;text-decoration:underline" onclick="event.stopPropagation();showPlateHistory('${escAttr(p.plate_number)}')">${esc(p.plate_number)}</td>
