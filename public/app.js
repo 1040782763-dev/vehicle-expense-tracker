@@ -276,6 +276,7 @@ function parseDisplayDate(str) {
 function formatNum(n) { return Number(n || 0).toLocaleString('en-US'); }
 function parseNum(v) { return parseFloat(String(v||'').replace(/,/g,'')) || 0; }
 function esc(v) { if (!v && v !== 0) return ''; return String(v).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+function escAttr(v) { return esc(v).replace(/\\/g,'\\\\').replace(/'/g,"\\'"); }
 
 // ─── Deposit ──────────────────────────────────────────────────
 async function loadDeposit() {
