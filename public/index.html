@@ -127,6 +127,8 @@
         <thead>
           <tr>
             <th class="w-plate" data-en="Plate No." data-zh="车牌号">Plate No.</th>
+            <th class="w-type" data-en="Car Type" data-zh="车型">Car Type</th>
+            <th class="w-guy" data-en="Customer" data-zh="客户">Customer</th>
             <th class="w-status" data-en="Status" data-zh="状态">Status</th>
             <th class="w-date" data-en="In Date" data-zh="进场日期">In Date</th>
             <th class="w-date" data-en="Out Date" data-zh="出厂日期">Out Date</th>
@@ -365,8 +367,10 @@
 <div class="modal-overlay" id="paymentModal">
   <div class="modal">
     <h2 id="paymentModalTitle">New Payment</h2>
-    <div class="form-row"><label>Plate No.</label><input type="text" id="mPPlate" list="dlPPlate" autocomplete="off"></div>
+    <div class="form-row"><label>Plate No.</label><input type="text" id="mPPlate" list="dlPPlate" autocomplete="off" onchange="autoFillPaymentInfo()"></div>
     <datalist id="dlPPlate"></datalist>
+    <div class="form-row"><label data-en="Car Type" data-zh="车型">Car Type</label><input type="text" id="mPCarType"></div>
+    <div class="form-row"><label data-en="Customer" data-zh="客户">Customer</label><input type="text" id="mPCustomer"></div>
     <div class="form-row">
       <label>Status</label>
       <select id="mPStatus"><option value="paid">Paid</option><option value="unpaid">Unpaid</option></select>
@@ -430,6 +434,6 @@
   </div>
 </div>
 
-<script src="/app.js?v=36"></script>
+<script src="/app.js?v=37"></script>
 </body>
 </html>

@@ -547,7 +547,7 @@ async function renderPayments() {
   const data = await loadPayments();
   const tbody = document.getElementById('paymentsBody');
   const isAdmin = currentUser && currentUser.role === 'admin';
-  const colSpan = isAdmin ? 10 : 7;
+  const colSpan = isAdmin ? 12 : 9;
 
   const amtHeader = document.getElementById('payAmtHeader');
   const costHeader = document.getElementById('payCostHeader');
@@ -560,9 +560,28 @@ async function renderPayments() {
     tbody.innerHTML = '<tr><td colspan="'+colSpan+'" class="no-data">' + t('noPayments') + '</td></tr>';
     return;
   }
-  tbody.innerHTML = data.map(p => `
+  // Build customer lookup map from plateCustomersMap
+  const customerMap = {};
+  if (plateCustomersMap) {
+    for (const [plate, info] of Object.entries(plateCustomersMap)) {
+      customerMap[plate.replace(/\s/g,'').toUpperCase()] = info;
+    }
+  }
+  const lookupCustomer = (plate) => {
+    if (!plate) return { customer: '', model: '' };
+    const key = plate.replace(/\s/g,'').toUpperCase();
+    return customerMap[key] || { customer: '', model: '' };
+  };
+
+  tbody.innerHTML = data.map(p => {
+    const cInfo = lookupCustomer(p.plate_number);
+    const carType = p.car_type || cInfo.model || '';
+    const customer = p.customer || cInfo.customer || '';
+    return `
     <tr>
       <td class="w-plate" style="color:var(--primary);cursor:pointer;text-decoration:underline" onclick="event.stopPropagation();showPlateHistory('${escAttr(p.plate_number)}')">${esc(p.plate_number)}</td>
+      <td class="w-type">${esc(carType)}</td>
+      <td class="w-guy">${esc(customer)}</td>
       <td class="w-status">
         <span class="badge ${p.status === 'paid' ? 'badge-paid' : 'badge-unpaid'}">${t(p.status)}</span>
       </td>
@@ -578,7 +597,7 @@ async function renderPayments() {
         <button class="btn-xs btn-del" onclick="deletePayment(${p.id})">${lang==='en'?'Del':'删除'}</button>
       </td>
     </tr>
-  `).join('');
+  `}).join('');
 }
 
 async function syncPayments() {
@@ -598,6 +617,8 @@ async function showPaymentModal() {
   document.getElementById('paymentModalTitle').textContent = t('newPayment');
   document.getElementById('btnSavePayment').textContent = t('save');
   document.getElementById('mPPlate').value = '';
+  document.getElementById('mPCarType').value = '';
+  document.getElementById('mPCustomer').value = '';
   document.getElementById('mPStatus').value = 'unpaid';
   document.getElementById('mPInDate').value = '';
   document.getElementById('mPOutDate').value = '';
@@ -627,6 +648,8 @@ async function editPayment(id) {
   document.getElementById('paymentModalTitle').textContent = t('editPayment');
   document.getElementById('btnSavePayment').textContent = t('update');
   document.getElementById('mPPlate').value = p.plate_number;
+  document.getElementById('mPCarType').value = p.car_type || '';
+  document.getElementById('mPCustomer').value = p.customer || '';
   document.getElementById('mPStatus').value = p.status;
   document.getElementById('mPInDate').value = p.in_date || '';
   document.getElementById('mPOutDate').value = p.out_date || '';
@@ -636,8 +659,20 @@ async function editPayment(id) {
   document.getElementById('paymentModal').classList.add('active');
 }
 
+function autoFillPaymentInfo() {
+  const plate = document.getElementById('mPPlate').value.trim();
+  if (!plate || !plateCustomersMap) return;
+  const custInfo = lookupPlateCustomer(plate);
+  if (custInfo) {
+    if (custInfo.model && !document.getElementById('mPCarType').value) document.getElementById('mPCarType').value = custInfo.model;
+    if (custInfo.customer && !document.getElementById('mPCustomer').value) document.getElementById('mPCustomer').value = custInfo.customer;
+  }
+}
+
 async function savePayment() {
   const plate = document.getElementById('mPPlate').value.trim();
+  const carType = document.getElementById('mPCarType').value.trim();
+  const customer = document.getElementById('mPCustomer').value.trim();
   const status = document.getElementById('mPStatus').value;
   const inDate = document.getElementById('mPInDate').value;
   const outDate = document.getElementById('mPOutDate').value;
@@ -647,7 +682,7 @@ async function savePayment() {
 
   if (!plate) { alert('Plate number is required'); return; }
 
-  const body = { plate_number: plate, status, in_date: inDate, out_date: outDate, payment_date: payDate, amount, notes };
+  const body = { plate_number: plate, car_type: carType, customer, status, in_date: inDate, out_date: outDate, payment_date: payDate, amount, notes };
   try {
     if (editingPaymentId) {
       await api('/api/payments/' + editingPaymentId, { method: 'PUT', body: JSON.stringify(body) });

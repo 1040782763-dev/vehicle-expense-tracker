@@ -374,6 +374,7 @@ function syncPaymentFromInvoice(inv, username) {
       plate_number: inv.plate,
       amount: total,
       customer: inv.customer,
+      car_type: inv.remark || existing.car_type || '',
       payment_date: inv.date,
       vat_amount: inv.vat_amount || 0,
       status: existing.status
@@ -383,6 +384,7 @@ function syncPaymentFromInvoice(inv, username) {
       plate_number: inv.plate,
       amount: total,
       customer: inv.customer,
+      car_type: inv.remark || '',
       payment_date: inv.date,
       vat_amount: inv.vat_amount || 0,
       order_no: inv.orderNo,
