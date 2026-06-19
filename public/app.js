@@ -560,23 +560,32 @@ async function renderPayments() {
     tbody.innerHTML = '<tr><td colspan="'+colSpan+'" class="no-data">' + t('noPayments') + '</td></tr>';
     return;
   }
-  // Build customer lookup map from plateCustomersMap
-  const customerMap = {};
-  if (plateCustomersMap) {
-    for (const [plate, info] of Object.entries(plateCustomersMap)) {
-      customerMap[plate.replace(/\s/g,'').toUpperCase()] = info;
+
+  // Build plate → car_type from expense records (most recent per plate)
+  const carTypeMap = {};
+  // Build plate → customer from invoices (most recent per plate)
+  const invCustomerMap = {};
+  try {
+    const [records, invoices] = await Promise.all([
+      api('/api/records?limit=9999'),
+      api('/api/invoices?limit=9999')
+    ]);
+    for (const r of (records || [])) {
+      if (r.plate_number && r.car_type && !carTypeMap[r.plate_number.toUpperCase().replace(/\s/g,'')]) {
+        carTypeMap[r.plate_number.toUpperCase().replace(/\s/g,'')] = r.car_type;
+      }
     }
-  }
-  const lookupCustomer = (plate) => {
-    if (!plate) return { customer: '', model: '' };
-    const key = plate.replace(/\s/g,'').toUpperCase();
-    return customerMap[key] || { customer: '', model: '' };
-  };
+    for (const inv of (invoices || [])) {
+      if (inv.plate && inv.customer && !invCustomerMap[inv.plate.toUpperCase().replace(/\s/g,'')]) {
+        invCustomerMap[inv.plate.toUpperCase().replace(/\s/g,'')] = inv.customer;
+      }
+    }
+  } catch(e) { /* ignore */ }
 
   tbody.innerHTML = data.map(p => {
-    const cInfo = lookupCustomer(p.plate_number);
-    const carType = p.car_type || cInfo.model || '';
-    const customer = p.customer || cInfo.customer || '';
+    const plateKey = (p.plate_number || '').toUpperCase().replace(/\s/g,'');
+    const carType = p.car_type || carTypeMap[plateKey] || '';
+    const customer = p.customer || invCustomerMap[plateKey] || '';
     return `
     <tr>
       <td class="w-plate" style="color:var(--primary);cursor:pointer;text-decoration:underline" onclick="event.stopPropagation();showPlateHistory('${escAttr(p.plate_number)}')">${esc(p.plate_number)}</td>
