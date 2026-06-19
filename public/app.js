@@ -556,6 +556,18 @@ async function renderPayments() {
   if (costHeader) costHeader.style.display = isAdmin ? '' : 'none';
   if (vatHeader) vatHeader.style.display = isAdmin ? '' : 'none';
 
+  // Stats bar
+  const totalAll = data.length;
+  const paidList = data.filter(p => p.status === 'paid');
+  const unpaidList = data.filter(p => p.status !== 'paid');
+  const paidAmt = paidList.reduce((s,p) => s + (Number(p.amount)||0), 0);
+  const unpaidAmt = unpaidList.reduce((s,p) => s + (Number(p.amount)||0), 0);
+  const totalAmt = paidAmt + unpaidAmt;
+  document.getElementById('paymentStats').innerHTML =
+    '<span>📋 '+(lang==='en'?'Total':'总计')+': <b>'+totalAll+'</b> (TZS '+formatNum(totalAmt)+')</span>' +
+    '<span style="color:var(--green)">✅ '+(lang==='en'?'Paid':'已付')+': <b>'+paidList.length+'</b> (TZS '+formatNum(paidAmt)+')</span>' +
+    '<span style="color:var(--danger)">❌ '+(lang==='en'?'Unpaid':'未付')+': <b>'+unpaidList.length+'</b> (TZS '+formatNum(unpaidAmt)+')</span>';
+
   if (!data.length) {
     tbody.innerHTML = '<tr><td colspan="'+colSpan+'" class="no-data">' + t('noPayments') + '</td></tr>';
     return;
