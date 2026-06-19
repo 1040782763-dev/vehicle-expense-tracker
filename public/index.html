@@ -383,6 +383,18 @@
   </div>
 </div>
 
+<!-- ═══ PLATE HISTORY MODAL ═══ -->
+<div class="modal-overlay" id="plateHistoryModal">
+  <div class="modal">
+    <h2 id="plateHistoryTitle">Plate History / 维修历史</h2>
+    <div style="max-height:45vh;overflow-y:auto" id="plateHistoryContent"></div>
+    <div class="btn-row" style="margin-top:12px">
+      <button class="btn btn-outline" onclick="closeModal('plateHistoryModal')" data-en="Close" data-zh="关闭">Close</button>
+      <button class="btn btn-primary" id="plateHistoryInvoiceBtn" onclick="createInvoiceFromPlate()" data-en="Create Invoice" data-zh="开单">Create Invoice</button>
+    </div>
+  </div>
+</div>
+
 <!-- ═══ DEPOSIT MODAL ═══ -->
 <div class="modal-overlay" id="depositModal">
   <div class="modal">
@@ -418,6 +430,6 @@
   </div>
 </div>
 
-<script src="/app.js?v=34"></script>
+<script src="/app.js?v=35"></script>
 </body>
 </html>

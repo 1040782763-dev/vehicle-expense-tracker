@@ -561,7 +561,7 @@ async function renderPayments() {
   }
   tbody.innerHTML = data.map(p => `
     <tr>
-      <td class="w-plate">${esc(p.plate_number)}</td>
+      <td class="w-plate" style="color:var(--primary);cursor:pointer;text-decoration:underline" onclick="event.stopPropagation();showPlateHistory('${escAttr(p.plate_number)}')">${esc(p.plate_number)}</td>
       <td class="w-status">
         <span class="badge ${p.status === 'paid' ? 'badge-paid' : 'badge-unpaid'}">${t(p.status)}</span>
       </td>
@@ -1595,9 +1595,60 @@ function closeModal(id) {
   document.getElementById(id).classList.remove('active');
 }
 
+let currentHistoryPlate = '';
+async function showPlateHistory(plate) {
+  if (!plate) return;
+  currentHistoryPlate = plate;
+  document.getElementById('plateHistoryTitle').textContent = '🚗 ' + plate + ' — ' + (lang === 'en' ? 'Repair History' : '维修历史');
+  document.getElementById('plateHistoryContent').innerHTML = '<div style="text-align:center;color:#999;padding:20px">Loading...</div>';
+  document.getElementById('plateHistoryModal').classList.add('active');
+
+  try {
+    const [records, invoices] = await Promise.all([
+      api('/api/records?plate=' + encodeURIComponent(plate) + '&limit=50'),
+      api('/api/invoices?plate=' + encodeURIComponent(plate))
+    ]);
+
+    let html = '';
+    // Recent expense records
+    if (records.length > 0) {
+      html += '<div style="font-weight:600;margin-bottom:8px;color:#1a237e">' + (lang === 'en' ? 'Recent Parts/Repairs:' : '最近维修记录：') + '</div>';
+      html += '<table style="width:100%;font-size:12px;margin-bottom:12px"><tr style="background:#f5f5f5"><th style="text-align:left;padding:4px">Date</th><th style="text-align:left;padding:4px">Item</th><th style="text-align:right;padding:4px">Amount</th></tr>';
+      records.slice(0, 20).forEach(r => {
+        html += `<tr><td style="padding:4px;border-bottom:1px solid #eee">${formatDate(r.date)}</td><td style="padding:4px;border-bottom:1px solid #eee">${esc(r.description)}</td><td style="text-align:right;padding:4px;border-bottom:1px solid #eee">${formatNum(r.amount)}</td></tr>`;
+      });
+      html += '</table>';
+    } else {
+      html += '<div style="color:#999;margin-bottom:12px">' + (lang === 'en' ? 'No repair records found' : '暂无维修记录') + '</div>';
+    }
+
+    // Recent invoices
+    if (invoices.length > 0) {
+      html += '<div style="font-weight:600;margin-bottom:8px;color:#1a237e">' + (lang === 'en' ? 'Recent Invoices:' : '最近开单：') + '</div>';
+      invoices.slice(0, 5).forEach(inv => {
+        const total = (inv.items || []).reduce((s, it) => s + (Number(it.amount) || (Number(it.qty)||0)*(Number(it.cost)||0) || 0), 0);
+        html += `<div style="font-size:12px;padding:4px 0;border-bottom:1px solid #eee;cursor:pointer;color:var(--primary)" onclick="closeModal('plateHistoryModal');loadInvoiceById(${inv.id})">📄 ${inv.orderNo} | ${inv.date} | ${inv.customer||''} | TZS ${total.toLocaleString('en-US')} (${(inv.items||[]).length} items)</div>`;
+      });
+    }
+
+    document.getElementById('plateHistoryContent').innerHTML = html || '<div style="color:#999">No data</div>';
+  } catch(e) {
+    document.getElementById('plateHistoryContent').innerHTML = '<div style="color:var(--danger)">Failed to load</div>';
+  }
+}
+
+function createInvoiceFromPlate() {
+  closeModal('plateHistoryModal');
+  switchTab('invoice');
+  initInvoice().then(() => {
+    document.getElementById('invPlate').value = currentHistoryPlate;
+    autoFillInvoice();
+  });
+}
+
 document.addEventListener('keydown', e => {
   if (e.key === 'Escape') {
-    ['recordModal','paymentModal','depositModal','userModal'].forEach(id => closeModal(id));
+    ['recordModal','paymentModal','depositModal','userModal','plateHistoryModal'].forEach(id => closeModal(id));
   }
 });
 
