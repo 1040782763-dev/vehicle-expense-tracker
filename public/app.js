@@ -654,8 +654,8 @@ async function renderPayments() {
           </td>
         </tr>`;
       }).join('');
-      return `<tr class="merge-summary" style="cursor:pointer;font-weight:600" onclick="toggleMergeDetails('${key.replace(/[^A-Z0-9]/g,'')}',this)">
-        <td class="w-plate" style="color:var(--primary)">▶ ${first.plate_number||key} <span style="font-weight:400;color:#888;font-size:11px">(${items.length})</span></td>
+      return `<tr class="merge-summary" style="font-weight:600" onclick="toggleMergeDetails('${key.replace(/[^A-Z0-9]/g,'')}',this)">
+        <td class="w-plate" style="color:var(--primary);cursor:pointer;text-decoration:underline" onclick="event.stopPropagation();showPlateHistory('${escAttr(first.plate_number||key)}')">▶ ${first.plate_number||key} <span style="font-weight:400;color:#888;font-size:11px">(${items.length})</span></td>
         <td class="w-type">${esc(info.carType)}</td>
         <td class="w-guy">${esc(info.customer)}</td>
         <td>${statusStr}</td>
