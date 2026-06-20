@@ -118,6 +118,10 @@
         <option value="paid" data-en="Paid" data-zh="已付款">Paid</option>
         <option value="unpaid" data-en="Unpaid" data-zh="未付款">Unpaid</option>
       </select>
+      <label style="font-size:13px;cursor:pointer;display:flex;align-items:center;gap:4px;white-space:nowrap">
+        <input type="checkbox" id="fMergePlate" onchange="renderPayments()" style="width:auto">
+        <span data-en="Merge by Plate" data-zh="按车牌合并">Merge by Plate</span>
+      </label>
       <span style="flex:1"></span>
       <button class="btn btn-outline" onclick="syncPayments()" data-en="Sync from Expenses" data-zh="从费用同步">Sync from Expenses</button>
       <button class="btn btn-success" onclick="showPaymentModal()">+ <span data-en="New" data-zh="新增">New</span></button>
@@ -435,6 +439,6 @@
   </div>
 </div>
 
-<script src="/app.js?v=40"></script>
+<script src="/app.js?v=41"></script>
 </body>
 </html>

@@ -602,33 +602,107 @@ async function renderPayments() {
     }
   } catch(e) { /* ignore */ }
 
-  tbody.innerHTML = data.map(p => {
+  // Build info helper
+  const getInfo = (p) => {
     const plateKey = (p.plate_number || '').toUpperCase().replace(/\s/g,'');
-    // Fallback: stored → records → plate DB model → ''
     const dbInfo = plateCustomersMap ? (plateCustomersMap[plateKey] || null) : null;
-    const carType = p.car_type || carTypeMap[plateKey] || (dbInfo ? dbInfo.model : '') || '';
-    const customer = p.customer || invCustomerMap[plateKey] || (dbInfo ? dbInfo.customer : '') || '';
-    return `
-    <tr>
-      <td class="w-plate" style="color:var(--primary);cursor:pointer;text-decoration:underline" onclick="event.stopPropagation();showPlateHistory('${escAttr(p.plate_number)}')">${esc(p.plate_number)}</td>
-      <td class="w-type">${esc(carType)}</td>
-      <td class="w-guy">${esc(customer)}</td>
-      <td class="w-status">
-        <span class="badge ${p.status === 'paid' ? 'badge-paid' : 'badge-unpaid'}">${t(p.status)}</span>
-      </td>
-      <td class="w-date">${p.in_date ? formatDate(p.in_date) : '-'}</td>
-      <td class="w-date">${p.out_date ? formatDate(p.out_date) : '-'}</td>
-      <td class="w-date">${p.payment_date ? formatDate(p.payment_date) : '-'}</td>
-      ${isAdmin ? `<td class="w-amt text-right">${p.amount ? formatNum(p.amount) : '-'}</td>` : ''}
-      ${isAdmin ? `<td class="w-amt text-right">${p.cost ? formatNum(p.cost) : '-'}</td>` : ''}
-      ${isAdmin ? `<td class="w-amt text-right">${p.vat_amount !== undefined && p.vat_amount !== null ? formatNum(p.vat_amount) : '-'}</td>` : ''}
-      <td class="w-desc">${esc(p.notes)}</td>
-      <td class="w-act text-center">
-        <button class="btn-xs btn-edit" onclick="editPayment(${p.id})">${lang==='en'?'Edit':'编辑'}</button>
-        <button class="btn-xs btn-del" onclick="deletePayment(${p.id})">${lang==='en'?'Del':'删除'}</button>
-      </td>
-    </tr>
+    return {
+      carType: p.car_type || carTypeMap[plateKey] || (dbInfo ? dbInfo.model : '') || '',
+      customer: p.customer || invCustomerMap[plateKey] || (dbInfo ? dbInfo.customer : '') || '',
+      plateKey
+    };
+  };
+
+  // Check merge mode
+  const mergeMode = document.getElementById('fMergePlate') && document.getElementById('fMergePlate').checked;
+
+  if (mergeMode) {
+    // Group by plate (normalized)
+    const groups = {};
+    const groupOrder = [];
+    for (const p of data) {
+      const key = (p.plate_number || 'Unknown').toUpperCase().replace(/\s/g,'');
+      if (!groups[key]) { groups[key] = []; groupOrder.push(key); }
+      groups[key].push(p);
+    }
+    tbody.innerHTML = groupOrder.map(key => {
+      const items = groups[key];
+      const first = items[0];
+      const info = getInfo(first);
+      const totalAmt = items.reduce((s,p) => s + (Number(p.amount)||0), 0);
+      const paidCount = items.filter(p => p.status === 'paid').length;
+      const unpaidCount = items.length - paidCount;
+      const statusStr = (lang==='en'?'Paid':'已付')+paidCount+' / '+(lang==='en'?'Unpaid':'未付')+unpaidCount;
+      // Build detail rows (hidden by default)
+      const detailRows = items.map(p => {
+        const pinfo = getInfo(p);
+        const pkey = p.plate_number || key;
+        return `<tr class="merge-detail merge-${key.replace(/[^A-Z0-9]/g,'')}" style="display:none;background:#fafafa">
+          <td style="padding-left:24px">↳ ${esc(pkey)}</td>
+          <td></td><td></td>
+          <td><span class="badge ${p.status==='paid'?'badge-paid':'badge-unpaid'}">${t(p.status)}</span></td>
+          <td>${p.in_date?formatDate(p.in_date):'-'}</td>
+          <td>${p.out_date?formatDate(p.out_date):'-'}</td>
+          <td>${p.payment_date?formatDate(p.payment_date):'-'}</td>
+          ${isAdmin?`<td class="w-amt text-right">${p.amount?formatNum(p.amount):'-'}</td>`:''}
+          ${isAdmin?`<td class="w-amt text-right">${p.cost?formatNum(p.cost):'-'}</td>`:''}
+          ${isAdmin?`<td class="w-amt text-right">${p.vat_amount!==undefined&&p.vat_amount!==null?formatNum(p.vat_amount):'-'}</td>`:''}
+          <td>${esc(p.notes)}</td>
+          <td class="w-act text-center">
+            <button class="btn-xs btn-edit" onclick="editPayment(${p.id})">${lang==='en'?'Edit':'编辑'}</button>
+            <button class="btn-xs btn-del" onclick="deletePayment(${p.id})">${lang==='en'?'Del':'删除'}</button>
+          </td>
+        </tr>`;
+      }).join('');
+      return `<tr class="merge-summary" style="cursor:pointer;font-weight:600" onclick="toggleMergeDetails('${key.replace(/[^A-Z0-9]/g,'')}',this)">
+        <td class="w-plate" style="color:var(--primary)">▶ ${first.plate_number||key} <span style="font-weight:400;color:#888;font-size:11px">(${items.length})</span></td>
+        <td class="w-type">${esc(info.carType)}</td>
+        <td class="w-guy">${esc(info.customer)}</td>
+        <td>${statusStr}</td>
+        <td class="w-date">-</td>
+        <td class="w-date">-</td>
+        <td class="w-date">-</td>
+        ${isAdmin?`<td class="w-amt text-right">${formatNum(totalAmt)}</td>`:''}
+        ${isAdmin?`<td class="w-amt text-right">-</td>`:''}
+        ${isAdmin?`<td class="w-amt text-right">-</td>`:''}
+        <td></td>
+        <td></td>
+      </tr>${detailRows}`;
+    }).join('');
+  } else {
+    tbody.innerHTML = data.map(p => {
+      const info = getInfo(p);
+      return `
+      <tr>
+        <td class="w-plate" style="color:var(--primary);cursor:pointer;text-decoration:underline" onclick="event.stopPropagation();showPlateHistory('${escAttr(p.plate_number)}')">${esc(p.plate_number)}</td>
+        <td class="w-type">${esc(info.carType)}</td>
+        <td class="w-guy">${esc(info.customer)}</td>
+        <td class="w-status">
+          <span class="badge ${p.status === 'paid' ? 'badge-paid' : 'badge-unpaid'}">${t(p.status)}</span>
+        </td>
+        <td class="w-date">${p.in_date ? formatDate(p.in_date) : '-'}</td>
+        <td class="w-date">${p.out_date ? formatDate(p.out_date) : '-'}</td>
+        <td class="w-date">${p.payment_date ? formatDate(p.payment_date) : '-'}</td>
+        ${isAdmin ? `<td class="w-amt text-right">${p.amount ? formatNum(p.amount) : '-'}</td>` : ''}
+        ${isAdmin ? `<td class="w-amt text-right">${p.cost ? formatNum(p.cost) : '-'}</td>` : ''}
+        ${isAdmin ? `<td class="w-amt text-right">${p.vat_amount !== undefined && p.vat_amount !== null ? formatNum(p.vat_amount) : '-'}</td>` : ''}
+        <td class="w-desc">${esc(p.notes)}</td>
+        <td class="w-act text-center">
+          <button class="btn-xs btn-edit" onclick="editPayment(${p.id})">${lang==='en'?'Edit':'编辑'}</button>
+          <button class="btn-xs btn-del" onclick="deletePayment(${p.id})">${lang==='en'?'Del':'删除'}</button>
+        </td>
+      </tr>
+    `}).join('');
+  }
   `}).join('');
+}
+
+function toggleMergeDetails(key, tr) {
+  const rows = document.querySelectorAll('.merge-detail.merge-'+key);
+  const arrow = tr.querySelector('.w-plate');
+  const isHidden = rows.length > 0 && rows[0].style.display === 'none';
+  rows.forEach(r => { r.style.display = isHidden ? '' : 'none'; });
+  if (arrow) arrow.innerHTML = arrow.innerHTML.replace(isHidden ? '▶' : '▼', isHidden ? '▼' : '▶');
 }
 
 async function syncPayments() {
