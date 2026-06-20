@@ -694,7 +694,6 @@ async function renderPayments() {
       </tr>
     `}).join('');
   }
-  `}).join('');
 }
 
 function toggleMergeDetails(key, tr) {
