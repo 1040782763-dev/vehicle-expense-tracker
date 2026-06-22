@@ -291,27 +291,30 @@ app.post('/api/payments/sync', authRequired, (req, res) => {
 
   const recentRecords = record.list({ date_from: thirtyDaysAgo, date_to: today });
 
-  // Group by (plate_number, date) — each unique pair = one potential payment
+  // Group by plate_number only
   const groups = new Map();
   for (const r of recentRecords) {
     if (!r.plate_number) continue;
-    const key = r.plate_number + '|' + r.date;
+    const key = r.plate_number;
     if (!groups.has(key)) {
-      groups.set(key, { plate_number: r.plate_number, date: r.date, total: 0 });
+      groups.set(key, { plate_number: r.plate_number, total: 0, date: r.date });
     }
     groups.get(key).total += r.amount || 0;
+    // Keep latest date
+    if (r.date > groups.get(key).date) groups.get(key).date = r.date;
   }
 
-  // Get existing payments to avoid duplicates
+  // Get existing payments to avoid duplicates — check by plate only
   const existingPayments = payment.list({});
-  const existingKeys = new Set(
-    existingPayments.map(p => p.plate_number + '|' + p.in_date)
+  const existingPlates = new Set(
+    existingPayments.map(p => (p.plate_number || '').toUpperCase().replace(/\s/g, ''))
   );
 
-  // Create payment for each group not already in payments
+  // Create payment for each plate not already in payments
   const created = [];
   for (const [key, grp] of groups) {
-    if (!existingKeys.has(key)) {
+    const normPlate = (grp.plate_number || '').toUpperCase().replace(/\s/g, '');
+    if (!existingPlates.has(normPlate)) {
       const p = payment.create({
         plate_number: grp.plate_number,
         status: 'unpaid',
