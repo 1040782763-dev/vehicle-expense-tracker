@@ -173,7 +173,7 @@ const payment = {
     let result = [...data.payments];
     if (filters.plate)  result = result.filter(p => (p.plate_number || '').toLowerCase().includes(filters.plate.toLowerCase()));
     if (filters.status) result = result.filter(p => p.status === filters.status);
-    result.sort((a, b) => (b.payment_date || b.in_date || '').localeCompare(a.payment_date || a.in_date || '') || b.id - a.id);
+    result.sort((a, b) => (b.in_date || b.payment_date || '').localeCompare(a.in_date || a.payment_date || '') || b.id - a.id);
     return result.slice(0, 500);
   },
 

@@ -543,8 +543,32 @@ async function loadPayments() {
   } catch(e) { return []; }
 }
 
+let paymentSortCol = 'in_date'; // in_date | payment_date | amount
+let paymentSortAsc = false; // false = newest first (default)
+
+function togglePaymentSort(col) {
+  if (paymentSortCol === col) {
+    paymentSortAsc = !paymentSortAsc;
+  } else {
+    paymentSortCol = col;
+    paymentSortAsc = col === 'in_date' ? false : true; // in_date defaults to newest first
+  }
+  renderPayments();
+}
+
+function sortPaymentData(data) {
+  const field = paymentSortCol;
+  return [...data].sort((a, b) => {
+    let va = a[field] || a.in_date || a.payment_date || '';
+    let vb = b[field] || b.in_date || b.payment_date || '';
+    if (field === 'amount') { va = Number(a.amount)||0; vb = Number(b.amount)||0; return paymentSortAsc ? va - vb : vb - va; }
+    return paymentSortAsc ? String(va).localeCompare(String(vb)) : String(vb).localeCompare(String(va));
+  });
+}
+
 async function renderPayments() {
-  const data = await loadPayments();
+  let data = await loadPayments();
+  data = sortPaymentData(data);
   const tbody = document.getElementById('paymentsBody');
   const isAdmin = currentUser && currentUser.role === 'admin';
   const colSpan = isAdmin ? 13 : 10;

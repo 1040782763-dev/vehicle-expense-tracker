@@ -136,9 +136,9 @@
             <th class="w-type" data-en="Car Type" data-zh="车型">Car Type</th>
             <th class="w-guy" data-en="Customer" data-zh="客户">Customer</th>
             <th class="w-status" data-en="Status" data-zh="状态">Status</th>
-            <th class="w-date" data-en="In Date" data-zh="进场日期">In Date</th>
-            <th class="w-date" data-en="Out Date" data-zh="出厂日期">Out Date</th>
-            <th class="w-date" data-en="Pay Date" data-zh="付款日期">Pay Date</th>
+            <th class="w-date" style="cursor:pointer" onclick="togglePaymentSort('in_date')" title="Click to sort" data-en="↕ In Date" data-zh="↕ 进场日期">↕ In Date</th>
+            <th class="w-date" style="cursor:pointer" onclick="togglePaymentSort('out_date')" title="Click to sort" data-en="Out Date" data-zh="出厂日期">Out Date</th>
+            <th class="w-date" style="cursor:pointer" onclick="togglePaymentSort('payment_date')" title="Click to sort" data-en="Pay Date" data-zh="付款日期">Pay Date</th>
             <th class="w-amt" id="payAmtHeader" data-en="Amount" data-zh="金额">Amount</th>
             <th class="w-amt" id="payCostHeader" data-en="Cost" data-zh="成本">Cost</th>
             <th class="w-amt" id="payVatHeader" data-en="VAT" data-zh="增值税">VAT</th>
