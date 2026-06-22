@@ -350,6 +350,20 @@ app.delete('/api/payments/:id', authRequired, (req, res) => {
   res.json({ ok: true });
 });
 
+// Merge multiple payments into one
+app.post('/api/payments/merge', authRequired, (req, res) => {
+  const { merge, delete_ids } = req.body;
+  if (!merge || !delete_ids || delete_ids.length < 2) {
+    return res.status(400).json({ error: 'Need at least 2 payments to merge' });
+  }
+  const created = payment.create({ ...merge, created_by: req.user.username });
+  for (const id of delete_ids) {
+    payment.delete(Number(id));
+  }
+  broadcastSSE('payment_updated', {});
+  res.json({ merged: created, deleted: delete_ids });
+});
+
 // ─── Invoices CRUD ──────────────────────────────────────────
 app.get('/api/invoices', authRequired, (req, res) => {
   res.json(invoice.list(req.query));

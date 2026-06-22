@@ -547,7 +547,7 @@ async function renderPayments() {
   const data = await loadPayments();
   const tbody = document.getElementById('paymentsBody');
   const isAdmin = currentUser && currentUser.role === 'admin';
-  const colSpan = isAdmin ? 12 : 9;
+  const colSpan = isAdmin ? 13 : 10;
 
   const amtHeader = document.getElementById('payAmtHeader');
   const costHeader = document.getElementById('payCostHeader');
@@ -634,11 +634,11 @@ async function renderPayments() {
       const unpaidCount = items.length - paidCount;
       const statusStr = (lang==='en'?'Paid':'已付')+paidCount+' / '+(lang==='en'?'Unpaid':'未付')+unpaidCount;
       // Build detail rows (hidden by default)
+      const safeKey = key.replace(/[^A-Z0-9]/g,'');
       const detailRows = items.map(p => {
-        const pinfo = getInfo(p);
-        const pkey = p.plate_number || key;
-        return `<tr class="merge-detail merge-${key.replace(/[^A-Z0-9]/g,'')}" style="display:none;background:#fafafa">
-          <td style="padding-left:24px">↳ ${esc(pkey)}</td>
+        return `<tr class="merge-detail merge-${safeKey}" style="display:none;background:#fafafa">
+          <td style="padding-left:8px"><input type="checkbox" class="merge-check-${safeKey}" value="${p.id}" style="width:auto"></td>
+          <td style="padding-left:8px;color:var(--primary);cursor:pointer;text-decoration:underline" onclick="event.stopPropagation();showPlateHistory('${escAttr(p.plate_number)}')">↳ ${esc(p.plate_number)}</td>
           <td></td><td></td>
           <td><span class="badge ${p.status==='paid'?'badge-paid':'badge-unpaid'}">${t(p.status)}</span></td>
           <td>${p.in_date?formatDate(p.in_date):'-'}</td>
@@ -654,7 +654,12 @@ async function renderPayments() {
           </td>
         </tr>`;
       }).join('');
-      return `<tr class="merge-summary" style="font-weight:600" onclick="toggleMergeDetails('${key.replace(/[^A-Z0-9]/g,'')}',this)">
+      // Only show merge button if >1 payment
+      const mergeBtn = items.length > 1
+        ? `<button class="btn-xs" style="background:var(--primary);color:#fff;margin-left:8px" onclick="event.stopPropagation();mergePaymentsByPlate('${safeKey}','${escAttr(items[0].plate_number||key)}')">${lang==='en'?'Merge':'合并'}</button>`
+        : '';
+      return `<tr class="merge-summary" style="font-weight:600" onclick="toggleMergeDetails('${safeKey}',this)">
+        <td><input type="checkbox" class="merge-select-all" onchange="event.stopPropagation();toggleMergeSelectAll('${safeKey}',this)" style="width:auto" title="Select All"></td>
         <td class="w-plate" style="color:var(--primary);cursor:pointer;text-decoration:underline" onclick="event.stopPropagation();showPlateHistory('${escAttr(first.plate_number||key)}')">▶ ${first.plate_number||key} <span style="font-weight:400;color:#888;font-size:11px">(${items.length})</span></td>
         <td class="w-type">${esc(info.carType)}</td>
         <td class="w-guy">${esc(info.customer)}</td>
@@ -666,7 +671,7 @@ async function renderPayments() {
         ${isAdmin?`<td class="w-amt text-right">-</td>`:''}
         ${isAdmin?`<td class="w-amt text-right">-</td>`:''}
         <td></td>
-        <td></td>
+        <td>${mergeBtn}</td>
       </tr>${detailRows}`;
     }).join('');
   } else {
@@ -674,6 +679,7 @@ async function renderPayments() {
       const info = getInfo(p);
       return `
       <tr>
+        <td></td>
         <td class="w-plate" style="color:var(--primary);cursor:pointer;text-decoration:underline" onclick="event.stopPropagation();showPlateHistory('${escAttr(p.plate_number)}')">${esc(p.plate_number)}</td>
         <td class="w-type">${esc(info.carType)}</td>
         <td class="w-guy">${esc(info.customer)}</td>
@@ -702,6 +708,47 @@ function toggleMergeDetails(key, tr) {
   const isHidden = rows.length > 0 && rows[0].style.display === 'none';
   rows.forEach(r => { r.style.display = isHidden ? '' : 'none'; });
   if (arrow) arrow.innerHTML = arrow.innerHTML.replace(isHidden ? '▶' : '▼', isHidden ? '▼' : '▶');
+}
+
+function toggleMergeSelectAll(key, cb) {
+  const checks = document.querySelectorAll('.merge-check-'+key);
+  checks.forEach(c => { c.checked = cb.checked; });
+}
+
+async function mergePaymentsByPlate(key, plate) {
+  const checks = document.querySelectorAll('.merge-check-'+key+':checked');
+  if (checks.length < 2) {
+    alert(lang === 'en' ? 'Select at least 2 payments to merge' : '请至少选择2条付款记录合并');
+    return;
+  }
+  const ids = Array.from(checks).map(c => parseInt(c.value));
+  if (!confirm((lang === 'en' ? 'Merge ' : '合并 ') + ids.length + (lang === 'en' ? ' payments for ' : ' 条付款记录：') + plate + '?')) return;
+
+  try {
+    // Fetch full payment details
+    const allData = await loadPayments();
+    const selected = allData.filter(p => ids.includes(p.id));
+    if (selected.length < 2) return;
+
+    // Merge: sum amounts, take latest date, keep if any is paid
+    const merged = {
+      plate_number: selected[0].plate_number,
+      car_type: selected.find(p=>p.car_type)?.car_type || '',
+      customer: selected.find(p=>p.customer)?.customer || '',
+      payment_date: selected.map(p=>p.payment_date).filter(Boolean).sort().pop() || '',
+      in_date: selected.map(p=>p.in_date).filter(Boolean).sort().pop() || '',
+      out_date: selected.map(p=>p.out_date).filter(Boolean).sort().pop() || '',
+      amount: selected.reduce((s,p)=>s+(Number(p.amount)||0),0),
+      cost: selected.reduce((s,p)=>s+(Number(p.cost)||0),0),
+      vat_amount: selected.reduce((s,p)=>s+(Number(p.vat_amount)||0),0),
+      status: selected.some(p=>p.status==='paid') ? 'paid' : 'unpaid',
+      notes: selected.map(p=>p.notes).filter(Boolean).join('; ')
+    };
+
+    // Create merged payment, then delete originals
+    await api('/api/payments/merge', { method: 'POST', body: JSON.stringify({ merge: merged, delete_ids: ids }) });
+    renderPayments();
+  } catch(e) { alert(e.message); }
 }
 
 async function syncPayments() {
