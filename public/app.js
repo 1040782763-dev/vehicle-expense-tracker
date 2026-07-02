@@ -1386,7 +1386,8 @@ async function saveInvoice() {
     invCurrentId = result.id;
     document.getElementById('invOrderNo').value = result.orderNo;
     clearInvDraft();
-    renderInvSavedList();
+    // Directly insert saved invoice at top of list (no extra API call)
+    prependToSavedList(result);
     alert((lang === 'en' ? 'Saved! Order No: ' : '已保存！单号：') + result.orderNo);
   } catch(e) { alert('Save failed / 保存失败: ' + e.message); }
 }
@@ -1409,6 +1410,23 @@ async function deleteInvoiceById(id, event) {
     if (invCurrentId === id) { newInvoice(); }
     renderInvSavedList();
   } catch(e) { alert('Delete failed / 删除失败'); }
+}
+
+function prependToSavedList(inv) {
+  const container = document.getElementById('invSavedList');
+  if (!container) return;
+  const total = (inv.items || []).reduce((s, it) => s + (Number(it.amount) || (Number(it.qty)||0)*(Number(it.cost)||0) || 0), 0);
+  const html = `<div class="inv-saved-item" onclick="loadInvoiceById(${inv.id})" style="background:#f6ffed">
+    <div class="inv-si-info">
+      <div class="inv-si-plate">🆕 ${esc(inv.plate||'No Plate')} | ${esc(inv.orderNo||'')}</div>
+      <div class="inv-si-meta">${inv.date||''} | ${esc(inv.customer||'')} | ${(inv.items||[]).length} items | TZS ${total.toLocaleString('en-US')}</div>
+    </div>
+    <button class="inv-si-del" onclick="deleteInvoiceById(${inv.id}, event)">${lang === 'en' ? 'Delete' : '删除'}</button>
+  </div>`;
+  // Remove "No records" placeholder if present
+  const placeholder = container.querySelector('div[style]');
+  if (placeholder && placeholder.textContent.includes('No records')) container.innerHTML = '';
+  container.insertAdjacentHTML('afterbegin', html);
 }
 
 async function renderInvSavedList() {
