@@ -412,11 +412,13 @@ function syncPaymentFromInvoice(inv, username) {
 }
 
 app.post('/api/invoices', authRequired, (req, res) => {
-  const data = { ...req.body, created_by: req.user.username };
-  const newInvoice = invoice.create(data);
-  syncPaymentFromInvoice(newInvoice, req.user.username);
-  broadcastSSE('invoice_updated', {});
-  res.status(201).json(newInvoice);
+  try {
+    const data = { ...req.body, created_by: req.user.username };
+    const newInvoice = invoice.create(data);
+    try { syncPaymentFromInvoice(newInvoice, req.user.username); } catch(e) { console.error('sync err:', e.message); }
+    broadcastSSE('invoice_updated', {});
+    res.status(201).json(newInvoice);
+  } catch(e) { res.status(500).json({ error: e.message }); }
 });
 
 app.get('/api/invoices/:id', authRequired, (req, res) => {
@@ -426,11 +428,13 @@ app.get('/api/invoices/:id', authRequired, (req, res) => {
 });
 
 app.put('/api/invoices/:id', authRequired, (req, res) => {
-  invoice.update(req.params.id, req.body);
-  const updated = invoice.getById(req.params.id);
-  syncPaymentFromInvoice(updated, req.user.username);
-  broadcastSSE('invoice_updated', {});
-  res.json(updated);
+  try {
+    invoice.update(req.params.id, req.body);
+    const updated = invoice.getById(req.params.id);
+    try { syncPaymentFromInvoice(updated, req.user.username); } catch(e) { console.error('sync err:', e.message); }
+    broadcastSSE('invoice_updated', {});
+    res.json(updated);
+  } catch(e) { res.status(500).json({ error: e.message }); }
 });
 
 app.delete('/api/invoices/:id', authRequired, (req, res) => {
@@ -550,6 +554,14 @@ app.get('/api/events', (req, res) => {
 // ─── Serve SPA ───────────────────────────────────────────────
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
+});
+
+// Crash protection — log errors instead of dying
+process.on('uncaughtException', (err) => {
+  console.error('UNCAUGHT EXCEPTION:', err.message, err.stack && err.stack.split('\n')[1]);
+});
+process.on('unhandledRejection', (reason) => {
+  console.error('UNHANDLED REJECTION:', reason);
 });
 
 app.listen(PORT, '0.0.0.0', () => {
