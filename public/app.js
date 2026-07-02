@@ -1427,7 +1427,7 @@ async function renderInvSavedList() {
       });
     }
     const container = document.getElementById('invSavedList');
-    const recent = data.slice(0, 20);
+    const recent = data.slice(0, 50);
     if (!recent.length) {
       container.innerHTML = '<div style="text-align:center;color:#999;padding:20px">' + (lang === 'en' ? 'No records' : '暂无记录') + '</div>';
       return;
